@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+    dev:
+        build:
+            args:
+                USER_NAME: '${USER_NAME}'
+                USER_UID: '${USER_UID}'
+                USER_GID: '${USER_GID}'
+                REPO: '${REPO}'
+                USER_GROUP: '${USER_GROUP}'
+            dockerfile: '.docker/Dockerfile'
+            context: '..'
+            target: 'dev'
+        cap_add:
+            - 'SYS_PTRACE'
+            - 'SYSLOG'
+        tty: true
+        security_opt:
+            - 'seccomp:unconfined'
+        volumes:
+           - '../:/home/gitter/src/${REPO}'
+           - '${HOME}/.ssh/known_hosts:/home/${USER_NAME}/.ssh/known_hosts'
+           - 'vscode_ext:/home/${USER_NAME}/.vscode-server'
+           - 'vscode_i_ext:/home/${USER_NAME}/.vscode-server-insiders/extensions'
+
+volumes:
+    vscode_ext: null
+    vscode_i_ext: null
