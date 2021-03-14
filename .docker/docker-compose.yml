@@ -7,8 +7,8 @@ services:
                 USER_NAME: '${USER_NAME}'
                 USER_UID: '${USER_UID}'
                 USER_GID: '${USER_GID}'
-                REPO: '${REPO}'
                 USER_GROUP: '${USER_GROUP}'
+                REPO: '${REPO}'
             dockerfile: '.docker/Dockerfile'
             context: '..'
             target: 'dev'
@@ -19,10 +19,10 @@ services:
         security_opt:
             - 'seccomp:unconfined'
         volumes:
-           - '../:/home/gitter/src/${REPO}'
+           - '../:/home/${USER_NAME}/src/${REPO}'
            - '${HOME}/.ssh/known_hosts:/home/${USER_NAME}/.ssh/known_hosts'
            - 'vscode_ext:/home/${USER_NAME}/.vscode-server'
-           - 'vscode_i_ext:/home/${USER_NAME}/.vscode-server-insiders/extensions'
+           - 'vscode_i_ext:/home/${USER_NAME}/.vscode-server-insiders'
 
 volumes:
     vscode_ext: null

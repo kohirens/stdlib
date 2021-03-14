@@ -1,8 +1,8 @@
 {
-	"name": "Go Kohirens",
+	"name": "Go Kohirens STD LIB",
 	"dockerComposeFile": "../.docker/docker-compose.yml",
 	"service": "dev",
-	"workspaceFolder": "/home/gitter/src/github.com/kohirens",
+	"workspaceFolder": "/home/devn/src/github.com/kohirens/stdlib",
 	// Use this environment variable if you need to bind mount your local source code into a new container.
 	"remoteEnv": {
 		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"

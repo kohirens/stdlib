@@ -4,19 +4,19 @@
 commit_id="622cb03f7e070a9670c94bae1a45d78d7181fbd4"
 hash="1612749334253"
 archive="vscode-server-linux-x64.tar.gz"
-repo="microsoft/vscode"
+# repo="microsoft/vscode"
 
 # TODO: Find a way to get the latest commit ID via command line: https://api.github.com/repos/microsoft/vscode/releases/latest
 # https://api.github.com/repos/microsoft/vscode/releases/latest
 #
-get_latest_release() {
-  curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
-    grep '"tag_name":' |                                            # Get tag line
-    sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
-}
+# get_latest_release() {
+#   curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
+#     grep '"tag_name":' |                                            # Get tag line
+#     sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
+# }
 
-commit_tag=$(get_latest_release $repo)
-echo "commit id = ${commit_tag}"
+# commit_tag=$(get_latest_release $repo)
+# echo "commit id = ${commit_tag}"
 
 # Download VS Code Server tarball to tmp directory.
 curl -sSL "https://update.code.visualstudio.com/commit:${commit_id}/server-linux-x64/stable" -o /tmp/${archive}
