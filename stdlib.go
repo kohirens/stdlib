@@ -16,7 +16,18 @@ var textFileTypes = [4]string{
 	".xml",
 }
 
-//  Returns true for files that match the text extensions.
+// DirExist Check if a string path exist.
+func DirExist(path string) bool {
+	fileObj, err := os.Stat(path)
+
+	if os.IsNotExist(err) || !fileObj.IsDir() {
+		return false
+	}
+
+	return true
+}
+
+// IsTextFile Returns true for files that match the text extensions.
 func IsTextFile(file string) (ret bool) {
 	ret = false
 

@@ -9,7 +9,7 @@ const (
 	TEST_TMP     = "testtmp"
 )
 
-func TestPathexists(t *testing.T) {
+func TestPathExist(t *testing.T) {
 
 	cases := []struct {
 		name, path string
@@ -49,6 +49,26 @@ func TestIsTextFile(t *testing.T) {
 
 		if got != sbj.want {
 			t.Errorf("got %v, want %v, for %v", got, sbj.want, sbj.path)
+		}
+	}
+}
+
+func TestDirExist(t *testing.T) {
+
+	cases := []struct {
+		name, path string
+		want       bool
+	}{
+		{"dirExist", FIXTURES_DIR + "/dir_that_exist", true},
+		{"isFileNotDir", FIXTURES_DIR + "/dir_that_exist/file_that_exists.md", false},
+		{"doesNotExists", FIXTURES_DIR + "/dir_that_exist/dir-does-not-exist", false},
+	}
+
+	for _, sbj := range cases {
+		got := DirExist(sbj.path)
+
+		if got != sbj.want {
+			t.Errorf("got %v, want %v", got, sbj.want)
 		}
 	}
 }
