@@ -46,7 +46,7 @@ func IsTextFile(file string) (ret bool) {
 	return
 }
 
-// PathExist true if it is a directory/file and false otherwise.
+// PathExist true for a directory/file and false otherwise.
 func PathExist(filename string) bool {
 	_, err := os.Stat(filename)
 
