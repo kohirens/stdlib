@@ -43,6 +43,12 @@ func AppDataDir() (dataDir string, err error) {
 	}
 
 	if runtime.GOOS == "windows" {
+		dd, ok := os.LookupEnv("LOCALAPPDATA")
+		if ok {
+			dataDir = dd
+			return
+		}
+		// fallback
 		dataDir = dataDir + "\\AppData\\Local"
 	}
 
