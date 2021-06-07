@@ -28,33 +28,38 @@ func TestPathExist(t *testing.T) {
 	}
 }
 
-func TestIsTextFile(t *testing.T) {
+func TestIsTextFile(tester *testing.T) {
 
 	cases := []struct {
 		name, path string
 		want       bool
 	}{
-		{"IsATextFile", FIXTURES_DIR + "/text-file-01.txt", true},
-		{"notATextFile", FIXTURES_DIR + "/text-file-02.jpg", false},
-		{"notATextFile", FIXTURES_DIR + "/text-file-03.gif", false},
-		{"notATextFile", FIXTURES_DIR + "/text-file-04.png", false},
-		{"notATextFile", FIXTURES_DIR + "/text-file-05.json", true},
-		{"notATextFile", FIXTURES_DIR + "/text-file-06.md", true},
-		{"notATextFile", FIXTURES_DIR + "/text-file-07.xml", true},
+		{"IsATextFile", "text-file-01.txt", true},
+		{"notATextFile", "text-file-02.jpg", false},
+		{"notATextFile", "text-file-03.gif", false},
+		{"notATextFile", "text-file-04.png", false},
+		{"notATextFile", "text-file-05.json", true},
+		{"notATextFile", "text-file-06.md", true},
+		{"notATextFile", "text-file-07.xml", true},
 	}
 
-	for _, sbj := range cases {
+	el := []string{"jpg", "gif", "png", "pdf"}
+	in := []string{"txt", "json", "md", "xml"}
+	sbj, _ := NewFileExtChecker(&el, &in)
 
-		got := IsTextFile(sbj.path)
+	for _, fxtr := range cases {
+		tester.Run(fxtr.name, func(t *testing.T) {
 
-		if got != sbj.want {
-			t.Errorf("got %v, want %v, for %v", got, sbj.want, sbj.path)
-		}
+			got := sbj.IsValid(fxtr.path)
+
+			if got != fxtr.want {
+				t.Errorf("got %v, want %v, for %v", got, fxtr.want, fxtr.path)
+			}
+		})
 	}
 }
 
 func TestDirExist(t *testing.T) {
-
 	cases := []struct {
 		name, path string
 		want       bool

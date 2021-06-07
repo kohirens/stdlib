@@ -1,19 +1,36 @@
 package stdlib
 
 import (
+	"fmt"
 	"os"
 	"path"
+	"strings"
 )
 
 const (
 	PS = string(os.PathSeparator)
 )
 
-var textFileTypes = [4]string{
-	".json",
-	".md",
-	".txt",
-	".xml",
+type FileExtChecker struct {
+	excludes *[]string
+	includes *[]string
+}
+
+// New Add file extensions for the file checker to exclude as being included
+func NewFileExtChecker(el, in *[]string) (*FileExtChecker, error) {
+	var err error
+
+	if el == nil && in == nil {
+		err := fmt.Errorf("you did not add provide any file extensions to include or exclude")
+		return nil, err
+	}
+
+	fce := FileExtChecker{
+		excludes: el,
+		includes: in,
+	}
+
+	return &fce, err
 }
 
 // DirExist Check if a string path exist.
@@ -27,18 +44,22 @@ func DirExist(path string) bool {
 	return true
 }
 
-// IsTextFile Returns true for files that match the text extensions.
-func IsTextFile(file string) (ret bool) {
+// IsValid Returns true for files that match allowed extensions.
+func (fec *FileExtChecker) IsValid(file string) (ret bool) {
 	ret = false
 
-	ext := path.Ext(file)
+	ext := strings.Trim(path.Ext(file),".")
 
 	if ext != "" {
-	txtcompare: // sorry, I just wanted to play with this so I get used to it. Even though this is single loop or I could just use return. I like to be explicit.
-		for _, t := range textFileTypes {
+		for _, t := range *fec.excludes {
+			if t == ext {
+				return
+			}
+		}
+		for _, t := range *fec.includes {
 			if t == ext {
 				ret = true
-				break txtcompare
+				break
 			}
 		}
 	}
