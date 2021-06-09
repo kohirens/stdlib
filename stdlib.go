@@ -25,6 +25,14 @@ func NewFileExtChecker(el, in *[]string) (*FileExtChecker, error) {
 		return nil, err
 	}
 
+	if el == nil {
+		el = &[]string{}
+	}
+
+	if in == nil {
+		in = &[]string{}
+	}
+
 	fce := FileExtChecker{
 		excludes: el,
 		includes: in,
@@ -52,8 +60,9 @@ func (fec *FileExtChecker) IsValid(file string) (ret bool) {
 
 	if ext != "" {
 		for _, t := range *fec.excludes {
+			ret = true
 			if t == ext {
-				return
+				return false
 			}
 		}
 		for _, t := range *fec.includes {

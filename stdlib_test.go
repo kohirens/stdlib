@@ -57,6 +57,46 @@ func TestIsTextFile(tester *testing.T) {
 			}
 		})
 	}
+
+	cases = []struct {
+		name, path string
+		want       bool
+	}{
+		{"notInTheExcludeList", "text-file-07.xml", true},
+	}
+	fxtr := cases[0]
+	el = []string{"jpg", "gif", "png", "pdf"}
+	in = []string{}
+	sbj, _ = NewFileExtChecker(&el, &in)
+	tester.Run(fxtr.name, func(t *testing.T) {
+
+		got := sbj.IsValid(fxtr.path)
+
+		if got != fxtr.want {
+			t.Errorf("got %v, want %v, for %v", got, fxtr.want, fxtr.path)
+		}
+	})
+
+
+
+	cases = []struct {
+		name, path string
+		want       bool
+	}{
+		{"notInTheIncludeList", "file-07.jpg", false},
+	}
+	fxtr = cases[0]
+	el = []string{}
+	in = []string{"txt", "json", "md", "xml"}
+	sbj, _ = NewFileExtChecker(&el, &in)
+	tester.Run(fxtr.name, func(t *testing.T) {
+
+		got := sbj.IsValid(fxtr.path)
+
+		if got != fxtr.want {
+			t.Errorf("got %v, want %v, for %v", got, fxtr.want, fxtr.path)
+		}
+	})
 }
 
 func TestDirExist(t *testing.T) {
