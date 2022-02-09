@@ -11,12 +11,13 @@ const (
 	PS = string(os.PathSeparator)
 )
 
+// FileExtChecker A store for file extensions to exclude and included.
 type FileExtChecker struct {
 	excludes *[]string
 	includes *[]string
 }
 
-// New Add file extensions for the file checker to exclude as being included
+// NewFileExtChecker Initialize a new FileExtChecker instance.
 func NewFileExtChecker(el, in *[]string) (*FileExtChecker, error) {
 	var err error
 
