@@ -56,7 +56,7 @@ func DirExist(path string) bool {
 func (fec *FileExtChecker) IsValid(file string) (ret bool) {
 	ret = false
 
-	ext := strings.Trim(path.Ext(file),".")
+	ext := strings.Trim(path.Ext(file), ".")
 
 	if ext != "" {
 		for _, t := range *fec.excludes {
