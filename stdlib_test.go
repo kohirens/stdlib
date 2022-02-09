@@ -80,8 +80,6 @@ func TestIsTextFile(tester *testing.T) {
 		}
 	})
 
-
-
 	cases = []struct {
 		name, path string
 		want       bool
