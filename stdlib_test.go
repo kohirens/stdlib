@@ -9,22 +9,25 @@ const (
 	TEST_TMP     = "testtmp"
 )
 
-func TestPathExist(t *testing.T) {
+func TestPathExist(test *testing.T) {
 
 	cases := []struct {
 		name, path string
 		want       bool
 	}{
 		{"existIsTrue", FIXTURES_DIR + "/file-exist-01.md", true},
-		{"existIsTrue", FIXTURES_DIR + "/file-does-not-exist-01.md", false},
+		{"existIsFalse", FIXTURES_DIR + "/file-does-not-exist-01.md", false},
+		{"invalidPathIsFalse", FIXTURES_DIR + "https://github.com/kohirens/tmpl-go-web/archive/refs/heads/main.zip\\template.json", false},
 	}
 
 	for _, sbj := range cases {
-		got := PathExist(sbj.path)
+		test.Run(sbj.name, func(t *testing.T) {
+			got := PathExist(sbj.path)
 
-		if got != sbj.want {
-			t.Errorf("got %v, want %v", got, sbj.want)
-		}
+			if got != sbj.want {
+				t.Errorf("got %v, want %v", got, sbj.want)
+			}
+		})
 	}
 }
 
