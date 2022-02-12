@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  vro: kohirens/version-release@0.7.0
+  vro: kohirens/version-release@0.7.2
 
 parameters:
   ssh-finger:
