@@ -42,6 +42,17 @@ func NewFileExtChecker(el, in *[]string) (*FileExtChecker, error) {
 	return &fce, err
 }
 
+func InitFileExtChecker() *FileExtChecker {
+	return &FileExtChecker{
+		excludes: &[]string{},
+		includes: &[]string{},
+	}
+}
+
+func NewFileExtCheckerStr(el, in []string) (*FileExtChecker, error) {
+	return NewFileExtChecker(&el, &in)
+}
+
 // DirExist Check if a string path exist.
 func DirExist(path string) bool {
 	fileObj, err := os.Stat(path)
