@@ -2,6 +2,9 @@
 ## [Unreleased]
 
 
+<a name="0.2.1"></a>
+## [0.2.1] - 2023-02-03
+
 <a name="0.2.0"></a>
 ## [0.2.0] - 2023-02-03
 ### Added
@@ -50,7 +53,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/0.2.1...HEAD
+[0.2.1]: https://github.com/kohirens/stdlib.git/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/kohirens/stdlib.git/compare/0.1.2...0.2.0
 [0.1.2]: https://github.com/kohirens/stdlib.git/compare/0.1.1...0.1.2
 [0.1.1]: https://github.com/kohirens/stdlib.git/compare/0.1.0...0.1.1
