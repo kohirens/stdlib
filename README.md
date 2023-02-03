@@ -1,6 +1,10 @@
 # Kohirens STDLIB
 
-A collection of highly reusable code throughout Korhirens projects.
+A library of reusable code throughout Korhirens projects.
+
+## Status Badges
+
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/kohirens/stdlib/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/kohirens/stdlib/tree/main)
 
 ## Setup Local Development.
 
@@ -9,8 +13,8 @@ computer. In fact, there is no documentation for any other way in this reading.
 
 You will need to set the `$Env:HOME` environment on Windows before you can start
 the dev environment. It should be the same value as `$Env:USERPROFILE`, or
-what you need it to be. Once you have it set and it shows up in Powershell when
-you run `Get-ChildItem Env:` you then do one of the following.
+whatever you need it to be. Once you have it set and it shows up in Powershell
+when you run `Get-ChildItem Env:` you then do one of the following.
 
 ### Run Docker
 
@@ -27,10 +31,10 @@ you run `Get-ChildItem Env:` you then do one of the following.
 
 ### Run with VS Code
 
-1. Install the VS code extention "Remote Container".
-2. Clonet this repository localy.
+1. Install the VS code extension "Remote Container".
+2. Clone this repository locally.
 3. Open the project in VS Code, which should ask to open the folder in a
    remote container.
-4. Open a termianl in VS Code and type `go test`.
+4. Open a terminal in VS Code and type `go test`.
 5. Now got to "Run and Debug" in the left nav and run one of the launch
    configurations.
