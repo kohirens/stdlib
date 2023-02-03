@@ -54,7 +54,8 @@ jobs:
 workflows:
   pull-request:
     jobs:
-      - co
+      - co:
+          filters: { branches: { ignore: /main|auto-update-changelog/ } }
       - run-test:
           requires: [ co ]
 
