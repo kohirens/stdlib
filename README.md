@@ -1,6 +1,6 @@
 # Kohirens STDLIB
 
-A library of reusable code throughout Korhirens projects.
+A library of reusable code throughout Kohirens projects.
 
 ## Status Badges
 
@@ -8,13 +8,13 @@ A library of reusable code throughout Korhirens projects.
 
 ## Setup Local Development.
 
-You can use the Docker environment to get going if you have Docker on your
+You can use a Docker environment to get going if you have Docker on your
 computer. In fact, there is no documentation for any other way in this reading.
 
-You will need to set the `$Env:HOME` environment on Windows before you can start
-the dev environment. It should be the same value as `$Env:USERPROFILE`, or
-whatever you need it to be. Once you have it set and it shows up in Powershell
-when you run `Get-ChildItem Env:` you then do one of the following.
+On Windows, you'll need to set an environment variable `$Env:HOME` before
+you can start the dev environment. It should be the same value as
+`$Env:USERPROFILE`, or whatever you need it to be. Once set and it shows up in
+Powershell when you run `Get-ChildItem Env:` you then do one of the following.
 
 ### Run Docker
 
