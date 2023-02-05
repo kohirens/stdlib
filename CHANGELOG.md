@@ -3,7 +3,7 @@
 
 
 <a name="0.4.0"></a>
-## [0.4.0] - 2021-05-31
+## [0.4.0] - 2023-02-05
 ### Added
 - Slice Prepend Functions
 
