@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="0.4.0"></a>
+## [0.4.0] - 2021-05-31
+### Added
+- Slice Prepend Functions
+
+
 <a name="0.3.0"></a>
 ## [0.3.0] - 2023-02-04
 ### Added
@@ -56,7 +62,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/0.3.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/0.4.0...HEAD
+[0.4.0]: https://github.com/kohirens/stdlib.git/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/kohirens/stdlib.git/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/kohirens/stdlib.git/compare/0.1.2...0.2.0
 [0.1.2]: https://github.com/kohirens/stdlib.git/compare/0.1.1...0.1.2
