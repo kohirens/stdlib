@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="0.5.0"></a>
+## [0.5.0] - 2023-02-08
+### Added
+- CopyToDir Function
+
+
 <a name="0.4.0"></a>
 ## [0.4.0] - 2023-02-05
 ### Added
@@ -62,7 +68,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/kohirens/stdlib.git/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/kohirens/stdlib.git/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/kohirens/stdlib.git/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/kohirens/stdlib.git/compare/0.1.2...0.2.0
