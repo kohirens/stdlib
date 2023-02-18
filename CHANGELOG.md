@@ -2,6 +2,16 @@
 ## [Unreleased]
 
 
+<a name="1.0.0"></a>
+## [1.0.0] - 2023-02-18
+### Added
+- kstring Package
+
+### Changed
+- Removed Obsolete Log Functions
+- Moved StrToCamel Into kstring Package
+
+
 <a name="0.5.0"></a>
 ## [0.5.0] - 2023-02-08
 ### Added
@@ -68,7 +78,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/0.5.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/kohirens/stdlib.git/compare/0.5.0...1.0.0
 [0.5.0]: https://github.com/kohirens/stdlib.git/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/kohirens/stdlib.git/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/kohirens/stdlib.git/compare/0.2.0...0.3.0
