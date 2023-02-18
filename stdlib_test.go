@@ -1,27 +1,23 @@
 package stdlib
 
 import (
+	"github.com/kohirens/stdlib/internal/test"
 	"testing"
 )
 
-const (
-	FIXTURES_DIR = "testdata"
-	TEST_TMP     = "testtmp"
-)
-
-func TestPathExist(test *testing.T) {
+func TestPathExist(runner *testing.T) {
 
 	cases := []struct {
 		name, path string
 		want       bool
 	}{
-		{"existIsTrue", FIXTURES_DIR + "/file-exist-01.md", true},
-		{"existIsFalse", FIXTURES_DIR + "/file-does-not-exist-01.md", false},
-		{"invalidPathIsFalse", FIXTURES_DIR + "https://github.com/kohirens/tmpl-go-web/archive/refs/heads/main.zip\\template.json", false},
+		{"existIsTrue", test.FixtureDir + "/file-exist-01.md", true},
+		{"existIsFalse", test.FixtureDir + "/file-does-not-exist-01.md", false},
+		{"invalidPathIsFalse", test.FixtureDir + "https://github.com/kohirens/tmpl-go-web/archive/refs/heads/main.zip\\template.json", false},
 	}
 
 	for _, sbj := range cases {
-		test.Run(sbj.name, func(t *testing.T) {
+		runner.Run(sbj.name, func(t *testing.T) {
 			got := PathExist(sbj.path)
 
 			if got != sbj.want {
@@ -105,9 +101,9 @@ func TestDirExist(t *testing.T) {
 		name, path string
 		want       bool
 	}{
-		{"dirExist", FIXTURES_DIR + "/dir_that_exist", true},
-		{"isFileNotDir", FIXTURES_DIR + "/dir_that_exist/file_that_exists.md", false},
-		{"doesNotExists", FIXTURES_DIR + "/dir_that_exist/dir-does-not-exist", false},
+		{"dirExist", test.FixtureDir + "/dir_that_exist", true},
+		{"isFileNotDir", test.FixtureDir + "/dir_that_exist/file_that_exists.md", false},
+		{"doesNotExists", test.FixtureDir + "/dir_that_exist/dir-does-not-exist", false},
 	}
 
 	for _, sbj := range cases {
