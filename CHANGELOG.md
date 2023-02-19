@@ -3,7 +3,10 @@
 
 
 <a name="1.0.1"></a>
-## [1.0.1] - 2023-02-18
+## [1.0.1] - 2023-02-19
+### Fixed
+- File Extension Checker File Handling
+
 
 <a name="1.0.0"></a>
 ## [1.0.0] - 2023-02-18
