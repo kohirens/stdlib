@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="1.1.0"></a>
+## [1.1.0] - 2023-02-19
+### Added
+- Normalize Path Function
+
+
 <a name="1.0.1"></a>
 ## [1.0.1] - 2023-02-19
 ### Fixed
@@ -84,7 +90,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/kohirens/stdlib.git/compare/1.0.1...1.1.0
 [1.0.1]: https://github.com/kohirens/stdlib.git/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/kohirens/stdlib.git/compare/0.5.0...1.0.0
 [0.5.0]: https://github.com/kohirens/stdlib.git/compare/0.4.0...0.5.0
