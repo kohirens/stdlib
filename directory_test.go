@@ -31,3 +31,25 @@ func TestCopyToDir(t *testing.T) {
 		})
 	}
 }
+
+func TestNormalizePath(t *testing.T) {
+	testCases := []struct {
+		name string
+		path string
+		want string
+	}{
+		{"windowsOnUnix", "\\windows\\path\\on\\uUnix", PS + "windows" + PS + "path" + PS + "on" + PS + "uUnix"},
+		{"unixOnWindows", "/unix/on/windows", PS + "unix" + PS + "on" + PS + "windows"},
+		{"mixedBag", "/i\\dont\\care/really", PS + "i" + PS + "dont" + PS + "care" + PS + "really"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := NormalizePath(tc.path)
+
+			if got != tc.want {
+				t.Errorf("got %v, want %v", got, tc.want)
+			}
+		})
+	}
+}

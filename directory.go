@@ -3,6 +3,7 @@ package stdlib
 import (
 	"io"
 	"os"
+	"strings"
 )
 
 // CopyToDir Copy a file to a directory.
@@ -24,4 +25,10 @@ func CopyToDir(sourcePath, destDir, separator string) (int64, error) {
 	}
 
 	return io.Copy(dFile, sFile)
+}
+
+// NormalizePath Normalize the path separator.
+func NormalizePath(p string) string {
+	str := strings.ReplaceAll(p, "/", PS)
+	return strings.ReplaceAll(str, "\\", PS)
 }
