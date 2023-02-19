@@ -3,7 +3,7 @@ package stdlib
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -64,28 +64,32 @@ func DirExist(path string) bool {
 	return true
 }
 
-// IsValid Returns true for files that match allowed extensions.
-func (fec *FileExtChecker) IsValid(file string) (ret bool) {
-	ret = false
-
-	ext := strings.Trim(path.Ext(file), ".")
+// IsValid Returns true for files that match allowed or excluded extensions.
+// Passing a full path only checks the basename.
+// Default to include all files.
+// If a file has no extension, then use its basename.
+func (fec *FileExtChecker) IsValid(file string) bool {
+	basename := filepath.Base(file) // account for hidden directories
+	ext := strings.Trim(filepath.Ext(basename), ".")
+	// when there is no extension (unix/linux/mac) use the basename
+	if len(ext) == 0 && len(basename) > 1 {
+		ext = basename
+	}
 
 	if ext != "" {
 		for _, t := range *fec.excludes {
-			ret = true
 			if t == ext {
 				return false
 			}
 		}
 		for _, t := range *fec.includes {
 			if t == ext {
-				ret = true
-				break
+				return true
 			}
 		}
 	}
 
-	return
+	return true
 }
 
 // PathExist true for a directory/file and false otherwise.
