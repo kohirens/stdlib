@@ -1,6 +1,6 @@
 # Kohirens STDLIB
 
-A library of reusable code throughout Kohirens projects.
+A library of reusable code.
 
 ## Status Badges
 
