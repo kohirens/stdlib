@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="1.2.0"></a>
+## [1.2.0] - 2023-03-24
+### Added
+- Test Package
+
+
 <a name="1.1.0"></a>
 ## [1.1.0] - 2023-02-19
 ### Added
@@ -90,7 +96,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/kohirens/stdlib.git/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/kohirens/stdlib.git/compare/1.0.1...1.1.0
 [1.0.1]: https://github.com/kohirens/stdlib.git/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/kohirens/stdlib.git/compare/0.5.0...1.0.0
