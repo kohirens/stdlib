@@ -55,6 +55,7 @@ func Warnf(message string, vars ...interface{}) {
 func verboseF(lvl int, messageTmpl string, vars ...interface{}) {
 	if lvl == VerboseLvlError || lvl == VerboseLvlFatal {
 		_, _ = fmt.Fprintf(os.Stderr, messageTmpl, vars...)
+		fmt.Println()
 	} else if VerbosityLevel >= lvl {
 		fmt.Printf(messageTmpl, vars...)
 		fmt.Println()
