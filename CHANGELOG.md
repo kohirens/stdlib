@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="1.4.0"></a>
+## [1.4.0] - 2023-05-28
+### Added
+- Method To Setup A Tmp Git Repository
+
+
 <a name="1.3.0"></a>
 ## [1.3.0] - 2023-04-30
 ### Added
@@ -102,7 +108,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.3.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.4.0...HEAD
+[1.4.0]: https://github.com/kohirens/stdlib.git/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/kohirens/stdlib.git/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/kohirens/stdlib.git/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/kohirens/stdlib.git/compare/1.0.1...1.1.0
