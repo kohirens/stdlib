@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="1.6.0"></a>
+## [1.6.0] - 2023-05-28
+### Added
+- AbsPath To Test Package
+
+
 <a name="1.5.0"></a>
 ## [1.5.0] - 2023-05-28
 ### Added
@@ -114,7 +120,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.5.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.6.0...HEAD
+[1.6.0]: https://github.com/kohirens/stdlib.git/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/kohirens/stdlib.git/compare/1.4.0...1.5.0
 [1.4.0]: https://github.com/kohirens/stdlib.git/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/kohirens/stdlib.git/compare/1.2.0...1.3.0
