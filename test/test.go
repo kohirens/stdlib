@@ -6,10 +6,20 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
 )
+
+// AbsPath  Return the absolute path of the directory or panic if error.
+func AbsPath(dir string) string {
+	tmp, err1 := filepath.Abs(dir)
+	if err1 != nil {
+		panic(fmt.Sprintf("could not get absolute path for %s: %v", dir, err1.Error()))
+	}
+	return tmp
+}
 
 // GetTestBinCmd return a command to run the test binary in a sub-process, passing it flags as fixtures to produce expected output; `TestMain`, will be run automatically.
 func GetTestBinCmd(subEnvVarName string, args []string) *exec.Cmd {
