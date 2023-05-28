@@ -39,6 +39,19 @@ func GetTestBinCmd(subEnvVarName string, args []string) *exec.Cmd {
 	return cmd
 }
 
+// ResetDir Reset a directory by emptying it out.
+func ResetDir(directory string, mode os.FileMode) {
+	// Delete all files in the directory and the directory itself.
+	if e := os.RemoveAll(directory); e != nil {
+		panic(fmt.Sprintf("could not clean up all files in %v directory", directory))
+	}
+
+	// Make the directory
+	if e := os.Mkdir(directory, mode); e != nil {
+		panic(fmt.Sprintf("could not make %v directory", directory))
+	}
+}
+
 // Silencer return a function that prevents output during a test run.
 func Silencer() func() {
 	// Abort in verbose mode.
