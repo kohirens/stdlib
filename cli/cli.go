@@ -4,27 +4,33 @@ import (
 	"github.com/kohirens/stdlib/log"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 type CommandRunner func(program, workDir string, args ...string) (cmdOut []byte, cmdErr error, exitCode int)
 
-// RunCommand run an external program.
-func RunCommand(program, workDir string, args ...string) (cmdOut []byte, cmdErr error, exitCode int) {
+// RunCommand run an external program in a sub process.
+func RunCommand(
+	workDir, program string,
+	args []string,
+	env map[string]string,
+	input []byte,
+) (cmdOut []byte, cmdErr error, exitCode int) {
 	cmd := exec.Command(program, args...)
-	cmd.Env = os.Environ()
 	cmd.Dir = workDir
-	cmdOut, cmdErr = cmd.CombinedOutput()
-	exitCode = cmd.ProcessState.ExitCode()
+	ce := os.Environ()
 
-	log.Infof("sub command run: %q", cmd.String())
-	return
-}
+	if env != nil {
+		for i, kv := range ce {
+			p := strings.Split(kv, "=")
+			v, ok := env[p[0]]
+			if ok {
+				ce[i] = p[0] + "=" + v
+			}
+		}
+	}
 
-// RunCommandWithInput run an external program.
-func RunCommandWithInput(workDir string, input []byte, program string, args ...string) (cmdOut []byte, cmdErr error, exitCode int) {
-	cmd := exec.Command(program, args...)
-	cmd.Env = os.Environ()
-	cmd.Dir = workDir
+	cmd.Env = ce
 
 	if input != nil {
 		cmdIn, err1 := cmd.StdinPipe()
