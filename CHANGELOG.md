@@ -2,6 +2,15 @@
 ## [Unreleased]
 
 
+<a name="2.0.0"></a>
+## [2.0.0] - 2023-06-13
+### Added
+- Function RunCommandWithInputAndEnv
+
+### Changed
+- RunCommand In CLI Package
+
+
 <a name="1.9.0"></a>
 ## [1.9.0] - 2023-06-08
 ### Added
@@ -138,7 +147,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/1.9.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/kohirens/stdlib.git/compare/1.9.0...2.0.0
 [1.9.0]: https://github.com/kohirens/stdlib.git/compare/1.8.0...1.9.0
 [1.8.0]: https://github.com/kohirens/stdlib.git/compare/1.7.0...1.8.0
 [1.7.0]: https://github.com/kohirens/stdlib.git/compare/1.6.0...1.7.0
