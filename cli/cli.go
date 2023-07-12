@@ -6,18 +6,18 @@ import (
 	"strings"
 )
 
-type CommandRunner func(wd, program string, args ...string) (cmdOut []byte, cmdErr error, exitCode int, cmdStr string)
-type CommandRunnerWithInput func(wd, program string, args ...string) (cmdOut []byte, cmdErr error, exitCode int, cmdStr string)
-type CommandRunnerWithInputAndEnv func(wd, program string, args ...string) (cmdOut []byte, cmdErr error, exitCode int, cmdStr string)
+type CommandRunner func(wd, program string, args ...string) ([]byte, error, int, string)
+type CommandRunnerWithInput func(wd, program string, args ...string) ([]byte, error, int, string)
+type CommandRunnerWithInputAndEnv func(wd, program string, args ...string) ([]byte, error, int, string)
 
 // RunCommand run an external program in a sub process.
-func RunCommand(wd, program string, args []string) (cmdOut []byte, cmdErr error, exitCode int, cmdStr string) {
+func RunCommand(wd, program string, args []string) ([]byte, error, int, string) {
 	return RunCommandWithInputAndEnv(wd, program, args, nil, nil)
 }
 
 // RunCommandWithInput run an external program in a sub process, allowing with
 // input.
-func RunCommandWithInput(wd string, program string, args []string, input []byte) (cmdOut []byte, cmdErr error, exitCode int, cmdStr string) {
+func RunCommandWithInput(wd string, program string, args []string, input []byte) ([]byte, error, int, string) {
 	return RunCommandWithInputAndEnv(wd, program, args, input, nil)
 }
 
@@ -31,7 +31,7 @@ func RunCommandWithInputAndEnv(
 	args []string,
 	input []byte,
 	env map[string]string,
-) (cmdOut []byte, cmdErr error, exitCode int, cmdStr string) {
+) ([]byte, error, int, string) {
 	cmd := exec.Command(program, args...)
 	cmd.Dir = wd
 	ce := os.Environ()
@@ -60,11 +60,11 @@ func RunCommandWithInputAndEnv(
 		}
 	}
 
-	cmdOut, cmdErr = cmd.CombinedOutput()
-	exitCode = cmd.ProcessState.ExitCode()
-	cmdStr = cmd.String()
+	cmdOut, cmdErr := cmd.CombinedOutput()
+	exitCode := cmd.ProcessState.ExitCode()
+	cmdStr := cmd.String()
 
-	return
+	return cmdOut, cmdErr, exitCode, cmdStr
 }
 
 // AmendStringAry where []string (like os.Environ()) is string of key=value
