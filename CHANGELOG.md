@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="2.1.1"></a>
+## [2.1.1] - 2023-07-12
+### Changed
+- Return Style For CLI RunCommand
+
+
 <a name="2.1.0"></a>
 ## [2.1.0] - 2023-07-06
 ### Added
@@ -153,7 +159,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.1.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.1.1...HEAD
+[2.1.1]: https://github.com/kohirens/stdlib.git/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/kohirens/stdlib.git/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/kohirens/stdlib.git/compare/1.9.0...2.0.0
 [1.9.0]: https://github.com/kohirens/stdlib.git/compare/1.8.0...1.9.0
