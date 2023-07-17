@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="2.2.0"></a>
+## [2.2.0] - 2023-07-17
+### Added
+- Package io
+
+
 <a name="2.1.1"></a>
 ## [2.1.1] - 2023-07-12
 ### Changed
@@ -159,7 +165,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.1.1...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.2.0...HEAD
+[2.2.0]: https://github.com/kohirens/stdlib.git/compare/2.1.1...2.2.0
 [2.1.1]: https://github.com/kohirens/stdlib.git/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/kohirens/stdlib.git/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/kohirens/stdlib.git/compare/1.9.0...2.0.0
