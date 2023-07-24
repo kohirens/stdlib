@@ -3,7 +3,7 @@
 
 
 <a name="2.4.0"></a>
-## [2.4.0] - 2023-07-20
+## [2.4.0] - 2023-07-24
 ### Added
 - NewReadCloser To io Package
 
