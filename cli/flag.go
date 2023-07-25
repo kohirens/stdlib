@@ -36,7 +36,7 @@ var UsageTmpl = `
 {{printf "%-14s %v" .command .summary}}
 {{end}}
 
-Usage: {{ .appName }} [subcommand] -[options] <args>
+Usage: {{ .appName }} [subcommand] [options] <args>
 
 Options:
 `
