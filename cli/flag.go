@@ -41,6 +41,8 @@ Usage: {{ .appName }} [subcommand] [options] <args>
 Options:
 `
 
+var UsageTmplVars = map[string]string{}
+
 // Usage Print the usage documentation.
 func Usage(appName string, um map[string]string, subcommands map[string]*flag.FlagSet) error {
 	tmpl, err1 := template.New("Usage").Parse(UsageTmpl)
@@ -60,11 +62,11 @@ func Usage(appName string, um map[string]string, subcommands map[string]*flag.Fl
 	flag.VisitAll(func(f *flag.Flag) { // global flags
 		m, ok := um[f.Name]
 		if ok {
-			td := map[string]string{
-				"option": f.Name, "info": m, "dv": f.Value.String(),
-			}
+			UsageTmplVars["option"] = f.Name
+			UsageTmplVars["info"] = m
+			UsageTmplVars["dv"] = f.Value.String()
 
-			if e := tmpl.ExecuteTemplate(os.Stdout, "option", td); e != nil {
+			if e := tmpl.ExecuteTemplate(os.Stdout, "option", UsageTmplVars); e != nil {
 				err2 = e
 				return
 			}
@@ -72,10 +74,10 @@ func Usage(appName string, um map[string]string, subcommands map[string]*flag.Fl
 	})
 
 	for command, flagSet := range subcommands {
-		td := map[string]string{
-			"command": command, "summary": um[command],
-		}
-		if e := tmpl.ExecuteTemplate(os.Stdout, "subcommand", td); e != nil {
+		UsageTmplVars["command"] = command
+		UsageTmplVars["summary"] = um[command]
+
+		if e := tmpl.ExecuteTemplate(os.Stdout, "subcommand", UsageTmplVars); e != nil {
 			err2 = e
 			break
 		}
@@ -83,10 +85,11 @@ func Usage(appName string, um map[string]string, subcommands map[string]*flag.Fl
 		flagSet.VisitAll(func(f *flag.Flag) { // global flags
 			m, ok := um[command+"_"+f.Name]
 			if ok {
-				td = map[string]string{
-					"option": f.Name, "info": m, "dv": f.Value.String(),
-				}
-				if e := tmpl.ExecuteTemplate(os.Stdout, "option", td); e != nil {
+				UsageTmplVars["option"] = f.Name
+				UsageTmplVars["info"] = m
+				UsageTmplVars["dv"] = f.Value.String()
+
+				if e := tmpl.ExecuteTemplate(os.Stdout, "option", UsageTmplVars); e != nil {
 					err2 = e
 					return
 				}
