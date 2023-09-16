@@ -2,6 +2,13 @@
 ## [Unreleased]
 
 
+<a name="2.5.1"></a>
+## [2.5.1] - 2023-09-16
+### Changed
+- Subcommand Template Optional
+- Package cli Usage Output
+
+
 <a name="2.5.0"></a>
 ## [2.5.0] - 2023-07-25
 ### Added
@@ -186,7 +193,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.5.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.5.1...HEAD
+[2.5.1]: https://github.com/kohirens/stdlib.git/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/kohirens/stdlib.git/compare/2.4.0...2.5.0
 [2.4.0]: https://github.com/kohirens/stdlib.git/compare/2.3.0...2.4.0
 [2.3.0]: https://github.com/kohirens/stdlib.git/compare/2.2.0...2.3.0
