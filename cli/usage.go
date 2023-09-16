@@ -55,35 +55,37 @@ func Usage(appName string, um map[string]string, subcommands map[string]*flag.Fl
 		}
 	})
 
-	for command, flagSet := range subcommands {
-		UsageTmplVars["command"] = command
-		UsageTmplVars["Command"] = command
-		UsageTmplVars["summary"] = um[command]
-		UsageTmplVars["Summary"] = um[command]
+	if sct := tmpl.Lookup("subcommand"); sct != nil {
+		for command, flagSet := range subcommands {
+			UsageTmplVars["command"] = command
+			UsageTmplVars["Command"] = command
+			UsageTmplVars["summary"] = um[command]
+			UsageTmplVars["Summary"] = um[command]
 
-		if e := tmpl.ExecuteTemplate(os.Stdout, "subcommand", UsageTmplVars); e != nil {
-			err2 = e
-			break
-		}
-
-		flagSet.VisitAll(func(f *flag.Flag) { // global flags
-			m, ok := um[command+"_"+f.Name]
-			if ok {
-				UsageTmplVars["option"] = f.Name
-				UsageTmplVars["OptionName"] = f.Name
-				UsageTmplVars["info"] = m
-				UsageTmplVars["OptionInfo"] = m
-				UsageTmplVars["dv"] = f.Value.String()
-				UsageTmplVars["DefaultVal"] = f.Value.String()
-
-				if e := tmpl.ExecuteTemplate(os.Stdout, "option", UsageTmplVars); e != nil {
-					err2 = e
-					return
-				}
+			if e := tmpl.ExecuteTemplate(os.Stdout, "subcommand", UsageTmplVars); e != nil {
+				err2 = e
+				break
 			}
-		})
-		if err2 != nil {
-			break
+
+			flagSet.VisitAll(func(f *flag.Flag) { // global flags
+				m, ok := um[command+"_"+f.Name]
+				if ok {
+					UsageTmplVars["option"] = f.Name
+					UsageTmplVars["OptionName"] = f.Name
+					UsageTmplVars["info"] = m
+					UsageTmplVars["OptionInfo"] = m
+					UsageTmplVars["dv"] = f.Value.String()
+					UsageTmplVars["DefaultVal"] = f.Value.String()
+
+					if e := tmpl.ExecuteTemplate(os.Stdout, "option", UsageTmplVars); e != nil {
+						err2 = e
+						return
+					}
+				}
+			})
+			if err2 != nil {
+				break
+			}
 		}
 	}
 
