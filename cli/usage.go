@@ -38,7 +38,7 @@ func Usage(appName string, um map[string]string, subcommands map[string]*flag.Fl
 	if err1 != nil {
 		return fmt.Errorf(stderr.UsageTmplParse, err1.Error())
 	}
-	UsageTmplVars["appName"] = appName
+
 	UsageTmplVars["AppName"] = appName
 	oht := tmpl.Lookup("optionHeader")
 
@@ -104,7 +104,6 @@ func executeOptionTmpl(tmpl, oht *template.Template, flags *flag.FlagSet, um Mes
 		if ok {
 			UsageTmplVars["OptionName"] = f.Name
 			UsageTmplVars["OptionInfo"] = m
-			UsageTmplVars["dv"] = f.Value.String()
 			UsageTmplVars["DefaultVal"] = f.Value.String()
 
 			if e := tmpl.ExecuteTemplate(os.Stdout, "option", UsageTmplVars); e != nil {
