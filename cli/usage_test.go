@@ -10,10 +10,12 @@ import (
 
 func TestUsage(t *testing.T) {
 	var help bool
-	var opt1 string
+	var opt1, opt2, version string
 	flag.BoolVar(&help, "help", false, "")
+	flag.StringVar(&version, "version", "", "")
 	fixedSubCmd := flag.NewFlagSet("test-cmd", flag.ExitOnError)
-	fixedSubCmd.StringVar(&opt1, "opt1", "", "opt1 info")
+	fixedSubCmd.StringVar(&opt1, "opt1", "", "")
+	fixedSubCmd.StringVar(&opt2, "opt2", "", "")
 	flag.Parse()
 	fixedSubCmd.Parse(flag.Args())
 
@@ -27,8 +29,10 @@ func TestUsage(t *testing.T) {
 			"display usage message",
 			map[string]string{
 				"help":          "display this help",
+				"version":       "display version info",
 				"test-cmd":      "test-cmd summary",
 				"test-cmd_opt1": "opt1 summary",
+				"test-cmd_opt2": "opt2 summary",
 			},
 			map[string]*flag.FlagSet{
 				"test-cmd": fixedSubCmd,
@@ -41,6 +45,8 @@ options:
 
   -help        display this help (default = false)
 
+  -version     display version info
+
 test-cmd       test-cmd summary
 
 usage: tester [global options] test-cmd [options] <args>
@@ -48,6 +54,8 @@ usage: tester [global options] test-cmd [options] <args>
 options:
 
   -opt1        opt1 summary
+
+  -opt2        opt2 summary
 `,
 		},
 	}
