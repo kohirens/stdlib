@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="2.5.2"></a>
+## [2.5.2] - 2023-09-17
+### Fixed
+- Duplicate Option Header
+
+
 <a name="2.5.1"></a>
 ## [2.5.1] - 2023-09-16
 ### Changed
@@ -193,7 +199,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.5.1...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.5.2...HEAD
+[2.5.2]: https://github.com/kohirens/stdlib.git/compare/2.5.1...2.5.2
 [2.5.1]: https://github.com/kohirens/stdlib.git/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/kohirens/stdlib.git/compare/2.4.0...2.5.0
 [2.4.0]: https://github.com/kohirens/stdlib.git/compare/2.3.0...2.4.0
