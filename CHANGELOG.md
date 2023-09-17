@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="3.0.0"></a>
+## [3.0.0] - 2023-09-17
+### Removed
+- All Lowercase Variables From cli Usage
+
+
 <a name="2.5.2"></a>
 ## [2.5.2] - 2023-09-17
 ### Fixed
@@ -199,7 +205,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/2.5.2...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/3.0.0...HEAD
+[3.0.0]: https://github.com/kohirens/stdlib.git/compare/2.5.2...3.0.0
 [2.5.2]: https://github.com/kohirens/stdlib.git/compare/2.5.1...2.5.2
 [2.5.1]: https://github.com/kohirens/stdlib.git/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/kohirens/stdlib.git/compare/2.4.0...2.5.0
