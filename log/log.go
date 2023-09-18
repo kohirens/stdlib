@@ -33,6 +33,7 @@ func Errf(message string, vars ...interface{}) {
 // Fatf Print a fatal message to stderr.
 func Fatf(message string, vars ...interface{}) {
 	verboseF(VerboseLvlFatal, message, vars...)
+	os.Exit(1)
 }
 
 // Infof Print an informational message to stdout.
@@ -53,11 +54,16 @@ func Warnf(message string, vars ...interface{}) {
 // verboseF Print log message based on the verbosity level. Prints a
 // newline after every message.
 func verboseF(lvl int, messageTmpl string, vars ...interface{}) {
+	var err1 error
 	if lvl == VerboseLvlError || lvl == VerboseLvlFatal {
-		_, _ = fmt.Fprintf(os.Stderr, messageTmpl, vars...)
+		_, err1 = fmt.Fprintf(os.Stderr, messageTmpl, vars...)
 		fmt.Println()
 	} else if VerbosityLevel >= lvl {
-		fmt.Printf(messageTmpl, vars...)
+		_, err1 = fmt.Fprintf(os.Stdout, messageTmpl, vars...)
 		fmt.Println()
+	}
+
+	if err1 != nil {
+		panic(err1)
 	}
 }
