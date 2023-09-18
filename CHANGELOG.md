@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="3.1.0"></a>
+## [3.1.0] - 2023-09-18
+### Added
+- OS Exit To Fatal
+
+
 <a name="3.0.0"></a>
 ## [3.0.0] - 2023-09-17
 ### Removed
@@ -205,7 +211,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/3.0.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/3.1.0...HEAD
+[3.1.0]: https://github.com/kohirens/stdlib.git/compare/3.0.0...3.1.0
 [3.0.0]: https://github.com/kohirens/stdlib.git/compare/2.5.2...3.0.0
 [2.5.2]: https://github.com/kohirens/stdlib.git/compare/2.5.1...2.5.2
 [2.5.1]: https://github.com/kohirens/stdlib.git/compare/2.5.0...2.5.1
