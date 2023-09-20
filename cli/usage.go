@@ -41,14 +41,17 @@ func Usage(appName string, um map[string]string, subcommands map[string]*flag.Fl
 
 	UsageTmplVars["AppName"] = appName
 	oht := tmpl.Lookup("optionHeader")
+	ot := tmpl.Lookup("option")
 
 	if e := tmpl.Execute(os.Stdout, UsageTmplVars); e != nil {
 		return fmt.Errorf(stderr.UsageTmplExecute, e.Error())
 	}
 
 	var err2 error
-	if e := executeOptionTmpl(tmpl, oht, flag.CommandLine, um, ""); e != nil {
-		return e
+	if ot != nil {
+		if e := executeOptionTmpl(ot, oht, flag.CommandLine, um, ""); e != nil {
+			return e
+		}
 	}
 
 	if sct := tmpl.Lookup("subcommand"); sct != nil {
@@ -60,10 +63,11 @@ func Usage(appName string, um map[string]string, subcommands map[string]*flag.Fl
 				err2 = e
 				break
 			}
-
-			if e := executeOptionTmpl(tmpl, oht, flagSet, um, command); e != nil {
-				err2 = e
-				break
+			if ot != nil {
+				if e := executeOptionTmpl(ot, oht, flagSet, um, command); e != nil {
+					err2 = e
+					break
+				}
 			}
 		}
 	}
