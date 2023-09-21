@@ -41,7 +41,7 @@ func TestUsage(t *testing.T) {
 
 Usage: tester [command] [options] <args>
 
-options:
+Options:
 
   -help        display this help (default = false)
 
@@ -49,9 +49,9 @@ options:
 
 test-cmd       test-cmd summary
 
-usage: tester [global options] test-cmd [options] <args>
+Usage: tester [global options] test-cmd [options] <args>
 
-options:
+Options:
 
   -opt1        opt1 summary
 
