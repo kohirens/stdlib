@@ -54,6 +54,7 @@ var (
 	usageVars     = StringMap{}
 )
 
+// AddCommand Add command usage information.
 func AddCommand(name, summary string, um StringMap, flags *flag.FlagSet) *Command {
 	c := &Command{
 		flags,
@@ -63,6 +64,12 @@ func AddCommand(name, summary string, um StringMap, flags *flag.FlagSet) *Comman
 	}
 
 	subcommands = append(subcommands, c)
+
+	flags.Usage = func() {
+		if e := UsageV2(name); e != nil {
+			panic(e)
+		}
+	}
 
 	return c
 }
@@ -79,6 +86,12 @@ func AddGlobalCommand(name, summary, tmplStr string, msgs, vars StringMap) *Comm
 	usageVars["AppName"] = name
 
 	AddTmpl(name, tmplStr, vars)
+
+	flag.Usage = func() {
+		if e := UsageV2(name); e != nil {
+			panic(e)
+		}
+	}
 
 	return command
 }
@@ -152,6 +165,8 @@ func UsageV2(name string) error {
 	if !ok || tmplStr == "" { // use the default when non provided
 		tmplStr = defaultUsageTmpl
 	}
+
+	usageVars["Command"] = name
 
 	if e := printUsage(name, tmplStr, usageVars); e != nil {
 		return e
