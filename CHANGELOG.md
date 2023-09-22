@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="3.2.1"></a>
+## [3.2.1] - 2023-09-22
+### Changed
+- Usage Interface Feature For cli Package
+
+
 <a name="3.2.0"></a>
 ## [3.2.0] - 2023-09-22
 ### Added
@@ -223,7 +229,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/3.2.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/3.2.1...HEAD
+[3.2.1]: https://github.com/kohirens/stdlib.git/compare/3.2.0...3.2.1
 [3.2.0]: https://github.com/kohirens/stdlib.git/compare/3.1.1...3.2.0
 [3.1.1]: https://github.com/kohirens/stdlib.git/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/kohirens/stdlib.git/compare/3.0.0...3.1.0
