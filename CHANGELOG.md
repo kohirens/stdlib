@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="3.2.0"></a>
+## [3.2.0] - 2023-09-21
+### Added
+- Interface Features
+
+
 <a name="3.1.1"></a>
 ## [3.1.1] - 2023-09-20
 ### Changed
@@ -217,7 +223,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/3.1.1...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/3.2.0...HEAD
+[3.2.0]: https://github.com/kohirens/stdlib.git/compare/3.1.1...3.2.0
 [3.1.1]: https://github.com/kohirens/stdlib.git/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/kohirens/stdlib.git/compare/3.0.0...3.1.0
 [3.0.0]: https://github.com/kohirens/stdlib.git/compare/2.5.2...3.0.0
