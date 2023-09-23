@@ -1,4 +1,4 @@
-package kstring
+package str
 
 import (
 	"bytes"
@@ -17,7 +17,7 @@ func InArray(currFile string, files []string) bool {
 	return false
 }
 
-// StrToCamel convert a dash/underscore separated string to camel case. Works great on pretty/vanity URLs.
+// ToCamelCase convert a dash/underscore separated string to camel case. Works great on pretty/vanity URLs.
 //
 // camel case - a typographical convention in which an initial capital is
 // used for the first letter of a word forming the second element of a
@@ -25,7 +25,7 @@ func InArray(currFile string, files []string) bool {
 //
 // Pascal case -- or PascalCase - is a programming naming convention where
 // the first letter of each compound word in a variable is capitalized.
-func StrToCamel(subject, separate string, pascal bool) (string, error) {
+func ToCamelCase(subject, separate string, pascal bool) (string, error) {
 	if len(subject) < 1 {
 		return subject, fmt.Errorf("there is nothing to do, the string is empty %q", subject)
 	}

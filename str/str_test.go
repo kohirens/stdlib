@@ -1,4 +1,4 @@
-package kstring
+package str
 
 import "testing"
 
@@ -38,7 +38,7 @@ func TestStrToCamel(runner *testing.T) {
 
 	for _, tc := range cases { // tc stands for test case
 		runner.Run(tc.name, func(t *testing.T) {
-			got, err := StrToCamel(tc.subject, tc.separator, tc.pascal)
+			got, err := ToCamelCase(tc.subject, tc.separator, tc.pascal)
 
 			if err != nil {
 				t.Errorf("got an unexpected error: %v", err.Error())
