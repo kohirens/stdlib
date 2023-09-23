@@ -1,15 +1,16 @@
-package test
+package git
 
 import (
 	"fmt"
-	"github.com/kohirens/stdlib"
+	"github.com/kohirens/stdlib/path"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 )
 
-func SetupARepository(bundleName, tmpDir, bundleDir, ps string) string {
+// CloneFromBundle Set up a repository from a git bundle.
+func CloneFromBundle(bundleName, tmpDir, bundleDir, ps string) string {
 	repoPath := tmpDir + ps + bundleName
 
 	// It may have already been unbundled.
@@ -29,7 +30,7 @@ func SetupARepository(bundleName, tmpDir, bundleDir, ps string) string {
 
 	srcRepo := wd + ps + bundleDir + ps + bundleName + ".bundle"
 	// It may not exist.
-	if !stdlib.PathExist(srcRepo) {
+	if !path.Exist(srcRepo) {
 		panic(fmt.Sprintf("%v bundle not found", srcRepo))
 	}
 
