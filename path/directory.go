@@ -1,9 +1,8 @@
-package stdlib
+package path
 
 import (
 	"io"
 	"os"
-	"strings"
 )
 
 // CopyToDir Copy a file to a directory.
@@ -27,8 +26,14 @@ func CopyToDir(sourcePath, destDir, separator string) (int64, error) {
 	return io.Copy(dFile, sFile)
 }
 
-// NormalizePath Normalize the path separator.
-func NormalizePath(p string) string {
-	str := strings.ReplaceAll(p, "/", PS)
-	return strings.ReplaceAll(str, "\\", PS)
+// DirExist Those rare times when you just need to check if a string path is a
+// directory and not a file.
+func DirExist(path string) bool {
+	fileObj, err := os.Stat(path)
+
+	if os.IsNotExist(err) || !fileObj.IsDir() {
+		return false
+	}
+
+	return true
 }

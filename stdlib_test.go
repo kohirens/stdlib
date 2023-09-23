@@ -1,31 +1,8 @@
 package stdlib
 
 import (
-	"github.com/kohirens/stdlib/internal/test"
 	"testing"
 )
-
-func TestPathExist(runner *testing.T) {
-
-	cases := []struct {
-		name, path string
-		want       bool
-	}{
-		{"existIsTrue", test.FixtureDir + "/file-exist-01.md", true},
-		{"existIsFalse", test.FixtureDir + "/file-does-not-exist-01.md", false},
-		{"invalidPathIsFalse", test.FixtureDir + "https://github.com/kohirens/tmpl-go-web/archive/refs/heads/main.zip\\template.json", false},
-	}
-
-	for _, sbj := range cases {
-		runner.Run(sbj.name, func(t *testing.T) {
-			got := PathExist(sbj.path)
-
-			if got != sbj.want {
-				t.Errorf("got %v, want %v", got, sbj.want)
-			}
-		})
-	}
-}
 
 func TestIsTextFile(tester *testing.T) {
 	cases := []struct {
@@ -76,23 +53,4 @@ func TestIsTextFile(tester *testing.T) {
 			t.Errorf("got %v, want %v, for %v", got, fxtr.want, fxtr.path)
 		}
 	})
-}
-
-func TestDirExist(t *testing.T) {
-	cases := []struct {
-		name, path string
-		want       bool
-	}{
-		{"dirExist", test.FixtureDir + "/dir_that_exist", true},
-		{"isFileNotDir", test.FixtureDir + "/dir_that_exist/file_that_exists.md", false},
-		{"doesNotExists", test.FixtureDir + "/dir_that_exist/dir-does-not-exist", false},
-	}
-
-	for _, sbj := range cases {
-		got := DirExist(sbj.path)
-
-		if got != sbj.want {
-			t.Errorf("got %v, want %v", got, sbj.want)
-		}
-	}
 }

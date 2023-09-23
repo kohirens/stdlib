@@ -53,17 +53,6 @@ func NewFileExtCheckerStr(el, in []string) (*FileExtChecker, error) {
 	return NewFileExtChecker(&el, &in)
 }
 
-// DirExist Check if a string path exist.
-func DirExist(path string) bool {
-	fileObj, err := os.Stat(path)
-
-	if os.IsNotExist(err) || !fileObj.IsDir() {
-		return false
-	}
-
-	return true
-}
-
 // IsValid Returns true for files that match allowed or excluded extensions.
 // Passing a full path only checks the basename.
 // Default to include all files.
@@ -90,15 +79,4 @@ func (fec *FileExtChecker) IsValid(file string) bool {
 	}
 
 	return true
-}
-
-// PathExist true for a directory/file and false otherwise.
-func PathExist(filename string) bool {
-	_, err := os.Stat(filename)
-
-	if err == nil {
-		return true
-	}
-
-	return false
 }
