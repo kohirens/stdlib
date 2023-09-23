@@ -22,8 +22,7 @@ func NewFileExtChecker(el, in *[]string) (*FileExtChecker, error) {
 	var err error
 
 	if el == nil && in == nil {
-		err := fmt.Errorf("you did not add provide any file extensions to include or exclude")
-		return nil, err
+		return nil, fmt.Errorf("you did not add provide any file extensions to include or exclude")
 	}
 
 	if el == nil {
@@ -40,17 +39,6 @@ func NewFileExtChecker(el, in *[]string) (*FileExtChecker, error) {
 	}
 
 	return &fce, err
-}
-
-func InitFileExtChecker() *FileExtChecker {
-	return &FileExtChecker{
-		excludes: &[]string{},
-		includes: &[]string{},
-	}
-}
-
-func NewFileExtCheckerStr(el, in []string) (*FileExtChecker, error) {
-	return NewFileExtChecker(&el, &in)
 }
 
 // IsValid Returns true for files that match allowed or excluded extensions.
