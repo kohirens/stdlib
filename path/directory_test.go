@@ -1,4 +1,4 @@
-package stdlib
+package path
 
 import (
 	"github.com/kohirens/stdlib/internal/test"
@@ -32,24 +32,21 @@ func TestCopyToDir(t *testing.T) {
 	}
 }
 
-func TestNormalizePath(t *testing.T) {
-	testCases := []struct {
-		name string
-		path string
-		want string
+func TestDirExist(t *testing.T) {
+	cases := []struct {
+		name, path string
+		want       bool
 	}{
-		{"windowsOnUnix", "\\windows\\path\\on\\uUnix", PS + "windows" + PS + "path" + PS + "on" + PS + "uUnix"},
-		{"unixOnWindows", "/unix/on/windows", PS + "unix" + PS + "on" + PS + "windows"},
-		{"mixedBag", "/i\\dont\\care/really", PS + "i" + PS + "dont" + PS + "care" + PS + "really"},
+		{"dirExist", test.FixtureDir + "/dir_that_exist", true},
+		{"isFileNotDir", test.FixtureDir + "/dir_that_exist/file_that_exists.md", false},
+		{"doesNotExists", test.FixtureDir + "/dir_that_exist/dir-does-not-exist", false},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			got := NormalizePath(tc.path)
+	for _, sbj := range cases {
+		got := DirExist(sbj.path)
 
-			if got != tc.want {
-				t.Errorf("got %v, want %v", got, tc.want)
-			}
-		})
+		if got != sbj.want {
+			t.Errorf("got %v, want %v", got, sbj.want)
+		}
 	}
 }
