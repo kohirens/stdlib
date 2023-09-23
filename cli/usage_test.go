@@ -21,16 +21,15 @@ func TestUsage(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		um         map[string]string
+		um         StringMap
 		subcommand map[string]*flag.FlagSet
 		want       string
 	}{
 		{
 			"display usage message",
-			map[string]string{
+			StringMap{
 				"help":          "display this help",
 				"version":       "display version info",
-				"test-cmd":      "test-cmd summary",
 				"test-cmd_opt1": "opt1 summary",
 				"test-cmd_opt2": "opt2 summary",
 			},
@@ -38,24 +37,21 @@ func TestUsage(t *testing.T) {
 				"test-cmd": fixedSubCmd,
 			},
 			`
+Usage: tester -[options] <args>
 
-Usage: tester [command] [options] <args>
-
-Options:
+Options
 
   -help        display this help (default = false)
 
   -version     display version info
 
-test-cmd       test-cmd summary
+Commands
 
-Usage: tester [global options] test-cmd [options] <args>
+  test-cmd - test-cmd summary
 
-Options:
+    usage: tester -[global options] test-cmd -[options] <args>
 
-  -opt1        opt1 summary
-
-  -opt2        opt2 summary
+    See tester test-cmd -help
 `,
 		},
 	}
@@ -66,11 +62,12 @@ Options:
 		t.Run(tt.name, func(t *testing.T) {
 			r, w, _ := os.Pipe()
 			os.Stdout = w
-			gotErr := Usage("tester", tt.um, tt.subcommand)
 
-			if gotErr != nil {
-				t.Errorf("Usage() error %v, want nil", gotErr.Error())
-			}
+			u := NewUsage("tester", tt.um, nil, "tester summary", "")
+			u.Command.AddCommand(tt.subcommand["test-cmd"], "test-cmd", tt.um, nil, "test-cmd summary", "")
+
+			flag.Usage()
+
 			outC := make(chan string)
 			// copy the output in a separate goroutine so printing can't block indefinitely
 			go func() {
@@ -127,12 +124,20 @@ usage: tester [global options] test-cmd [options] <args>
 		t.Run(tt.name, func(t *testing.T) {
 			r, w, _ := os.Pipe()
 			os.Stdout = w
-			UsageTmpl = tt.tmpl
-			gotErr := Usage("tester", tt.um, tt.subcommands)
 
-			if gotErr != nil {
-				t.Errorf("Usage() error %v, want nil", gotErr.Error())
-			}
+			u := NewUsage("tester", tt.um, nil, "tester summary", tt.tmpl)
+			u.Command.AddCommand(
+				tt.subcommands["test-cmd"],
+				"test-cmd",
+				tt.um,
+				nil,
+				"test-cmd summary",
+				tt.tmpl,
+			)
+
+			//flag.Usage()
+			u.Command.Subcommands["test-cmd"].Flags.Usage()
+
 			outC := make(chan string)
 			// copy the output in a separate goroutine so printing can't block indefinitely
 			go func() {

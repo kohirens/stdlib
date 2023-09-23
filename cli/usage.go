@@ -7,66 +7,89 @@ import (
 	"text/template"
 )
 
-type Command struct {
-	Flags    *flag.FlagSet
-	Name     string
-	Summary  string
-	Messages StringMap
+type Usage struct {
+	Command *Command
 }
 
-// Message
-// Deprecated: use StringMap
-type Message = map[string]string
+type Command struct {
+	Flags       *flag.FlagSet
+	Name        string
+	Summary     string
+	Messages    StringMap
+	Template    string
+	Vars        StringMap
+	Subcommands map[string]*Command
+}
 
 // StringMap use for usage messages, templates, and template vars.
 type StringMap = map[string]string
 
 const defaultUsageTmpl = `
 {{- define "optionHeader"}}
-Options:
+Options
 {{end -}}
 
 {{- define "option"}}
-{{printf "  -%-11s %v" .OptionName .OptionInfo}}{{with .DefaultVal }} (default = {{.}}){{end}}
+{{printf "  -%-11s %v" .OptionName .OptionInfo}}{{with .DefaultValue }} (default = {{.}}){{end}}
+{{end -}}
+
+{{- define "commandHeader"}}
+Commands
 {{end -}}
 
 {{- define "subcommand"}}
-{{printf "%-14s %v" .Command .Summary}}
+  {{.Command}} - {{.Summary}}
 
-Usage: {{ .AppName }} [global options] {{ .Command }} [options] <args>
+    usage: {{.AppName}} -[global options] {{.Command}} -[options] <args>
+
+    See {{.AppName}} {{.Command}} -help
 {{end}}
-
-Usage: {{ .AppName }} [command] [options] <args>
+Usage: {{.AppName}} -[options] <args>
 `
 
 var (
-	command     *Command
-	subcommands = []*Command{}
-
-	// UsageTmpl Go template to used for display usage information.
-	UsageTmpl = defaultUsageTmpl
-
-	usageTmpls = StringMap{}
-
-	// UsageTmplVars Variables used to fill in the actions in a template.
-	// Deprecated: Use
-	UsageTmplVars = StringMap{}
-	usageVars     = StringMap{}
+	appName              string
+	printedCommandHeader = false
+	printedOptionHeader  = false
 )
 
-// AddCommand Add command usage information.
-func AddCommand(name, summary string, um StringMap, flags *flag.FlagSet) *Command {
-	c := &Command{
-		flags,
-		name,
-		summary,
-		um,
+// AddCommand Add additional application command usage information.
+//
+//	*flag.FlagSet.Usage function will be replaced with cli.Print.
+func (u *Usage) AddCommand(flags *flag.FlagSet, name string, msgs, vars StringMap, summary, tmplStr string) *Usage {
+	u.Command.AddCommand(flags, name, msgs, vars, summary, tmplStr)
+
+	return u
+}
+
+// AddCommand Add additional application command usage information.
+//
+//	*flag.FlagSet.Usage function will be replaced with cli.Print.
+func (c *Command) AddCommand(flags *flag.FlagSet, name string, msgs, vars StringMap, summary, tmplStr string) *Command {
+	if flags == nil {
+		panic("need non-nil *flag.FlagSet " + name)
 	}
 
-	subcommands = append(subcommands, c)
+	if name == "" {
+		panic("a command name cannot be an empty string")
+	}
+
+	v := StringMap{}
+	if vars != nil {
+		v = vars
+	}
+
+	c.Subcommands[name] = &Command{
+		Flags:    flags,
+		Name:     name,
+		Summary:  summary,
+		Messages: msgs,
+		Template: tmplStr,
+		Vars:     v,
+	}
 
 	flags.Usage = func() {
-		if e := UsageV2(name); e != nil {
+		if e := PrintUsage(c.Subcommands[name]); e != nil {
 			panic(e)
 		}
 	}
@@ -74,127 +97,78 @@ func AddCommand(name, summary string, um StringMap, flags *flag.FlagSet) *Comman
 	return c
 }
 
-// AddGlobalCommand Set up the application usage information.
-func AddGlobalCommand(name, summary, tmplStr string, msgs, vars StringMap) *Command {
-	command = &Command{
-		flag.CommandLine,
-		name,
-		summary,
-		msgs,
+// NewUsage Set up the application usage information.
+//
+//	flag.Usage function will be replaced with this cli.Print.
+func NewUsage(name string, msgs, vars StringMap, summary, tmplStr string) *Usage {
+	v := StringMap{}
+	if vars != nil {
+		v = vars
 	}
 
-	usageVars["AppName"] = name
+	appName = name
 
-	AddTmpl(name, tmplStr, vars)
+	u := &Usage{
+		Command: &Command{
+			Name:        name,
+			Flags:       flag.CommandLine,
+			Summary:     summary,
+			Messages:    msgs,
+			Template:    tmplStr,
+			Vars:        v,
+			Subcommands: map[string]*Command{},
+		},
+	}
 
 	flag.Usage = func() {
-		if e := UsageV2(name); e != nil {
+		if e := PrintUsage(u.Command); e != nil {
 			panic(e)
 		}
 	}
 
-	return command
+	return u
 }
 
-// AddTmpl Set a custom template for each command.
-func AddTmpl(command, tmplStr string, vars StringMap) {
-	usageTmpls[command] = tmplStr
-
-	for k, v := range vars {
-		usageVars[k] = v
-	}
-}
-
-// Usage Print the usage documentation.
+// Print Display application usage information.
 //
-//	NOTE: Flags that do not have an entry in the um (usage message) list are
-//	hidden.
-func Usage(appName string, um StringMap, subcommands map[string]*flag.FlagSet) error {
-	tmpl, err1 := template.New("Usage").Parse(UsageTmpl)
-	if err1 != nil {
-		return fmt.Errorf(stderr.UsageTmplParse, err1.Error())
-	}
-
-	UsageTmplVars["AppName"] = appName
-	oht := tmpl.Lookup("optionHeader")
-	ot := tmpl.Lookup("option")
-
-	if e := tmpl.Execute(os.Stdout, UsageTmplVars); e != nil {
-		return fmt.Errorf(stderr.UsageTmplExecute, e.Error())
-	}
-
-	var err2 error
-	if ot != nil {
-		if e := printOptionUsage(ot, oht, flag.CommandLine, um, ""); e != nil {
-			return e
-		}
-	}
-
-	if sct := tmpl.Lookup("subcommand"); sct != nil {
-		for c, flagSet := range subcommands {
-			UsageTmplVars["Command"] = c
-			UsageTmplVars["Summary"] = um[c]
-
-			if e := tmpl.ExecuteTemplate(os.Stdout, "subcommand", UsageTmplVars); e != nil {
-				err2 = e
-				break
-			}
-			if ot != nil {
-				if e := printOptionUsage(ot, oht, flagSet, um, c); e != nil {
-					err2 = e
-					break
-				}
-			}
-		}
-	}
-
-	return err2
+//	NOTE: Flags that do not have an entry in the messages list are hidden.
+func (c *Command) Print() error {
+	return PrintUsage(c)
 }
 
-// UsageV2 Print the usage documentation.
+// PrintUsage Display application usage information.
 //
-//	NOTE: Flags that do not have an entry in the um (usage message) list are
-//	hidden.
-func UsageV2(name string) error {
-	if len(subcommands) < 1 {
-		return nil
-	}
-
-	tmplStr, ok := usageTmpls[name]
-
-	if !ok || tmplStr == "" { // use the default when non provided
+//	NOTE: Flags that do not have an entry in the messages list are hidden.
+func PrintUsage(c *Command) error {
+	tmplStr := c.Template
+	if tmplStr == "" { // use the default when non provided
 		tmplStr = defaultUsageTmpl
 	}
 
-	usageVars["Command"] = name
-
-	if e := printUsage(name, tmplStr, usageVars); e != nil {
-		return e
+	// setting these here gives the user the opportunity to change them
+	// anytime before printing.
+	c.Vars["AppName"] = appName
+	if appName != c.Name {
+		c.Vars["Command"] = c.Name
+		c.Vars["Summary"] = c.Summary
 	}
 
-	return nil
-}
-
-func printUsage(tmplName, tmplStr string, vars StringMap) error {
-	tmpl, err1 := template.New(tmplName + "_usage").Parse(tmplStr)
+	tmpl, err1 := template.New(c.Name + "_usage").Parse(tmplStr)
 	if err1 != nil {
 		return fmt.Errorf(stderr.UsageTmplParse, err1.Error())
 	}
 
-	if e := tmpl.Execute(os.Stdout, vars); e != nil {
+	if e := tmpl.Execute(os.Stdout, c.Vars); e != nil {
 		return e
 	}
 
-	if len(subcommands) > 0 { // display an option command header
-		cht := tmpl.Lookup("commandHeader")
-		if e := cht.Execute(os.Stdout, vars); e != nil {
-			return e
-		}
+	if e := printOptionUsage(c, tmpl); e != nil {
+		return e
 	}
 
 	var err2 error
-	for _, c := range subcommands {
-		if e := printSubcommandUsage(c, tmpl, vars); e != nil {
+	for _, sc := range c.Subcommands {
+		if e := printSubCommandSummary(sc, tmpl); e != nil {
 			err2 = e
 			break
 		}
@@ -203,19 +177,39 @@ func printUsage(tmplName, tmplStr string, vars StringMap) error {
 	return err2
 }
 
-func printSubcommandUsage(c *Command, tmpl *template.Template, vars StringMap) error {
-	vars["Command"] = c.Name
-	vars["Summary"] = c.Summary
-
-	if ct := tmpl.Lookup("subcommand"); ct != nil {
-		if e := ct.Execute(os.Stdout, vars); e != nil { // command
-			return e
-		}
+// printCommandHeader Print the command header once per usage run.
+func printCommandHeader(tmpl *template.Template, vars StringMap) error {
+	if printedCommandHeader {
+		return nil
 	}
 
-	if ot := tmpl.Lookup("option"); ot != nil {
-		oht := tmpl.Lookup("optionHeader")
-		if e := printOptionUsage(ot, oht, command.Flags, command.Messages, command.Name); e != nil {
+	cht := tmpl.Lookup("commandHeader")
+	if cht == nil {
+		return nil
+	}
+
+	if e := cht.Execute(os.Stdout, vars); e != nil {
+		return e
+	}
+
+	printedCommandHeader = true
+
+	return nil
+}
+
+func printSubCommandSummary(c *Command, tmpl *template.Template) error {
+	// setting these here gives the user the opportunity to change them
+	// anytime before printing.
+	c.Vars["AppName"] = appName
+	c.Vars["Command"] = c.Name
+	c.Vars["Summary"] = c.Summary
+
+	if e := printCommandHeader(tmpl, c.Vars); e != nil {
+		return e
+	}
+
+	if ct := tmpl.Lookup("subcommand"); ct != nil {
+		if e := ct.Execute(os.Stdout, c.Vars); e != nil { // command
 			return e
 		}
 	}
@@ -223,18 +217,43 @@ func printSubcommandUsage(c *Command, tmpl *template.Template, vars StringMap) e
 	return nil
 }
 
-func printOptionUsage(tmpl, oht *template.Template, flags *flag.FlagSet, um StringMap, command string) error {
+// printOptionHeader Print the option header once per usage run.
+func printOptionHeader(tmpl *template.Template, vars StringMap) error {
+	if printedOptionHeader {
+		return nil
+	}
+
+	cht := tmpl.Lookup("optionHeader")
+	if cht == nil {
+		return nil
+	}
+
+	if e := cht.Execute(os.Stdout, vars); e != nil {
+		return e
+	}
+
+	printedOptionHeader = true
+
+	return nil
+}
+
+// printOptionUsage
+//
+//	NOTE: Flags that do not have an entry in the messages list are hidden.
+func printOptionUsage(c *Command, parentTmpl *template.Template) error {
+	ot := parentTmpl.Lookup("option")
+	if ot == nil { // when there is no option template do nothing.
+		return nil
+	}
+
+	numberOfFlags := 0
+	msgs := c.Messages
 	// We need to know there is at least 1 flag defined.
 	// flag.Nflag only counts flags that are set and there seems no other way.
 	// So we wastefully visit each flag to find out.
-	numberOfFlags := 0
-	flags.VisitAll(func(f *flag.Flag) {
-		_, ok := um[f.Name]
-		if command != "" {
-			_, ok = um[command+"_"+f.Name]
-		}
 
-		if ok {
+	c.Flags.VisitAll(func(f *flag.Flag) {
+		if _, ok := msgs[f.Name]; ok {
 			numberOfFlags++
 		}
 
@@ -245,28 +264,22 @@ func printOptionUsage(tmpl, oht *template.Template, flags *flag.FlagSet, um Stri
 		return nil
 	}
 
-	if oht != nil {
-		if e := oht.ExecuteTemplate(os.Stdout, "optionHeader", usageVars); e != nil {
-			return e
-		}
+	if e := printOptionHeader(parentTmpl, c.Vars); e != nil {
+		return e
 	}
 
 	var err1 error
 	var m string
 	var ok bool
-	flags.VisitAll(func(f *flag.Flag) { // global flags
-		if command != "" {
-			m, ok = um[command+"_"+f.Name]
-		} else {
-			m, ok = um[f.Name]
-		}
+	c.Flags.VisitAll(func(f *flag.Flag) { // global flags
+		m, ok = msgs[f.Name]
 
 		if ok {
-			usageVars["OptionName"] = f.Name
-			usageVars["OptionInfo"] = m
-			usageVars["DefaultVal"] = f.Value.String()
+			c.Vars["OptionName"] = f.Name
+			c.Vars["OptionInfo"] = m
+			c.Vars["DefaultValue"] = f.Value.String()
 
-			if e := tmpl.ExecuteTemplate(os.Stdout, "option", usageVars); e != nil {
+			if e := ot.Execute(os.Stdout, c.Vars); e != nil {
 				err1 = e
 				return
 			}
