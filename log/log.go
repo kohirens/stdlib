@@ -46,6 +46,12 @@ func Logf(message string, vars ...interface{}) {
 	verboseF(VerboseLvlLog, message, vars...)
 }
 
+// Panf Log a general message, useful for giving the user feedback on progress.
+func Panf(message string, vars ...interface{}) {
+	verboseF(VerboseLvlFatal, message, vars...)
+	panic("")
+}
+
 // Warnf Print a warning message to stdout.
 func Warnf(message string, vars ...interface{}) {
 	verboseF(VerboseLvlWarn, message, vars...)
