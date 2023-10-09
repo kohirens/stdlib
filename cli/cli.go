@@ -68,7 +68,7 @@ func RunCommandWithInputAndEnv(
 }
 
 // AmendStringAry where []string (like os.Environ()) is string of key=value
-// pairs. Pass in a map who's that will overwrite an existing key pair, or append it to the string array.
+// pairs. Pass in a map that will overwrite an existing key pair, or append it to the string array.
 func AmendStringAry(ce []string, env map[string]string) []string {
 	for key, val := range env {
 		found := false
