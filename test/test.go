@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	FixturesDir = "testdata"
+	FixtureDir  = "testdata"
 	SubCmdFlags = "SUB_CMD_FLAGS"
 	TmpDir      = "tmp"
 )

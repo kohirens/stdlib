@@ -15,9 +15,13 @@ const DirMode = 0774
 
 func TestMainSetup(m *testing.M) {
 	// call flag.Parse() here if TestMain uses flags
-	_ = os.RemoveAll(TestTmp)
+	if e := os.RemoveAll(TestTmp); e != nil {
+		panic(e.Error())
+	}
 	// Set up a temporary dir for generate files
-	_ = os.Mkdir(TestTmp, DirMode) // set up a temporary dir for generate files
+	if e := os.Mkdir(TestTmp, DirMode); e != nil { // set up a temporary dir for generate files
+		panic(e.Error())
+	}
 	// Run all tests
 	exitCode := m.Run()
 	// Clean up
