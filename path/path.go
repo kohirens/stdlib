@@ -19,9 +19,5 @@ func Normalize(p string) string {
 func Exist(filename string) bool {
 	_, err := os.Stat(filename)
 
-	if err == nil {
-		return true
-	}
-
-	return false
+	return err == nil
 }
