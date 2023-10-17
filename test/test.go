@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -80,26 +79,6 @@ func ResetDir(directory string, mode os.FileMode) {
 	// Make the directory
 	if e := os.Mkdir(directory, mode); e != nil {
 		panic(fmt.Sprintf("could not make %v directory", directory))
-	}
-}
-
-// Silencer return a function that prevents output during a test run.
-func Silencer() func() {
-	// Abort in verbose mode.
-	if testing.Verbose() {
-		return func() {}
-	}
-	null, _ := os.Open(os.DevNull)
-	sOut := os.Stdout
-	sErr := os.Stderr
-	os.Stdout = null
-	os.Stderr = null
-	log.SetOutput(null)
-	return func() {
-		defer null.Close()
-		os.Stdout = sOut
-		os.Stderr = sErr
-		log.SetOutput(os.Stderr)
 	}
 }
 
