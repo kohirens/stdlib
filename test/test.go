@@ -14,6 +14,7 @@ const (
 	FixtureDir  = "testdata"
 	SubCmdFlags = "SUB_CMD_FLAGS"
 	TmpDir      = "tmp"
+	ps          = string(os.PathSeparator)
 )
 
 // AbsPath  Return the absolute path of the directory or panic if error.
@@ -23,6 +24,21 @@ func AbsPath(dir string) string {
 		panic(fmt.Sprintf("could not get absolute path for %s: %v", dir, err1.Error()))
 	}
 	return tmp
+}
+
+// GetTempFile Get a temporary file for writing and reading.
+func GetTempFile(name, pattern string) *os.File {
+	outTmp := os.TempDir() + ps + name
+	if e := os.MkdirAll(outTmp, 0774); e != nil {
+		panic(e)
+	}
+
+	f, e1 := os.CreateTemp(outTmp, pattern)
+	if e1 != nil {
+		panic(e1)
+	}
+
+	return f
 }
 
 // GetTestBinCmd return a command to run the test binary in a sub-process, passing it flags as fixtures to produce expected output; `TestMain`, will be run automatically.
@@ -84,6 +100,23 @@ func Silencer() func() {
 		os.Stdout = sOut
 		os.Stderr = sErr
 		log.SetOutput(os.Stderr)
+	}
+}
+
+// TempFileSwap Swap a file pointer for a temporary file pointer.
+//
+//	Takes a reference to a variable to temporarily swap its contents until the
+//	call back function is called.
+func TempFileSwap(filePointerRef **os.File, name, pattern string) (*os.File, func()) {
+	tmpFilePointer := GetTempFile(name, pattern)
+	// Store the original file pointer.
+	ogFilePointer := *filePointerRef
+	// Swap in the temporary file pointer.
+	*filePointerRef = tmpFilePointer
+
+	return tmpFilePointer, func() { // cleanup
+		// Restore the original file pointer.
+		*filePointerRef = ogFilePointer
 	}
 }
 
