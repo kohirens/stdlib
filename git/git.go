@@ -50,7 +50,7 @@ func Clone(repoUri, repoDir, refName string) (string, string, error) {
 	var sco []byte
 	var e1 error
 
-	if isRemoteRepo(repoUri) {
+	if IsRemoteRepo(repoUri) {
 		branchName := refName
 		re := regexp.MustCompile("^refs/[^/]+/(.*)$")
 		if re.MatchString(refName) {
@@ -201,8 +201,8 @@ func gitCmd(repoPath string, args ...string) ([]byte, error) {
 	return cmdOut, nil
 }
 
-// isRemoteRepo return true if Git repository is a remote URL or false if local.
-func isRemoteRepo(repoLocation string) bool {
+// IsRemoteRepo return true if Git repository is a remote URL or false if local.
+func IsRemoteRepo(repoLocation string) bool {
 	if len(repoLocation) < 1 {
 		return false
 	}
