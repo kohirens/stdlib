@@ -17,7 +17,7 @@ func Normalize(p string) string {
 
 // Exist true for a directory/file and false otherwise.
 func Exist(filename string) bool {
-	_, err := os.Stat(filename)
+	_, e1 := os.Stat(filename)
 
-	return err == nil
+	return e1 == nil || os.IsExist(e1)
 }
