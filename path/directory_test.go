@@ -1,12 +1,140 @@
 package path
 
 import (
+	"fmt"
+	"github.com/kohirens/stdlib/git"
 	"github.com/kohirens/stdlib/internal/test"
+	"os"
+	"strings"
 	"testing"
 )
 
 func TestMain(t *testing.M) {
-	test.TestMainSetup(t)
+	test.MainSetup(t)
+}
+
+func TestCopyDirToDir(runner *testing.T) {
+	td := test.TmpDir + PS + runner.Name()
+	_ = os.MkdirAll(td, 0744)
+
+	tests := []struct {
+		name    string
+		src     string
+		dst     string
+		ps      string
+		wantErr bool
+		want    []string
+	}{
+		{
+			"copy all files 01",
+			test.FixtureDir + PS + "dir-to-dir-01",
+			td,
+			PS,
+			false,
+			[]string{td + PS + "README.md"},
+		},
+		{
+			"copy all files 02",
+			test.FixtureDir + PS + "dir-to-dir-02",
+			td,
+			PS,
+			false,
+			[]string{
+				td + PS + "README.md",
+				td + PS + "sub-01" + PS + "README.md",
+				td + PS + "sub-02" + PS + "file-01.txt",
+				td + PS + "sub-02" + PS + "file-02.txt",
+				td + PS + "sub-03" + PS + "README.md",
+				td + PS + "sub-03" + PS + "sub-sub-04" + PS + "README-04.md",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		runner.Run(tt.name, func(t *testing.T) {
+			if err := CopyDirToDir(tt.src, tt.dst, tt.ps, test.FileMode); (err != nil) != tt.wantErr {
+				t.Errorf("CopyDirToDir() error = %v, wantErr %v", err, tt.wantErr)
+
+			}
+
+			for _, f := range tt.want {
+				if !Exist(f) {
+					t.Errorf("file not found %v", f)
+				}
+			}
+		})
+	}
+}
+
+func TestCopyDirToDirSrcDoesNotExist(runner *testing.T) {
+	td := test.TmpDir + PS + runner.Name()
+	_ = os.MkdirAll(td, 0744)
+
+	tests := []struct {
+		name    string
+		src     string
+		dst     string
+		ps      string
+		wantErr bool
+	}{
+		{
+			"src error",
+			test.FixtureDir + PS + "fake-dir-01",
+			td,
+			PS,
+			true,
+		},
+	}
+	for _, tt := range tests {
+		runner.Run(tt.name, func(t *testing.T) {
+			if err := CopyDirToDir(tt.src, tt.dst, tt.ps, test.FileMode); (err != nil) != tt.wantErr {
+				t.Errorf("CopyDirToDir() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+// The destination (Dst) exist, and it should be overwritten.
+func TestCopyDirToDirDstOverwrite(runner *testing.T) {
+	td := test.TmpDir + PS + runner.Name()
+	_ = os.MkdirAll(td, 0744)
+
+	f := "dir-to-dir-03"
+
+	tests := []struct {
+		name    string
+		src     string
+		dst     string
+		ps      string
+		wantErr bool
+	}{
+		{
+			"success",
+			test.FixtureDir + PS + f,
+			td,
+			PS,
+			false,
+		},
+	}
+	for _, tt := range tests {
+		runner.Run(tt.name, func(t *testing.T) {
+			d := git.CloneFromBundle(f, td, test.FixtureDir, PS)
+
+			fmt.Printf("d = %v", d)
+			if err := CopyDirToDir(tt.src, d, tt.ps, test.FileMode); (err != nil) != tt.wantErr {
+				t.Errorf("CopyDirToDir() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			b, e1 := os.ReadFile(d + PS + ".config/config.yml")
+			if e1 != nil {
+				t.Errorf("failed to read file: %v", e1.Error())
+			}
+
+			if !strings.Contains(string(b), "2.1") {
+				t.Errorf("did not get expected content from file.")
+			}
+		})
+	}
 }
 
 func TestCopyToDir(t *testing.T) {
@@ -14,7 +142,7 @@ func TestCopyToDir(t *testing.T) {
 		name, source, dest string
 		want               int64
 	}{
-		{"canCopyFile", test.FixtureDir + "/copy-file-01.txt", test.TestTmp, 26},
+		{"canCopyFile", test.FixtureDir + "/copy-file-01.txt", test.TmpDir, 26},
 	}
 
 	for _, tc := range testCases {

@@ -5,21 +5,23 @@ import (
 	"testing"
 )
 
-// FixtureDir Fixture location
-const FixtureDir = "testdata"
+const (
+	// FixtureDir Fixture location
+	FixtureDir = "testdata"
 
-// TestTmp Temporarily stores test run output,
-const TestTmp = "testtmp"
+	// TmpDir Temporarily stores test run output
+	TmpDir = "tmp"
 
-const DirMode = 0774
+	FileMode = 0774
+)
 
-func TestMainSetup(m *testing.M) {
+func MainSetup(m *testing.M) {
 	// call flag.Parse() here if TestMain uses flags
-	if e := os.RemoveAll(TestTmp); e != nil {
+	if e := os.RemoveAll(TmpDir); e != nil {
 		panic(e.Error())
 	}
 	// Set up a temporary dir for generate files
-	if e := os.Mkdir(TestTmp, DirMode); e != nil { // set up a temporary dir for generate files
+	if e := os.Mkdir(TmpDir, FileMode); e != nil { // set up a temporary dir for generate files
 		panic(e.Error())
 	}
 	// Run all tests
