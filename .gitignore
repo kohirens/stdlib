@@ -1,12 +1,10 @@
 # Directories
 # -----------
 /.idea/
-/testtmp/
+/git/testdata/repo-01/
+/git/tmp/
+/path/tmp/
 
 # Files
 # -----
 /build-version.json
-/git/testdata/repo-01/
-/git/testtmp/
-/git/tmp/
-/path/testtmp/
