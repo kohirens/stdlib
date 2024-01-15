@@ -3,6 +3,7 @@ package cli
 import (
 	"flag"
 	"fmt"
+	"github.com/kohirens/stdlib/str"
 	"os"
 	"text/template"
 )
@@ -15,14 +16,11 @@ type Command struct {
 	Flags       *flag.FlagSet
 	Name        string
 	Summary     string
-	Messages    StringMap
+	Messages    str.StringMap
 	Template    string
-	Vars        StringMap
+	Vars        str.StringMap
 	Subcommands map[string]*Command
 }
-
-// StringMap use for usage messages, templates, and template vars.
-type StringMap = map[string]string
 
 const defaultUsageTmpl = `
 {{- define "optionHeader"}}
@@ -56,7 +54,7 @@ var (
 // AddCommand Add additional application command usage information.
 //
 //	*flag.FlagSet.Usage function will be replaced with cli.Print.
-func (u *Usage) AddCommand(flags *flag.FlagSet, name string, msgs, vars StringMap, summary, tmplStr string) *Usage {
+func (u *Usage) AddCommand(flags *flag.FlagSet, name string, msgs, vars str.StringMap, summary, tmplStr string) *Usage {
 	u.Command.AddCommand(flags, name, msgs, vars, summary, tmplStr)
 
 	return u
@@ -65,7 +63,7 @@ func (u *Usage) AddCommand(flags *flag.FlagSet, name string, msgs, vars StringMa
 // AddCommand Add additional application command usage information.
 //
 //	*flag.FlagSet.Usage function will be replaced with cli.Print.
-func (c *Command) AddCommand(flags *flag.FlagSet, name string, msgs, vars StringMap, summary, tmplStr string) *Command {
+func (c *Command) AddCommand(flags *flag.FlagSet, name string, msgs, vars str.StringMap, summary, tmplStr string) *Command {
 	if flags == nil {
 		panic("need non-nil *flag.FlagSet " + name)
 	}
@@ -74,7 +72,7 @@ func (c *Command) AddCommand(flags *flag.FlagSet, name string, msgs, vars String
 		panic("a command name cannot be an empty string")
 	}
 
-	v := StringMap{}
+	v := str.StringMap{}
 	if vars != nil {
 		v = vars
 	}
@@ -100,8 +98,8 @@ func (c *Command) AddCommand(flags *flag.FlagSet, name string, msgs, vars String
 // NewUsage Set up the application usage information.
 //
 //	flag.Usage function will be replaced with this cli.Print.
-func NewUsage(name string, msgs, vars StringMap, summary, tmplStr string) *Usage {
-	v := StringMap{}
+func NewUsage(name string, msgs, vars str.StringMap, summary, tmplStr string) *Usage {
+	v := str.StringMap{}
 	if vars != nil {
 		v = vars
 	}
@@ -178,7 +176,7 @@ func PrintUsage(c *Command) error {
 }
 
 // printCommandHeader Print the command header once per usage run.
-func printCommandHeader(tmpl *template.Template, vars StringMap) error {
+func printCommandHeader(tmpl *template.Template, vars str.StringMap) error {
 	if printedCommandHeader {
 		return nil
 	}
@@ -218,7 +216,7 @@ func printSubCommandSummary(c *Command, tmpl *template.Template) error {
 }
 
 // printOptionHeader Print the option header once per usage run.
-func printOptionHeader(tmpl *template.Template, vars StringMap) error {
+func printOptionHeader(tmpl *template.Template, vars str.StringMap) error {
 	if printedOptionHeader {
 		return nil
 	}
