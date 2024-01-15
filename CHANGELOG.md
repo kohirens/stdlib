@@ -2,6 +2,32 @@
 ## [Unreleased]
 
 
+<a name="4.0.0"></a>
+## [4.0.0] - 2024-01-15
+### Added
+- Copy A Directory To Another Directory
+- New Test Functions
+- Test Features
+- More Git Functions
+- Panf To Log Package
+
+### Changed
+- Moved StringMap
+- Function To Public
+- Added path Package
+- Made git Package
+- Renamed kstring Package
+
+### Fixed
+- Grammer in cli Package Function
+
+### Removed
+- Sibling Package Dependency
+- Removed Silencer Function
+- User Methods
+- Flag Types
+
+
 <a name="3.2.1"></a>
 ## [3.2.1] - 2023-09-22
 ### Changed
@@ -229,7 +255,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/3.2.1...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/4.0.0...HEAD
+[4.0.0]: https://github.com/kohirens/stdlib.git/compare/3.2.1...4.0.0
 [3.2.1]: https://github.com/kohirens/stdlib.git/compare/3.2.0...3.2.1
 [3.2.0]: https://github.com/kohirens/stdlib.git/compare/3.1.1...3.2.0
 [3.1.1]: https://github.com/kohirens/stdlib.git/compare/3.1.0...3.1.1
