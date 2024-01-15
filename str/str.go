@@ -57,3 +57,6 @@ func ToCamelCase(subject, separate string, pascal bool) (string, error) {
 
 	return string(rVal), nil
 }
+
+// StringMap use for usage messages, templates, and template vars.
+type StringMap = map[string]string
