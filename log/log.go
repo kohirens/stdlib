@@ -1,6 +1,4 @@
-// Package log with formatted messages to an output based on type.
-// Defaults to stdout and Err
-// stderr.
+// Package log Provide simple logging to os.Stdout and os.Stderr
 package log
 
 import (
@@ -72,4 +70,54 @@ func verboseF(lvl int, messageTmpl string, vars ...interface{}) {
 	if err1 != nil {
 		panic(err1)
 	}
+}
+
+type Logger interface {
+	Dbugf(message string, vars ...interface{})
+	Errf(message string, vars ...interface{})
+	Fatf(message string, vars ...interface{})
+	Infof(message string, vars ...interface{})
+	Logf(message string, vars ...interface{})
+	Panf(message string, vars ...interface{})
+}
+
+var _ Logger = (*StdLogger)(nil)
+var _ Logger = StdLogger{}
+
+// StdLogger Standard logging functions.
+//
+//	Please always supply human comprehensible logging messages for yourself
+//	and others whom may not have worked on your code.
+type StdLogger struct {
+}
+
+// Dbugf Print a debug message to stdout.
+func (sl StdLogger) Dbugf(message string, vars ...interface{}) {
+	Dbugf(message, vars...)
+}
+
+// Errf Print a warning message to stderr.
+func (sl StdLogger) Errf(message string, vars ...interface{}) {
+	Errf(message, vars...)
+}
+
+// Fatf Print a fatal message to stderr.
+func (sl StdLogger) Fatf(message string, vars ...interface{}) {
+	Fatf(message, vars...)
+	os.Exit(1)
+}
+
+// Infof Print an informational message to stdout.
+func (sl StdLogger) Infof(message string, vars ...interface{}) {
+	Infof(message, vars...)
+}
+
+// Logf Log a general message, useful for giving the user feedback on progress.
+func (sl StdLogger) Logf(message string, vars ...interface{}) {
+	Logf(message, vars...)
+}
+
+// Panf Log a general message, useful for giving the user feedback on progress.
+func (sl StdLogger) Panf(message string, vars ...interface{}) {
+	Panf(message, vars...)
 }
