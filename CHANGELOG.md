@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="4.2.0"></a>
+## [4.2.0] - 2024-01-21
+### Added
+- New Constant
+
+
 <a name="4.1.0"></a>
 ## [4.1.0] - 2024-01-21
 ### Added
@@ -262,7 +268,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/4.1.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/4.2.0...HEAD
+[4.2.0]: https://github.com/kohirens/stdlib.git/compare/4.1.0...4.2.0
 [4.1.0]: https://github.com/kohirens/stdlib.git/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/kohirens/stdlib.git/compare/3.2.1...4.0.0
 [3.2.1]: https://github.com/kohirens/stdlib.git/compare/3.2.0...3.2.1
