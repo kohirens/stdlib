@@ -3,7 +3,7 @@
 
 
 <a name="4.1.0"></a>
-## [4.1.0] - 2024-01-20
+## [4.1.0] - 2024-01-21
 ### Added
 - Web Library
 - Standard Logger To Log Package
