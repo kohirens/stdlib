@@ -2,6 +2,13 @@
 ## [Unreleased]
 
 
+<a name="4.1.0"></a>
+## [4.1.0] - 2024-01-20
+### Added
+- Web Library
+- Standard Logger To Log Package
+
+
 <a name="4.0.0"></a>
 ## [4.0.0] - 2024-01-15
 ### Added
@@ -255,7 +262,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/4.0.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/4.1.0...HEAD
+[4.1.0]: https://github.com/kohirens/stdlib.git/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/kohirens/stdlib.git/compare/3.2.1...4.0.0
 [3.2.1]: https://github.com/kohirens/stdlib.git/compare/3.2.0...3.2.1
 [3.2.0]: https://github.com/kohirens/stdlib.git/compare/3.1.1...3.2.0
