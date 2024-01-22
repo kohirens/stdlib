@@ -11,7 +11,7 @@ var Stdout = struct {
 	BytesRead:            "number of bytes read from %v is %d",
 	ConnectTo:            "connecting to %v",
 	DomainOnRedirectList: "domain %v in in the list of domains to redirect to %v",
-	EnvVarEmpty:          "environment variable $v is empty",
+	EnvVarEmpty:          "environment variable %v is empty",
 	LoadPage:             "loading the %v page",
 	RunCli:               "Running CLI",
 }
