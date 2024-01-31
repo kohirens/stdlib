@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/aws/aws-lambda-go/events"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -72,6 +73,13 @@ func TestRespond301Or308(t *testing.T) {
 			"Location":     "https://www.example.com",
 		},
 	}
+	fixed302Response := &events.LambdaFunctionURLResponse{
+		StatusCode: 302,
+		Headers: map[string]string{
+			"Content-Type": "text/html;charset=utf-8",
+			"Location":     "https://www.example.com",
+		},
+	}
 	fixed308Response := &events.LambdaFunctionURLResponse{
 		StatusCode: 308,
 		Headers: map[string]string{
@@ -81,23 +89,29 @@ func TestRespond301Or308(t *testing.T) {
 	}
 	tests := []struct {
 		name     string
-		method   string
+		call     func(string) *Response
 		location string
 		want     *events.LambdaFunctionURLResponse
+		status   string
 	}{
-		{"301", "GET", "www.example.com", fixedResponse},
-		{"308", "POST", "www.example.com", fixed308Response},
+		{"301", Respond301, "https://www.example.com", fixedResponse, "Moved Permanently"},
+		{"302", Respond302, "https://www.example.com", fixed302Response, "Found"},
+		{"308", Respond308, "https://www.example.com", fixed308Response, "Permanent Redirect"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Respond301Or308(tt.method, tt.location)
+			got := tt.call(tt.location)
 
 			if got.StatusCode != tt.want.StatusCode {
-				t.Errorf("Respond301Or308() = %v, want %v", got.StatusCode, tt.want.StatusCode)
+				t.Errorf("Respond%v() = %v, want %v", tt.name, got.StatusCode, tt.want.StatusCode)
+			}
+
+			if !strings.Contains(got.Body, tt.status) {
+				t.Errorf("Respond%v() = does not contain %v", tt.name, tt.status)
 			}
 
 			if !reflect.DeepEqual(got.Headers, tt.want.Headers) {
-				t.Errorf("Respond301Or308() = %v, want %v", got.Headers, tt.want.Headers)
+				t.Errorf("Respond%v() = %v, want %v", tt.name, got.Headers, tt.want.Headers)
 			}
 		})
 	}
