@@ -208,13 +208,13 @@ func Respond500() *Response {
 	}
 }
 
-// Response501 Send a 501 Not Implemented HTTP response.
+// Respond501 Send a 501 Not Implemented HTTP response.
 //
 //	501 is the appropriate response when the server does not recognize the
 //	request method and is incapable of supporting it for any resource. The only
 //	methods that servers are required to support (and therefore that must not
 //	return 501) are GET and HEAD.
-func Response501() *Response {
+func Respond501() *Response {
 	return &Response{
 		Body: Http501NotImplemented,
 		Headers: StringMap{

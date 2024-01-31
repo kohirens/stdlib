@@ -123,6 +123,7 @@ func TestRespond301Or308(t *testing.T) {
 // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
 // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
 // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
+// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501
 func TestRespond401(t *testing.T) {
 	tests := []struct {
 		name       string
@@ -133,6 +134,7 @@ func TestRespond401(t *testing.T) {
 		{"401", Respond401, 401, 401},
 		{"404", Respond404, 404, 404},
 		{"500", Respond500, 500, 500},
+		{"500", Respond501, 501, 501},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
