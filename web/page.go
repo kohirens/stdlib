@@ -224,6 +224,20 @@ func Response501() *Response {
 	}
 }
 
+// RespondDebug Respond with a debug message and whatever code your like.
+//
+//	This was handy when testing AWS Lambda function or initial set up of the
+//	Lambda URL feature.
+func RespondDebug(code int, message, footer string) *Response {
+	return &Response{
+		Body: fmt.Sprintf(Http200Debug, code, message, footer),
+		Headers: StringMap{
+			"Content-Type": ContentTypeHtml,
+		},
+		StatusCode: code,
+	}
+}
+
 // RespondJSON Send a JSON HTTP response.
 func RespondJSON(content interface{}) (*Response, error) {
 	jsonEncodedContent, e1 := json.Marshal(content)
