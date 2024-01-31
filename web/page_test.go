@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"reflect"
 	"strings"
@@ -173,6 +174,35 @@ func TestRespondJSONOG(t *testing.T) {
 
 			if got.Body != tt.wantBody {
 				t.Errorf("RespondJSON() = %v, want %v", got.Body, tt.wantBody)
+			}
+		})
+	}
+}
+
+func TestRespondDebug(t *testing.T) {
+	tests := []struct {
+		name    string
+		message string
+		footer  string
+		code    int
+	}{
+		{"Debug200", "status ok", "Acme", 401},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := RespondDebug(tt.code, tt.message, tt.footer)
+
+			if !strings.Contains(got.Body, fmt.Sprintf("%v", tt.code)) {
+				t.Errorf("RespondDebug() = does not contain %v", tt.code)
+			}
+
+			if !strings.Contains(got.Body, fmt.Sprintf("%v", tt.message)) {
+				t.Errorf("RespondDebug() = does not contain %v", tt.footer)
+			}
+
+			if !strings.Contains(got.Body, fmt.Sprintf("%v", tt.footer)) {
+				t.Errorf("RespondDebug() = does not contain %v", tt.footer)
 			}
 		})
 	}

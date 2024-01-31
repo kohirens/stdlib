@@ -1,7 +1,7 @@
 package web
 
 const (
-	Http200Debug                = `<!DOCTYPE html><html><head><title>Debugging Implemented</title></head><body><center><h1>Debugging is currently Implemented</h1></center><hr><center>Lambda</center></body></html>`
+	Http200Debug                = `<!DOCTYPE html><html><head><title>Debugging Implemented (%[1]d)</title></head><body style="text-align:center"><h1>Debugging is currently Implemented</h1><p>%[2]v</p><div>%[3]v</div></body></html>`
 	Http301RedirectContent      = `<!DOCTYPE html><html><head><title>301 Moved Permanently</title></head><body><center><h1>301 Moved Permanently</h1></center><hr><center>CloudFront</center></body></html>`
 	Http308RedirectContent      = `<!DOCTYPE html><html><head><title>308 Permanent Redirect</title></head><body><center><h1>308 Permanent Redirect</h1></center><hr><center>CloudFront</center></body></html>`
 	Http401UnauthorizedContent  = `<!DOCTYPE html><html><head><title>401 Unauthorized</title></head><body><center><h1>401 Unauthorized</h1></center><hr><center>CloudFront</center></body></html>`
