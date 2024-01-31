@@ -8,6 +8,7 @@ const (
 	Http404NotFoundContent      = `<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><center><h1>404 Not Found</h1></center><hr><center>CloudFront</center></body></html>`
 	Http500InternalErrorContent = `<!DOCTYPE html><html><head><title>500 Internal Server Error</title></head><body><center><h1>500 Internal Server Error</h1></center><hr><center>CloudFront</center></body></html>`
 	Http501NotImplemented       = `<!DOCTYPE html><html><head><title>501 Not Implemented</title></head><body><center><h1>501 Not Implemented</h1></center><hr><center>CloudFront</center></body></html>`
+	HttpRedirectContent         = `<!DOCTYPE html><html><head><title>%[1]v %[2]v</title></head><body><center><h1>%[1]v %[2]v</h1><hr>%[3]vCloudFront</center></body></html>`
 
 	// See [Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml)
 	// Also see [IETF Media Types](https://www.rfc-editor.org/rfc/rfc9110.html#media.type)

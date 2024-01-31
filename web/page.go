@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kohirens/stdlib/log"
+	"net/http"
 	"path/filepath"
 	"strings"
 )
@@ -112,6 +113,7 @@ func Respond200(content []byte, contentType string) *Response {
 }
 
 // Respond301Or308 Send a 301 or 308 HTTP response redirect to another location.
+// Deprecated see Respond301 or Respond308
 func Respond301Or308(method, location string) *Response {
 	code := 301
 	content := Http301RedirectContent
@@ -132,6 +134,44 @@ func Respond301Or308(method, location string) *Response {
 			"Location":     location,
 		},
 		StatusCode: code,
+	}
+}
+
+const Footer = "Acme"
+
+// Respond301 Send a 301 HTTP response redirect to another location (full URL).
+func Respond301(location string) *Response {
+	return &Response{
+		Body: fmt.Sprintf(HttpRedirectContent, http.StatusMovedPermanently, "Moved Permanently", Footer),
+		Headers: StringMap{
+			"Content-Type": ContentTypeHtml,
+			"Location":     location,
+		},
+		StatusCode: http.StatusMovedPermanently,
+	}
+}
+
+// Respond302 Send a 302 HTTP response redirect to another location (full URL).
+func Respond302(location string) *Response {
+	return &Response{
+		Body: fmt.Sprintf(HttpRedirectContent, http.StatusFound, "Found", Footer),
+		Headers: StringMap{
+			"Content-Type": ContentTypeHtml,
+			"Location":     location,
+		},
+		StatusCode: http.StatusFound,
+	}
+}
+
+// Respond308 Send a 308 HTTP response redirect to another location (full URL).
+func Respond308(location string) *Response {
+	return &Response{
+		Body: fmt.Sprintf(HttpRedirectContent, http.StatusPermanentRedirect, "Permanent Redirect", Footer),
+		Headers: StringMap{
+			"Content-Type": ContentTypeHtml,
+			"Location":     location,
+		},
+		StatusCode: http.StatusPermanentRedirect,
 	}
 }
 
