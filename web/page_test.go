@@ -151,6 +151,33 @@ func TestRespond401(t *testing.T) {
 	}
 }
 
+// This suite of test ensure any refactoring of these methods leave the
+// required HTTP status code and recommended status message are left intact.
+// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405
+func TestRespond405(t *testing.T) {
+	tests := []struct {
+		name       string
+		methods    string
+		wantCode   int
+		wantStatus string
+	}{
+		{"405", "GET, HEAD, POST,", 405, "405"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Respond405(tt.methods)
+
+			if got.StatusCode != tt.wantCode {
+				t.Errorf("Respond%v() = %v, want %v", tt.name, got.StatusCode, tt.wantCode)
+			}
+
+			if !strings.Contains(got.Body, tt.wantStatus) {
+				t.Errorf("Respond%v() = does not contain %v", tt.name, tt.wantStatus)
+			}
+		})
+	}
+}
+
 func TestRespondJSONOG(t *testing.T) {
 	type jsonMsg struct {
 		Msg string `json:"msg"`

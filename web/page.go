@@ -197,6 +197,23 @@ func Respond404() *Response {
 	}
 }
 
+// Respond405 Send a 405 Method Not Allowed HTTP response.
+//
+//	allowedMethods is a comma delimited string of HTTP methods that are allowed.
+//	Example:
+//	  GET, HEAD, PUT
+func Respond405(allowedMethods string) *Response {
+	code := http.StatusMethodNotAllowed
+	return &Response{
+		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), Footer),
+		Headers: StringMap{
+			"Content-Type": ContentTypeHtml,
+			"Allow":        allowedMethods,
+		},
+		StatusCode: code,
+	}
+}
+
 // Respond500 Send a 500 Internal Server Error HTTP response.
 func Respond500() *Response {
 	return &Response{
