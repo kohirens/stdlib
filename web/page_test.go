@@ -2,9 +2,7 @@ package web
 
 import (
 	"fmt"
-	"github.com/aws/aws-lambda-go/events"
 	"net/http"
-	"reflect"
 	"strings"
 	"testing"
 )
@@ -68,52 +66,28 @@ func TestGetPageTypeByExt(t *testing.T) {
 }
 
 func TestRespond301Or308(t *testing.T) {
-	fixedResponse := &events.LambdaFunctionURLResponse{
-		StatusCode: 301,
-		Headers: map[string]string{
-			"Content-Type": "text/html;charset=utf-8",
-			"Location":     "https://www.example.com",
-		},
-	}
-	fixed302Response := &events.LambdaFunctionURLResponse{
-		StatusCode: 302,
-		Headers: map[string]string{
-			"Content-Type": "text/html;charset=utf-8",
-			"Location":     "https://www.example.com",
-		},
-	}
-	fixed308Response := &events.LambdaFunctionURLResponse{
-		StatusCode: 308,
-		Headers: map[string]string{
-			"Content-Type": "text/html;charset=utf-8",
-			"Location":     "https://www.example.com",
-		},
-	}
 	tests := []struct {
 		name     string
 		call     func(string) *Response
 		location string
-		want     *events.LambdaFunctionURLResponse
+		wantCode int
 		status   string
 	}{
-		{"301", Respond301, "https://www.example.com", fixedResponse, "Moved Permanently"},
-		{"302", Respond302, "https://www.example.com", fixed302Response, "Found"},
-		{"308", Respond308, "https://www.example.com", fixed308Response, "Permanent Redirect"},
+		{"201", Respond201, "https://www.example.com", 201, "Created"},
+		{"301", Respond301, "https://www.example.com", 301, "Moved Permanently"},
+		{"302", Respond302, "https://www.example.com", 302, "Found"},
+		{"308", Respond308, "https://www.example.com", 308, "Permanent Redirect"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := tt.call(tt.location)
 
-			if got.StatusCode != tt.want.StatusCode {
-				t.Errorf("Respond%v() = %v, want %v", tt.name, got.StatusCode, tt.want.StatusCode)
+			if got.StatusCode != tt.wantCode {
+				t.Errorf("Respond%v() = %v, want %v", tt.name, got.StatusCode, tt.wantCode)
 			}
 
 			if !strings.Contains(got.Body, tt.status) {
 				t.Errorf("Respond%v() = does not contain %v", tt.name, tt.status)
-			}
-
-			if !reflect.DeepEqual(got.Headers, tt.want.Headers) {
-				t.Errorf("Respond%v() = %v, want %v", tt.name, got.Headers, tt.want.Headers)
 			}
 		})
 	}

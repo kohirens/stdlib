@@ -116,6 +116,20 @@ func Respond200(content []byte, contentType string) *Response {
 	return res
 }
 
+// Respond201 Send a Created HTTP response.
+func Respond201(location string) *Response {
+	code := http.StatusCreated
+	return &Response{
+		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code)+"<br />"+location, FooterText),
+		Headers: StringMap{
+			"Content-Type": ContentTypeHtml,
+			"Location":     location,
+		},
+		StatusCode: code,
+		Cookies:    []string{},
+	}
+}
+
 // Respond301Or308 Send a 301 or 308 HTTP response redirect to another location.
 // Deprecated see Respond301 or Respond308
 func Respond301Or308(method, location string) *Response {
