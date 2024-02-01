@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
+	"net/http"
 	"reflect"
 	"strings"
 	"testing"
@@ -124,28 +125,27 @@ func TestRespond301Or308(t *testing.T) {
 // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
 // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
 // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501
-func TestRespond401(t *testing.T) {
+func TestRespondXXX(t *testing.T) {
 	tests := []struct {
-		name       string
 		call       func() *Response
 		wantCode   int
-		wantStatus int
+		wantStatus string
 	}{
-		{"401", Respond401, 401, 401},
-		{"404", Respond404, 404, 404},
-		{"500", Respond500, 500, 500},
-		{"500", Respond501, 501, 501},
+		{Respond401, 401, http.StatusText(401)},
+		{Respond404, 404, http.StatusText(404)},
+		{Respond500, 500, http.StatusText(500)},
+		{Respond501, 501, http.StatusText(501)},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.wantStatus, func(t *testing.T) {
 			got := tt.call()
 
 			if got.StatusCode != tt.wantCode {
-				t.Errorf("Respond%v() = %v, want %v", tt.name, got.StatusCode, tt.wantCode)
+				t.Errorf("Respond%v() = %v, want %v", tt.wantCode, got.StatusCode, tt.wantCode)
 			}
 
-			if got.StatusCode != tt.wantCode {
-				t.Errorf("Respond%v() = %v, want %v", tt.name, got.StatusCode, tt.wantStatus)
+			if !strings.Contains(got.Body, tt.wantStatus) {
+				t.Errorf("Respond%v() = does not contain %v", tt.wantCode, tt.wantStatus)
 			}
 		})
 	}
