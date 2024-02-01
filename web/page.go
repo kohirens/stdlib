@@ -130,31 +130,6 @@ func Respond201(location string) *Response {
 	}
 }
 
-// Respond301Or308 Send a 301 or 308 HTTP response redirect to another location.
-// Deprecated see Respond301 or Respond308
-func Respond301Or308(method, location string) *Response {
-	code := http.StatusMovedPermanently
-	content := Http301RedirectContent
-
-	if method == "POST" {
-		code = http.StatusPermanentRedirect
-		content = Http308RedirectContent
-	}
-
-	if !strings.Contains(location, "https://") {
-		location = "https://" + location
-	}
-
-	return &Response{
-		Body: content,
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-			"Location":     location,
-		},
-		StatusCode: code,
-	}
-}
-
 // Respond301 Send a "Moved Permanently" HTTP response.
 func Respond301(location string) *Response {
 	code := http.StatusMovedPermanently
@@ -172,7 +147,7 @@ func Respond301(location string) *Response {
 func Respond302(location string) *Response {
 	code := http.StatusFound
 	return &Response{
-		Body: fmt.Sprintf(HttpRedirectContent, code, http.StatusText(code)+"<br />"+location, FooterText),
+		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code)+"<br />"+location, FooterText),
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 			"Location":     location,
