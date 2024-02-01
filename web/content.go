@@ -1,15 +1,8 @@
 package web
 
 const (
-	Http200Debug                = `<!DOCTYPE html><html><head><title>Debugging Implemented (%[1]d)</title></head><body style="text-align:center"><h1>Debugging is currently Implemented</h1><p>%[2]v</p><div>%[3]v</div></body></html>`
-	Http301RedirectContent      = `<!DOCTYPE html><html><head><title>301 Moved Permanently</title></head><body><center><h1>301 Moved Permanently</h1></center><hr><center>CloudFront</center></body></html>`
-	Http308RedirectContent      = `<!DOCTYPE html><html><head><title>308 Permanent Redirect</title></head><body><center><h1>308 Permanent Redirect</h1></center><hr><center>CloudFront</center></body></html>`
-	Http401UnauthorizedContent  = `<!DOCTYPE html><html><head><title>401 Unauthorized</title></head><body><center><h1>401 Unauthorized</h1></center><hr><center>CloudFront</center></body></html>`
-	Http404NotFoundContent      = `<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><center><h1>404 Not Found</h1></center><hr><center>CloudFront</center></body></html>`
-	Http500InternalErrorContent = `<!DOCTYPE html><html><head><title>500 Internal Server Error</title></head><body><center><h1>500 Internal Server Error</h1></center><hr><center>CloudFront</center></body></html>`
-	Http501NotImplemented       = `<!DOCTYPE html><html><head><title>501 Not Implemented</title></head><body><center><h1>501 Not Implemented</h1></center><hr><center>CloudFront</center></body></html>`
-	HttpRedirectContent         = `<!DOCTYPE html><html><head><title>%[1]v %[2]v</title></head><body><center><h1>%[1]v %[2]v</h1><hr>%[3]vCloudFront</center></body></html>`
-	HttpStatusContent           = `<!DOCTYPE html><html><head><title>%[1]v %[2]v</title></head><body><center><h1>%[1]v %[2]v</h1><hr /><div>%[3]v</div></center></body></html>`
+	Http200Debug      = `<!DOCTYPE html><html><head><title>Debugging Implemented (%[1]d)</title></head><body style="text-align:center"><h1>Debugging is currently Implemented</h1><p>%[2]v</p><div>%[3]v</div></body></html>`
+	HttpStatusContent = `<!DOCTYPE html><html><head><title>%[1]v %[2]v</title></head><body><center><h1>%[1]v %[2]v</h1><hr /><div>%[3]v</div></center></body></html>`
 
 	// See [Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml)
 	// Also see [IETF Media Types](https://www.rfc-editor.org/rfc/rfc9110.html#media.type)
