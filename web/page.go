@@ -91,13 +91,14 @@ func GetMapItem(mapData StringMap, name string) string {
 	return value
 }
 
-// Respond200 Send a 301 or 308 HTTP response redirect to another location.
+// Respond200 Send a status OK HTTP response.
 func Respond200(content []byte, contentType string) *Response {
+	code := http.StatusOK
 	res := &Response{
 		Headers: StringMap{
 			"Content-Type": contentType,
 		},
-		StatusCode: 200,
+		StatusCode: code,
 		Cookies:    []string{},
 	}
 
@@ -115,11 +116,11 @@ func Respond200(content []byte, contentType string) *Response {
 // Respond301Or308 Send a 301 or 308 HTTP response redirect to another location.
 // Deprecated see Respond301 or Respond308
 func Respond301Or308(method, location string) *Response {
-	code := 301
+	code := http.StatusMovedPermanently
 	content := Http301RedirectContent
 
 	if method == "POST" {
-		code = 308
+		code = http.StatusPermanentRedirect
 		content = Http308RedirectContent
 	}
 
@@ -141,59 +142,64 @@ const Footer = "Acme"
 
 // Respond301 Send a 301 HTTP response redirect to another location (full URL).
 func Respond301(location string) *Response {
+	code := http.StatusMovedPermanently
 	return &Response{
-		Body: fmt.Sprintf(HttpRedirectContent, http.StatusMovedPermanently, "Moved Permanently", Footer),
+		Body: fmt.Sprintf(HttpRedirectContent, code, "Moved Permanently", Footer),
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 			"Location":     location,
 		},
-		StatusCode: http.StatusMovedPermanently,
+		StatusCode: code,
 	}
 }
 
 // Respond302 Send a 302 HTTP response redirect to another location (full URL).
 func Respond302(location string) *Response {
+	code := http.StatusFound
 	return &Response{
-		Body: fmt.Sprintf(HttpRedirectContent, http.StatusFound, "Found", Footer),
+		Body: fmt.Sprintf(HttpRedirectContent, code, "Found", Footer),
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 			"Location":     location,
 		},
-		StatusCode: http.StatusFound,
+		StatusCode: code,
 	}
 }
 
 // Respond308 Send a 308 HTTP response redirect to another location (full URL).
 func Respond308(location string) *Response {
+	code := http.StatusPermanentRedirect
 	return &Response{
-		Body: fmt.Sprintf(HttpRedirectContent, http.StatusPermanentRedirect, "Permanent Redirect", Footer),
+		Body: fmt.Sprintf(HttpRedirectContent, code, "Permanent Redirect", Footer),
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 			"Location":     location,
 		},
-		StatusCode: http.StatusPermanentRedirect,
+		StatusCode: code,
 	}
 }
 
 // Respond401 Send a 401 Unauthorized HTTP response.
 func Respond401() *Response {
+	code := http.StatusUnauthorized
 	return &Response{
 		Body: Http401UnauthorizedContent,
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 		},
-		StatusCode: 401,
+		StatusCode: code,
 	}
 }
 
 // Respond404 Send a 404 Not Found HTTP response.
 func Respond404() *Response {
+	code := http.StatusNotFound
 	return &Response{
 		Body: Http404NotFoundContent,
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 		},
-		StatusCode: 404,
+		StatusCode: code,
 	}
 }
 
@@ -216,12 +222,13 @@ func Respond405(allowedMethods string) *Response {
 
 // Respond500 Send a 500 Internal Server Error HTTP response.
 func Respond500() *Response {
+	code := http.StatusInternalServerError
 	return &Response{
 		Body: Http500InternalErrorContent,
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 		},
-		StatusCode: 500,
+		StatusCode: code,
 	}
 }
 
@@ -232,12 +239,13 @@ func Respond500() *Response {
 //	methods that servers are required to support (and therefore that must not
 //	return 501) are GET and HEAD.
 func Respond501() *Response {
+	code := http.StatusNotImplemented
 	return &Response{
 		Body: Http501NotImplemented,
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 		},
-		StatusCode: 501,
+		StatusCode: code,
 	}
 }
 
