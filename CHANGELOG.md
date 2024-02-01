@@ -2,6 +2,16 @@
 ## [Unreleased]
 
 
+<a name="4.3.0"></a>
+## [4.3.0] - 2024-01-31
+### Added
+- Web Debug Responder
+- Individual Web Response Redirect Methods
+
+### Fixed
+- Web 501 Reponse Function Name
+
+
 <a name="4.2.1"></a>
 ## [4.2.1] - 2024-01-22
 ### Fixed
@@ -274,7 +284,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/4.2.1...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/4.3.0...HEAD
+[4.3.0]: https://github.com/kohirens/stdlib.git/compare/4.2.1...4.3.0
 [4.2.1]: https://github.com/kohirens/stdlib.git/compare/4.2.0...4.2.1
 [4.2.0]: https://github.com/kohirens/stdlib.git/compare/4.1.0...4.2.0
 [4.1.0]: https://github.com/kohirens/stdlib.git/compare/4.0.0...4.1.0
