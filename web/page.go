@@ -8,7 +8,10 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"time"
 )
+
+var FooterText = "&copy; " + time.Now().Format("2006")
 
 // GetPageType Get the content type via header.
 func GetPageType(headers StringMap) string {
@@ -138,13 +141,11 @@ func Respond301Or308(method, location string) *Response {
 	}
 }
 
-const Footer = "Acme"
-
 // Respond301 Send a 301 HTTP response redirect to another location (full URL).
 func Respond301(location string) *Response {
 	code := http.StatusMovedPermanently
 	return &Response{
-		Body: fmt.Sprintf(HttpRedirectContent, code, "Moved Permanently", Footer),
+		Body: fmt.Sprintf(HttpRedirectContent, code, "Moved Permanently", FooterText),
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 			"Location":     location,
@@ -157,7 +158,7 @@ func Respond301(location string) *Response {
 func Respond302(location string) *Response {
 	code := http.StatusFound
 	return &Response{
-		Body: fmt.Sprintf(HttpRedirectContent, code, "Found", Footer),
+		Body: fmt.Sprintf(HttpRedirectContent, code, "Found", FooterText),
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 			"Location":     location,
@@ -170,7 +171,7 @@ func Respond302(location string) *Response {
 func Respond308(location string) *Response {
 	code := http.StatusPermanentRedirect
 	return &Response{
-		Body: fmt.Sprintf(HttpRedirectContent, code, "Permanent Redirect", Footer),
+		Body: fmt.Sprintf(HttpRedirectContent, code, "Permanent Redirect", FooterText),
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 			"Location":     location,
@@ -211,7 +212,7 @@ func Respond404() *Response {
 func Respond405(allowedMethods string) *Response {
 	code := http.StatusMethodNotAllowed
 	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), Footer),
+		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), FooterText),
 		Headers: StringMap{
 			"Content-Type": ContentTypeHtml,
 			"Allow":        allowedMethods,
