@@ -118,79 +118,32 @@ func Respond200(content []byte, contentType string) *Response {
 
 // Respond201 Send a Created HTTP response.
 func Respond201(location string) *Response {
-	code := http.StatusCreated
-	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code)+"<br />"+location, FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-			"Location":     location,
-		},
-		StatusCode: code,
-		Cookies:    []string{},
-	}
+	return RespondWithLocation(location, http.StatusCreated)
 }
 
 // Respond301 Send a "Moved Permanently" HTTP response.
 func Respond301(location string) *Response {
-	code := http.StatusMovedPermanently
-	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code)+"<br />"+location, FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-			"Location":     location,
-		},
-		StatusCode: code,
-	}
+	return RespondWithLocation(location, http.StatusMovedPermanently)
 }
 
 // Respond302 Send a Found HTTP response0.
 func Respond302(location string) *Response {
-	code := http.StatusFound
-	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code)+"<br />"+location, FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-			"Location":     location,
-		},
-		StatusCode: code,
-	}
+	return RespondWithLocation(location, http.StatusFound)
 }
 
 // Respond308 Send an 308 HTTP response redirect to another location (full URL).
 func Respond308(location string) *Response {
-	code := http.StatusPermanentRedirect
-	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code)+"<br />"+location, FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-			"Location":     location,
-		},
-		StatusCode: code,
-	}
+	return RespondWithLocation(location, http.StatusPermanentRedirect)
 }
 
 // Respond401 Send a 401 Unauthorized HTTP response.
 func Respond401() *Response {
-	code := http.StatusUnauthorized
-	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-		},
-		StatusCode: code,
-	}
+	return RespondWithStatus(http.StatusUnauthorized)
 }
 
 // Respond404 Send a 404 Not Found HTTP response.
 func Respond404() *Response {
-	code := http.StatusNotFound
-	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-		},
-		StatusCode: code,
-	}
+	return RespondWithStatus(http.StatusNotFound)
 }
 
 // Respond405 Send a 405 Method Not Allowed HTTP response.
@@ -199,27 +152,12 @@ func Respond404() *Response {
 //	Example:
 //	  GET, HEAD, PUT
 func Respond405(allowedMethods string) *Response {
-	code := http.StatusMethodNotAllowed
-	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-			"Allow":        allowedMethods,
-		},
-		StatusCode: code,
-	}
+	return RespondWithStatus(http.StatusMethodNotAllowed)
 }
 
 // Respond500 Send a 500 Internal Server Error HTTP response.
 func Respond500() *Response {
-	code := http.StatusInternalServerError
-	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-		},
-		StatusCode: code,
-	}
+	return RespondWithStatus(http.StatusInternalServerError)
 }
 
 // Respond501 Send a 501 Not Implemented HTTP response.
@@ -229,14 +167,7 @@ func Respond500() *Response {
 //	methods that servers are required to support (and therefore that must not
 //	return 501) are GET and HEAD.
 func Respond501() *Response {
-	code := http.StatusNotImplemented
-	return &Response{
-		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-		},
-		StatusCode: code,
-	}
+	return RespondWithStatus(http.StatusNotImplemented)
 }
 
 // RespondDebug Respond with a debug message and whatever code your like.
@@ -272,5 +203,31 @@ func ResponseOptions(options string) *Response {
 			"Allow": options,
 		},
 		StatusCode: 204,
+	}
+}
+
+// RespondWithLocation Send a status to go to another location HTTP response0.
+func RespondWithLocation(location string, code int) *Response {
+	return &Response{
+		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code)+"<br />"+location, FooterText),
+		Headers: StringMap{
+			"Content-Type": ContentTypeHtml,
+			"Location":     location,
+		},
+		StatusCode: code,
+	}
+}
+
+// RespondWithStatus Send a status HTTP response.
+//
+//	See: https://www.rfc-editor.org/rfc/rfc9110
+//	Also see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+func RespondWithStatus(code int) *Response {
+	return &Response{
+		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), FooterText),
+		Headers: StringMap{
+			"Content-Type": ContentTypeHtml,
+		},
+		StatusCode: code,
 	}
 }
