@@ -2,8 +2,8 @@ package web
 
 import (
 	"fmt"
+	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/log"
-	"github.com/kohirens/stdlib/path"
 	"os"
 )
 
@@ -35,7 +35,7 @@ func (ls *LocalStorage) Save(content []byte, filename string) (int, error) {
 func (ls *LocalStorage) Load(pagePath string) ([]byte, error) {
 	Log.Infof(Stdout.LoadPage, pagePath)
 
-	if !path.Exist(pagePath) {
+	if !fsio.Exist(pagePath) {
 		return nil, fmt.Errorf("file %v not found", pagePath)
 	}
 

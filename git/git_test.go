@@ -2,7 +2,7 @@ package git
 
 import (
 	"fmt"
-	"github.com/kohirens/stdlib/path"
+	"github.com/kohirens/stdlib/fsio"
 	"github.com/kohirens/stdlib/test"
 	"os"
 	"path/filepath"
@@ -43,7 +43,7 @@ func TestCloneFromBundle(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := CloneFromBundle(tt.args.bundleName, TmpDir, tt.args.bundleDir, tt.args.ps)
-			if path.Exist(got) != tt.want {
+			if fsio.Exist(got) != tt.want {
 				t.Errorf("CloneFromBundle() = %v, want %v", got, tt.want)
 			}
 		})
