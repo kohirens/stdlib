@@ -2,6 +2,19 @@
 ## [Unreleased]
 
 
+<a name="4.4.0"></a>
+## [4.4.0] - 2024-02-02
+### Added
+- 201 Responder To The web Package
+- 405 Response To web Package
+
+### Fixed
+- Package web Footer Text
+
+### Removed
+- Deprecated Methods From web Package
+
+
 <a name="4.3.0"></a>
 ## [4.3.0] - 2024-02-01
 ### Added
@@ -284,7 +297,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/4.3.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/4.4.0...HEAD
+[4.4.0]: https://github.com/kohirens/stdlib.git/compare/4.3.0...4.4.0
 [4.3.0]: https://github.com/kohirens/stdlib.git/compare/4.2.1...4.3.0
 [4.2.1]: https://github.com/kohirens/stdlib.git/compare/4.2.0...4.2.1
 [4.2.0]: https://github.com/kohirens/stdlib.git/compare/4.1.0...4.2.0
