@@ -184,8 +184,8 @@ func RespondDebug(code int, message, footer string) *Response {
 	}
 }
 
-// RespondJSON Send a JSON HTTP response.
-func RespondJSON(content interface{}) (*Response, error) {
+// RespondWithJSON Send a JSON HTTP response.
+func RespondWithJSON(content interface{}) (*Response, error) {
 	jsonEncodedContent, e1 := json.Marshal(content)
 	if e1 != nil {
 		return nil, fmt.Errorf(Stderr.CannotEncodeToJson, e1.Error())

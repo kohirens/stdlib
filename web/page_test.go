@@ -169,14 +169,14 @@ func TestRespondJSONOG(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, e := RespondJSON(tt.content)
+			got, e := RespondWithJSON(tt.content)
 
 			if (e != nil) != tt.wantErr {
-				t.Errorf("RespondJSON() = %v, want %v", e, tt.wantErr)
+				t.Errorf("RespondWithJSON() = %v, want %v", e, tt.wantErr)
 			}
 
 			if got.Body != tt.wantBody {
-				t.Errorf("RespondJSON() = %v, want %v", got.Body, tt.wantBody)
+				t.Errorf("RespondWithJSON() = %v, want %v", got.Body, tt.wantBody)
 			}
 		})
 	}
