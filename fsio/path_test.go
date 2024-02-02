@@ -1,4 +1,4 @@
-package path
+package fsio
 
 import (
 	"github.com/kohirens/stdlib"

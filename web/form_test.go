@@ -1,7 +1,7 @@
 package web
 
 import (
-	"github.com/kohirens/stdlib/path"
+	"github.com/kohirens/stdlib/fsio"
 	"net/url"
 	"testing"
 )
@@ -61,7 +61,7 @@ func TestParseForm2(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			event := loadEvent("testdata/" + tt.form)
-			_, _ = path.CopyToDir(tt.upload, "./", "/")
+			_, _ = fsio.CopyToDir(tt.upload, "./", "/")
 
 			got, err := ParseFormWithFiles(event.Body, tt.contentType)
 			if (err != nil) != tt.wantErr {

@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/kohirens/stdlib/path"
+	"github.com/kohirens/stdlib/fsio"
 	"os"
 )
 
 func loadEvent(s string) events.LambdaFunctionURLRequest {
-	if !path.Exist(s) {
+	if !fsio.Exist(s) {
 		panic(fmt.Sprintf("file %s not found", s))
 	}
 
