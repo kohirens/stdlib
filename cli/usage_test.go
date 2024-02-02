@@ -22,13 +22,13 @@ func TestUsage(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		um         str.StringMap
+		um         str.Map
 		subcommand map[string]*flag.FlagSet
 		want       string
 	}{
 		{
 			"display usage message",
-			str.StringMap{
+			str.Map{
 				"help":          "display this help",
 				"version":       "display version info",
 				"test-cmd_opt1": "opt1 summary",

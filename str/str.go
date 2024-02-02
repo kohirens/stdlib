@@ -6,6 +6,9 @@ import (
 	"regexp"
 )
 
+// Map use for usage messages, templates, and template vars.
+type Map = map[string]string
+
 // InArray Returns true if the string is found in the array of strings.
 func InArray(currFile string, files []string) bool {
 	for _, aFile := range files {
@@ -57,6 +60,3 @@ func ToCamelCase(subject, separate string, pascal bool) (string, error) {
 
 	return string(rVal), nil
 }
-
-// StringMap use for usage messages, templates, and template vars.
-type StringMap = map[string]string
