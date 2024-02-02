@@ -7,16 +7,18 @@ import (
 
 func TestReadCloser(t *testing.T) {
 	tests := []struct {
-		name     string
-		filepath string
-		want     string
-		wantErr  bool
+		name    string
+		content string
+		isFile  bool
+		want    string
+		wantErr bool
 	}{
-		{"can-read-file", "testdata/salam.txt", "Salam", false},
+		{"can-read-file", "testdata/salam.txt", true, "Salam", false},
+		{"can-read-file", "Salam", false, "Salam", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ReadCloser(tt.filepath)
+			got, err := NewReadCloser(tt.content, tt.isFile)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ReadCloser() error = %v, wantErr %v", err, tt.wantErr)
