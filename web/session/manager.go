@@ -1,6 +1,7 @@
 package session
 
 import (
+	"fmt"
 	"github.com/kohirens/stdlib/log"
 	"net/http"
 	"time"
@@ -31,13 +32,35 @@ func (m *Manager) ID() *http.Cookie {
 	return &http.Cookie{Name: IDKey, Value: m.id, Path: m.cookiePath, Secure: true}
 }
 
+// Init Loads an already-in-session session from storage by a string. In
+// contrast to RestoreFromCookie, which you will likely only use 1 of these
+// methods.
 func (m *Manager) Init(id string) error {
-	if id == "" { // continue with the default values.
-		return nil
+	if id == "" {
+		return fmt.Errorf(stderr.EmptySessionID)
 	}
 
 	// otherwise load from wherever storage keeps it.
 	data, e1 := m.storage.Load(id)
+	if e1 != nil {
+		return e1
+	}
+
+	m.data = data.Data
+	m.id = data.Id
+	m.expires = data.Expiration.Add(ExtendTime)
+
+	return nil
+}
+
+// RestoreFromCookie Get the session ID from a cookie then load it from storage.
+func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWriter) error {
+	if sidCookie.Value == "" {
+		return fmt.Errorf(stderr.EmptySessionID)
+	}
+
+	// otherwise load from wherever storage keeps it.
+	data, e1 := m.storage.Load(sidCookie.Value)
 	if e1 != nil {
 		return e1
 	}
