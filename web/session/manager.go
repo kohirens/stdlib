@@ -49,13 +49,14 @@ func (m *Manager) Init(id string) error {
 	return nil
 }
 
-func NewManager(storage Storage, expiration time.Duration) *Manager {
+func NewManager(storage Storage, expiration time.Duration, logger log.Logger) *Manager {
 	return &Manager{
 		data:       make(Store, 100),
 		expires:    time.Now().Add(expiration),
 		id:         GenerateID(),
 		storage:    storage,
 		hasUpdates: false,
+		log:        logger,
 	}
 }
 
