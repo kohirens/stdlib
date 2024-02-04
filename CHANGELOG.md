@@ -2,6 +2,13 @@
 ## [Unreleased]
 
 
+<a name="5.2.0"></a>
+## [5.2.0] - 2024-02-04
+### Added
+- Restore Session From Cookie
+- MongoDB Read and Update Functions
+
+
 <a name="5.1.1"></a>
 ## [5.1.1] - 2024-02-04
 ### Changed
@@ -318,7 +325,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.1.1...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.2.0...HEAD
+[5.2.0]: https://github.com/kohirens/stdlib.git/compare/5.1.1...5.2.0
 [5.1.1]: https://github.com/kohirens/stdlib.git/compare/5.1.0...5.1.1
 [5.1.0]: https://github.com/kohirens/stdlib.git/compare/5.0.0...5.1.0
 [5.0.0]: https://github.com/kohirens/stdlib.git/compare/4.4.0...5.0.0
