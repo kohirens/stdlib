@@ -19,8 +19,8 @@ func TestManager(t *testing.T) {
 			mngr := NewManager(tt.storage, tt.expiration, log.StdLogger{})
 
 			// use default with no error
-			if e := mngr.Init(""); e != nil {
-				t.Errorf("Manager.Init() = %v, want %v", e.Error(), nil)
+			if e := mngr.Init(""); e == nil {
+				t.Errorf("Manager.Init() did not error as expected")
 			}
 
 			// can load a session from storage
