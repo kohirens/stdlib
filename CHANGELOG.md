@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="5.1.1"></a>
+## [5.1.1] - 2024-02-04
+### Changed
+- Set Session Logger
+
+
 <a name="5.1.0"></a>
 ## [5.1.0] - 2024-02-02
 ### Added
@@ -312,7 +318,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.1.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.1.1...HEAD
+[5.1.1]: https://github.com/kohirens/stdlib.git/compare/5.1.0...5.1.1
 [5.1.0]: https://github.com/kohirens/stdlib.git/compare/5.0.0...5.1.0
 [5.0.0]: https://github.com/kohirens/stdlib.git/compare/4.4.0...5.0.0
 [4.4.0]: https://github.com/kohirens/stdlib.git/compare/4.3.0...4.4.0
