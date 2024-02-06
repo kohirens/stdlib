@@ -29,7 +29,13 @@ func (m *Manager) Get(key string) string {
 }
 
 func (m *Manager) ID() *http.Cookie {
-	return &http.Cookie{Name: IDKey, Value: m.id, Path: m.cookiePath, Secure: true}
+	return &http.Cookie{
+		Expires: m.expires,
+		Name:    IDKey,
+		Path:    m.cookiePath,
+		Secure:  true,
+		Value:   m.id,
+	}
 }
 
 // Init Loads an already-in-session session from storage by a string. In
@@ -59,7 +65,7 @@ func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWri
 		return fmt.Errorf(stderr.EmptySessionID)
 	}
 
-	if time.Now().UTC().After(sidCookie.Expires.UTC()) {
+	if !sidCookie.Expires.IsZero() && time.Now().UTC().After(sidCookie.Expires.UTC()) {
 		return fmt.Errorf(stderr.ExpiredCookie, sidCookie.Expires.UTC())
 	}
 
