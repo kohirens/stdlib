@@ -55,7 +55,7 @@ func (m *Manager) Init(id string) error {
 
 // RestoreFromCookie Get the session ID from a cookie then load it from storage.
 func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWriter) error {
-	if sidCookie.Value == "" {
+	if sidCookie == nil || sidCookie.Value == "" {
 		return fmt.Errorf(stderr.EmptySessionID)
 	}
 
