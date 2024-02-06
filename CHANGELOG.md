@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="5.3.1"></a>
+## [5.3.1] - 2024-02-06
+### Changed
+- Package session Cookie Expiration
+
+
 <a name="5.3.0"></a>
 ## [5.3.0] - 2024-02-06
 ### Added
@@ -334,7 +340,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.3.0...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.3.1...HEAD
+[5.3.1]: https://github.com/kohirens/stdlib.git/compare/5.3.0...5.3.1
 [5.3.0]: https://github.com/kohirens/stdlib.git/compare/5.2.0...5.3.0
 [5.2.0]: https://github.com/kohirens/stdlib.git/compare/5.1.1...5.2.0
 [5.1.1]: https://github.com/kohirens/stdlib.git/compare/5.1.0...5.1.1
