@@ -2,8 +2,14 @@
 ## [Unreleased]
 
 
-<a name="5.2.1"></a>
-## [5.2.1] - 2024-02-04
+<a name="5.3.0"></a>
+## [5.3.0] - 2024-02-06
+### Added
+- Detect Expired session ID Cookie
+
+### Fixed
+- Handling Invalid Session Cookie
+
 
 <a name="5.2.0"></a>
 ## [5.2.0] - 2024-02-04
@@ -328,8 +334,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.2.1...HEAD
-[5.2.1]: https://github.com/kohirens/stdlib.git/compare/5.2.0...5.2.1
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.3.0...HEAD
+[5.3.0]: https://github.com/kohirens/stdlib.git/compare/5.2.0...5.3.0
 [5.2.0]: https://github.com/kohirens/stdlib.git/compare/5.1.1...5.2.0
 [5.1.1]: https://github.com/kohirens/stdlib.git/compare/5.1.0...5.1.1
 [5.1.0]: https://github.com/kohirens/stdlib.git/compare/5.0.0...5.1.0
