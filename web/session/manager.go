@@ -59,6 +59,10 @@ func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWri
 		return fmt.Errorf(stderr.EmptySessionID)
 	}
 
+	if time.Now().UTC().After(sidCookie.Expires.UTC()) {
+		return fmt.Errorf(stderr.ExpiredCookie, sidCookie.Expires.UTC())
+	}
+
 	// otherwise load from wherever storage keeps it.
 	data, e1 := m.storage.Load(sidCookie.Value)
 	if e1 != nil {
