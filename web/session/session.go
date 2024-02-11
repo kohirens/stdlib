@@ -16,6 +16,13 @@ const (
 	IDKey = "_sid_"
 )
 
+// Handler Handle adding, getting, and removing data from a session.
+type Handler interface {
+	Get(key string) string
+	Remove(key string)
+	Set(key, value string)
+}
+
 // OfflineStore Model for long term storage
 type OfflineStore struct {
 	Id         string            `bson:"session_id"`
