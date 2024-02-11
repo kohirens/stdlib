@@ -2,6 +2,12 @@
 ## [Unreleased]
 
 
+<a name="5.4.0"></a>
+## [5.4.0] - 2024-02-11
+### Added
+- Handler To The session Package
+
+
 <a name="5.3.1"></a>
 ## [5.3.1] - 2024-02-06
 ### Changed
@@ -340,7 +346,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.3.1...HEAD
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.4.0...HEAD
+[5.4.0]: https://github.com/kohirens/stdlib.git/compare/5.3.1...5.4.0
 [5.3.1]: https://github.com/kohirens/stdlib.git/compare/5.3.0...5.3.1
 [5.3.0]: https://github.com/kohirens/stdlib.git/compare/5.2.0...5.3.0
 [5.2.0]: https://github.com/kohirens/stdlib.git/compare/5.1.1...5.2.0
