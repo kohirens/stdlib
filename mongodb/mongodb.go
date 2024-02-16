@@ -1,3 +1,6 @@
+// Package mongodb
+// Deprecated see github.com/kohirens/mongodb standalone library. This will be
+// removed in the next major release.
 package mongodb
 
 import (
