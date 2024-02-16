@@ -2,6 +2,7 @@ package slice
 
 import (
 	"bytes"
+	"reflect"
 	"testing"
 )
 
@@ -45,6 +46,25 @@ func TestPrependInt(tr *testing.T) {
 					t.Errorf("got %v but want %v", got, tc.want)
 					break
 				}
+			}
+		})
+	}
+}
+
+func TestPrepend(t *testing.T) {
+	type testCase[V comparable] struct {
+		name string
+		ary  []V
+		item V
+		want []V
+	}
+	tests := []testCase[int]{
+		{"int", []int{2, 3}, 1, []int{1, 2, 3}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Prepend(tt.ary, tt.item); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Prepend() = %v, want %v", got, tt.want)
 			}
 		})
 	}
