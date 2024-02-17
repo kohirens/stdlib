@@ -2,8 +2,11 @@
 ## [Unreleased]
 
 
-<a name="5.4.1"></a>
-## [5.4.1] - 2024-02-11
+<a name="5.5.0"></a>
+## [5.5.0] - 2024-02-16
+### Added
+- Generic Prepend Array Function
+
 
 <a name="5.4.0"></a>
 ## [5.4.0] - 2024-02-11
@@ -349,8 +352,8 @@
 - Development environment
 
 
-[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.4.1...HEAD
-[5.4.1]: https://github.com/kohirens/stdlib.git/compare/5.4.0...5.4.1
+[Unreleased]: https://github.com/kohirens/stdlib.git/compare/5.5.0...HEAD
+[5.5.0]: https://github.com/kohirens/stdlib.git/compare/5.4.0...5.5.0
 [5.4.0]: https://github.com/kohirens/stdlib.git/compare/5.3.1...5.4.0
 [5.3.1]: https://github.com/kohirens/stdlib.git/compare/5.3.0...5.3.1
 [5.3.0]: https://github.com/kohirens/stdlib.git/compare/5.2.0...5.3.0
