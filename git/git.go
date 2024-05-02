@@ -207,7 +207,7 @@ func IsRemoteRepo(repoLocation string) bool {
 		return false
 	}
 	// git@github.com:kohirens/tmpltoap.git
-	// https://github.com/kohirens/tmpltoapp.git
+	// https://github.com/kohirens/tmplpress.git
 	isGitUri := regexp.MustCompile("^(git|http|https)://.+$")
 	if isGitUri.MatchString(repoLocation) {
 		return true
