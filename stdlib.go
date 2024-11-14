@@ -12,12 +12,17 @@ const (
 )
 
 // FileExtChecker A store for file extensions to exclude and included.
+//
+// Deprecated This was used long ago but no longer needed and should be removed.
+// Originally written for tmptoapp now named tmplpress.
 type FileExtChecker struct {
 	excludes *[]string
 	includes *[]string
 }
 
 // NewFileExtChecker Initialize a new FileExtChecker instance.
+// Deprecated This was used long ago but no longer needed and should be removed.
+// Originally written for tmptoapp now named tmplpress.
 func NewFileExtChecker(el, in *[]string) (*FileExtChecker, error) {
 	var err error
 
