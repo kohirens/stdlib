@@ -13,5 +13,6 @@ consolidated here after being used in 2 or more Kohirens projects.
 
 * [Contributing](CONTRIBUTING.md)
 * Packages
-   * [fsio](/docs/fsio.md) - file io package.
-   * [str](/docs/str.md)
+   * [env](/docs/env.md) - Environment package.
+   * [fsio](/docs/fsio.md) - File IO package.
+   * [str](/docs/str.md) - Strings package.
