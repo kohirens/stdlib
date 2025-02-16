@@ -30,15 +30,16 @@ type OfflineStore struct {
 	Data       map[string]string `bson:"session_data"`
 }
 
-// Storage an interface to a medium for storing the session data out-side of an
-// HTTP cookie header. Especially for sensitive data pertaining to a users
-// session. Use this to implement storage for mediums like File, Database,
-// In-memory cache, etc.
+// Storage An interface medium for storing the session data to anyplace an
+// implementer see fit. An implementor should especially take into consideration
+// sensitive data pertaining to the clients session. This simple interface does
+// implementation of encryption for Save and decryption for Load. Use this
+// to implement storage for mediums like File, Database, In-memory cache, etc.
 type Storage interface {
 	// Load The session from storage.
 	Load(id string) (*OfflineStore, error)
 
-	// Save The session to storage.
+	// Save The session data to storage.
 	Save(id string, store Store, expiration time.Time) error
 }
 
