@@ -112,10 +112,24 @@ func (m *Manager) Save() error {
 	return nil
 }
 
-func (m *Manager) Remove(key string) {
+// Remove data from a session
+func (m *Manager) Remove(key string) error {
+	// verify the key exists
+	_, ok := m.data[key]
+	if !ok {
+		return fmt.Errorf(stderr.NoSuchKey, key)
+	}
+
+	// Indicate the session data needs to be saved.
+	m.hasUpdates = true
+
+	// Remove the key
 	delete(m.data, key)
+
+	return nil
 }
 
+// Set Store data in the session.
 func (m *Manager) Set(key, value string) {
 	m.hasUpdates = true
 	m.data[key] = value
