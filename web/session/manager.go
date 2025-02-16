@@ -34,11 +34,12 @@ func (m *Manager) Get(key string) string {
 // ID Of the session as an HTTP cookie with secure and http-only (cannot be read by JavaScript) enabled.
 func (m *Manager) ID() *http.Cookie {
 	return &http.Cookie{
-		Expires: m.expires,
-		Name:    IDKey,
-		Path:    m.cookiePath,
-		Secure:  true,
-		Value:   m.id,
+		Expires:  m.expires,
+		Name:     IDKey,
+		Path:     m.cookiePath,
+		Secure:   true,
+		HttpOnly: true,
+		Value:    m.id,
 	}
 }
 
