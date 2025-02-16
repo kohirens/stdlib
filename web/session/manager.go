@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// Manager This is the container/interface for your session. Needed to make a
+// new session or restore an existing one.
 type Manager struct {
 	cookiePath string
 	data       Store
@@ -19,6 +21,7 @@ type Manager struct {
 	log        log.Logger
 }
 
+// Get Retrieve data from the session.
 func (m *Manager) Get(key string) string {
 	value, ok := m.data[key]
 	if ok {
@@ -28,6 +31,7 @@ func (m *Manager) Get(key string) string {
 	return ""
 }
 
+// ID Of the session as an HTTP cookie with secure and http-only (cannot be read by JavaScript) enabled.
 func (m *Manager) ID() *http.Cookie {
 	return &http.Cookie{
 		Expires: m.expires,
@@ -38,9 +42,7 @@ func (m *Manager) ID() *http.Cookie {
 	}
 }
 
-// Init Loads an already-in-session session from storage by a string. In
-// contrast to RestoreFromCookie, which you will likely only use 1 of these
-// methods.
+// Init Restore a session by ID as a string.
 func (m *Manager) Init(id string) error {
 	if id == "" {
 		return fmt.Errorf(stderr.EmptySessionID)
@@ -59,7 +61,7 @@ func (m *Manager) Init(id string) error {
 	return nil
 }
 
-// RestoreFromCookie Get the session ID from a cookie then load it from storage.
+// RestoreFromCookie Restore a session by ID from an HTTP cookie.
 func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWriter) error {
 	if sidCookie == nil || sidCookie.Value == "" {
 		return fmt.Errorf(stderr.EmptySessionID)
@@ -69,7 +71,7 @@ func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWri
 		return fmt.Errorf(stderr.ExpiredCookie, sidCookie.Expires.UTC())
 	}
 
-	// otherwise load from wherever storage keeps it.
+	// Load the session from storage.
 	data, e1 := m.storage.Load(sidCookie.Value)
 	if e1 != nil {
 		return e1
@@ -82,6 +84,7 @@ func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWri
 	return nil
 }
 
+// NewManager Initialize a new session manager to handle session save, restore, get, and set.
 func NewManager(storage Storage, expiration time.Duration, logger log.Logger) *Manager {
 	return &Manager{
 		data:       make(Store, 100),
@@ -93,8 +96,8 @@ func NewManager(storage Storage, expiration time.Duration, logger log.Logger) *M
 	}
 }
 
-// Save calls the storage.Save, this is no-up is Set was never called.
-// Logs (at level info) when no-up.
+// Save Writes session data to its storage. This is no-op if Set was not previously called.
+// Logs a no-op message at level info.
 func (m *Manager) Save() error {
 	if m.hasUpdates {
 		return m.storage.Save(m.id, m.data, m.expires)
