@@ -32,13 +32,16 @@ func TestManager(t *testing.T) {
 			// can set and get an item from the session
 			mngr.Set("test", "1245")
 			if got := mngr.Get("test"); got != "1245" {
-				t.Errorf("Manager.Get() = %v, want %v", got, "1245")
+				t.Errorf("Manager.Set() = %v, want %v", got, "1245")
 			}
 
 			// can remove an item from the session
-			mngr.Remove("test")
+			ge1 := mngr.Remove("test")
+			if ge1 != nil {
+				t.Errorf("Manager.Remove() = %v, want %v", ge1, "nil")
+			}
 			if got := mngr.Get("test"); got != "" {
-				t.Errorf("Manager.Get() = %v, want %v", got, "")
+				t.Errorf("Manager.Remove() = %v, want %v", got, "")
 			}
 		})
 	}
