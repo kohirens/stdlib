@@ -49,7 +49,7 @@ func (m *Manager) Init(id string) error {
 		return fmt.Errorf(stderr.EmptySessionID)
 	}
 
-	// otherwise load from wherever storage keeps it.
+	// Load from storage.
 	data, e1 := m.storage.Load(id)
 	if e1 != nil {
 		return e1
