@@ -24,8 +24,8 @@ func NotImplemented(method string, supported []string) bool {
 }
 
 // ResponseFromFile Load a page from storage.
-func ResponseFromFile(pagePath, contentType string, store Storage) (*Response, error) {
-	content, e1 := store.Load(pagePath)
+func ResponseFromFile(pagePath, contentType string) (*Response, error) {
+	content, e1 := os.ReadFile(pagePath)
 	if e1 != nil {
 		return nil, fmt.Errorf(Stderr.CannotLoadPage, e1.Error())
 	}

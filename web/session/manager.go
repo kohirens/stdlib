@@ -9,11 +9,8 @@ import (
 // Manager This is the container/interface for your session. Needed to make a
 // new session or restore an existing one.
 type Manager struct {
-	cookiePath string
-	data       Store
-	expires    time.Time
-	id         string
-	storage    Storage
+	data    *Data
+	storage Storage
 	// To save on network traffic default this to false, and set to true when
 	// Set is called. Save is no-up if this is false.
 	hasUpdates bool
@@ -21,7 +18,7 @@ type Manager struct {
 
 // Get Retrieve data from the session.
 func (m *Manager) Get(key string) string {
-	value, ok := m.data[key]
+	value, ok := m.data.Items[key]
 	if ok {
 		return value
 	}
@@ -30,19 +27,26 @@ func (m *Manager) Get(key string) string {
 }
 
 // ID Of the session as an HTTP cookie with secure and http-only (cannot be read by JavaScript) enabled.
-func (m *Manager) ID() *http.Cookie {
-	return &http.Cookie{
-		Expires:  m.expires,
+// The domain parameter is optional, and only set when it is not an emptry string.
+func (m *Manager) ID(cookiePath, domain string) *http.Cookie {
+	c := &http.Cookie{
+		Expires:  m.data.Expiration,
 		Name:     IDKey,
-		Path:     m.cookiePath,
+		Path:     cookiePath,
 		Secure:   true,
 		HttpOnly: true,
-		Value:    m.id,
+		Value:    m.data.Id,
 	}
+
+	if domain != "" {
+		c.Domain = domain
+	}
+
+	return c
 }
 
-// Init Restore a session by ID as a string.
-func (m *Manager) Init(id string) error {
+// Restore Restores the session by ID as a string.
+func (m *Manager) Restore(id string) error {
 	if id == "" {
 		return fmt.Errorf(stderr.EmptySessionID)
 	}
@@ -53,32 +57,29 @@ func (m *Manager) Init(id string) error {
 		return e1
 	}
 
-	m.data = data.Data
-	m.id = data.Id
-	m.expires = data.Expiration.Add(ExtendTime)
+	m.data = data
 
 	return nil
 }
 
 // RestoreFromCookie Restore a session by ID from an HTTP cookie.
-func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWriter) error {
+func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie) error {
 	if sidCookie == nil || sidCookie.Value == "" {
 		return fmt.Errorf(stderr.EmptySessionID)
 	}
 
+	// Verify the cookie has not expired.
 	if !sidCookie.Expires.IsZero() && time.Now().UTC().After(sidCookie.Expires.UTC()) {
 		return fmt.Errorf(stderr.ExpiredCookie, sidCookie.Expires.UTC())
 	}
 
-	// Load the session from storage.
+	// Load the session from storage, no matter the storage medium this should always return JSON as a byte array.
 	data, e1 := m.storage.Load(sidCookie.Value)
 	if e1 != nil {
 		return e1
 	}
 
-	m.data = data.Data
-	m.id = data.Id
-	m.expires = data.Expiration.Add(ExtendTime)
+	m.data = data
 
 	return nil
 }
@@ -86,9 +87,11 @@ func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWri
 // NewManager Initialize a new session manager to handle session save, restore, get, and set.
 func NewManager(storage Storage, expiration time.Duration) *Manager {
 	return &Manager{
-		data:       make(Store, 100),
-		expires:    time.Now().Add(expiration),
-		id:         GenerateID(),
+		data: &Data{
+			GenerateID(),
+			time.Now().Add(expiration),
+			make(Store, 100),
+		},
 		storage:    storage,
 		hasUpdates: false,
 	}
@@ -97,7 +100,7 @@ func NewManager(storage Storage, expiration time.Duration) *Manager {
 // Save Writes session data to its storage. This is no-op if Set was not previously called.
 func (m *Manager) Save() error {
 	if m.hasUpdates {
-		return m.storage.Save(m.id, m.data, m.expires)
+		return m.storage.Save(m.data)
 	}
 
 	return nil
@@ -106,7 +109,7 @@ func (m *Manager) Save() error {
 // Remove data from a session
 func (m *Manager) Remove(key string) error {
 	// verify the key exists
-	_, ok := m.data[key]
+	_, ok := m.data.Items[key]
 	if !ok {
 		return fmt.Errorf(stderr.NoSuchKey, key)
 	}
@@ -115,7 +118,7 @@ func (m *Manager) Remove(key string) error {
 	m.hasUpdates = true
 
 	// Remove the key
-	delete(m.data, key)
+	delete(m.data.Items, key)
 
 	return nil
 }
@@ -123,5 +126,5 @@ func (m *Manager) Remove(key string) error {
 // Set Store data in the session.
 func (m *Manager) Set(key, value string) {
 	m.hasUpdates = true
-	m.data[key] = value
+	m.data.Items[key] = value
 }

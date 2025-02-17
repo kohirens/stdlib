@@ -12,22 +12,11 @@ import (
 	"time"
 )
 
-const (
-	IDKey = "_sid_"
-)
-
 // Handler Handle adding, getting, and removing data from a session.
 type Handler interface {
 	Get(key string) string
 	Remove(key string)
 	Set(key, value string)
-}
-
-// OfflineStore Model for long term storage
-type OfflineStore struct {
-	Id         string            `bson:"session_id"`
-	Expiration time.Time         `bson:"expiration"`
-	Data       map[string]string `bson:"session_data"`
 }
 
 // Storage An interface medium for storing the session data to anyplace an
@@ -37,15 +26,26 @@ type OfflineStore struct {
 // to implement storage for mediums like File, Database, In-memory cache, etc.
 type Storage interface {
 	// Load The session from storage.
-	Load(id string) (*OfflineStore, error)
+	// No matter the storage medium this should always return JSON as a byte array.
+	Load(id string) (*Data, error)
 
-	// Save The session data to storage.
-	Save(id string, store Store, expiration time.Time) error
+	// Save The session data to the storage medium.
+	Save(data *Data) error
+}
+
+type Data struct {
+	Id         string            `json,bson:"session_id"`
+	Expiration time.Time         `json,bson:"expiration"`
+	Items      map[string]string `json,bson:"session_data"`
 }
 
 // Store Model for short term storage in memory (not intended for long
-// term storage, see OfflineStore for that purpose).
+// term storage).
 type Store map[string]string
+
+const (
+	IDKey = "_sid_"
+)
 
 var (
 	// ExtendTime How much time the session is extended when a user loads a
