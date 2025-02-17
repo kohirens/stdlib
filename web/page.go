@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -64,11 +63,6 @@ func GetHeader(headers StringMap, name string) string {
 	for h, v := range headers {
 		lch := strings.ToLower(h)
 		if lch == lcn {
-			ov := v
-			if lch == "authorization" {
-				ov = "*************"
-			}
-			log.Infof("found header %v = %v", name, ov)
 			value = v
 			break
 		}
@@ -85,7 +79,6 @@ func GetMapItem(mapData StringMap, name string) string {
 	for k, v := range mapData {
 		lk := strings.ToLower(k)
 		if lk == ln {
-			log.Infof("found item %q in string map", name)
 			value = v
 			break
 		}
@@ -148,7 +141,7 @@ func Respond404() *Response {
 
 // Respond405 Send a 405 Method Not Allowed HTTP response.
 //
-//	allowedMethods is a comma delimited string of HTTP methods that are allowed.
+//	allowedMethods is a comma-delimited string of HTTP methods that are allowed.
 //	Example:
 //	  GET, HEAD, PUT
 func Respond405(allowedMethods string) *Response {

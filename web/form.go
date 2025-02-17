@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
 	"mime"
 	"mime/multipart"
 	"net/url"
@@ -80,7 +79,7 @@ func ParseFormWithFiles(encodedData string, contentType string) (*FormData, erro
 
 	mediaType, params, e1 := mime.ParseMediaType(contentType)
 	if e1 != nil {
-		log.Fatf(e1.Error())
+		return nil, e1
 	}
 
 	var formData *multipart.Form

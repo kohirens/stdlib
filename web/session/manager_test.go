@@ -1,7 +1,6 @@
 package session
 
 import (
-	"github.com/kohirens/stdlib/log"
 	"testing"
 	"time"
 )
@@ -16,7 +15,7 @@ func TestManager(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mngr := NewManager(tt.storage, tt.expiration, log.StdLogger{})
+			mngr := NewManager(tt.storage, tt.expiration)
 
 			// use default with no error
 			if e := mngr.Init(""); e == nil {

@@ -25,18 +25,14 @@ func NotImplemented(method string, supported []string) bool {
 
 // ResponseFromFile Load a page from storage.
 func ResponseFromFile(pagePath, contentType string, store Storage) (*Response, error) {
-	Log.Infof(Stdout.LoadPage, pagePath)
-
 	content, e1 := store.Load(pagePath)
 	if e1 != nil {
-		Log.Errf(Stderr.CannotLoadPage, e1.Error())
+		return nil, fmt.Errorf(Stderr.CannotLoadPage, e1.Error())
 	}
 
 	if content == nil {
 		return Respond404(), nil
 	}
-
-	Log.Dbugf(Stdout.BytesRead, pagePath, len(content))
 
 	res := Respond200(content, contentType)
 
@@ -60,7 +56,6 @@ func ShouldRedirect(host string) (bool, error) {
 	}
 
 	if strings.EqualFold(host, rt) {
-		Log.Infof(Stderr.DoNotRedirectToSelf, host, rt)
 		return false, nil
 	}
 
@@ -70,7 +65,6 @@ func ShouldRedirect(host string) (bool, error) {
 	}
 
 	if rh == "" {
-		Log.Infof(Stdout.EnvVarEmpty, RedirectHostEnvVar)
 		return false, nil
 	}
 
@@ -78,7 +72,6 @@ func ShouldRedirect(host string) (bool, error) {
 	rhs := strings.Split(rh, ",")
 	for _, h := range rhs {
 		if h == host {
-			Log.Infof(Stdout.DomainOnRedirectList, host, rt)
 			retVal = true
 		}
 	}

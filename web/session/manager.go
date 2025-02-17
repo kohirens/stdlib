@@ -2,7 +2,6 @@ package session
 
 import (
 	"fmt"
-	"github.com/kohirens/stdlib/log"
 	"net/http"
 	"time"
 )
@@ -18,7 +17,6 @@ type Manager struct {
 	// To save on network traffic default this to false, and set to true when
 	// Set is called. Save is no-up if this is false.
 	hasUpdates bool
-	log        log.Logger
 }
 
 // Get Retrieve data from the session.
@@ -86,27 +84,20 @@ func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie, res http.ResponseWri
 }
 
 // NewManager Initialize a new session manager to handle session save, restore, get, and set.
-func NewManager(storage Storage, expiration time.Duration, logger log.Logger) *Manager {
+func NewManager(storage Storage, expiration time.Duration) *Manager {
 	return &Manager{
 		data:       make(Store, 100),
 		expires:    time.Now().Add(expiration),
 		id:         GenerateID(),
 		storage:    storage,
 		hasUpdates: false,
-		log:        logger,
 	}
 }
 
 // Save Writes session data to its storage. This is no-op if Set was not previously called.
-// Logs a no-op message at level info.
 func (m *Manager) Save() error {
 	if m.hasUpdates {
 		return m.storage.Save(m.id, m.data, m.expires)
-
-	}
-
-	if m.log != nil {
-		m.log.Infof("no session updates to save")
 	}
 
 	return nil
