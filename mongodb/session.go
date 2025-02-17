@@ -6,26 +6,25 @@ import (
 	"github.com/kohirens/stdlib/web/session"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"time"
 )
 
-type SessionStore struct {
+type StorageDocument struct {
 	collection *mongo.Collection
 }
 
-func NewSessionStore(c *mongo.Client, database, collection string) session.Storage {
-	return &SessionStore{
+func NewStorageMongoDB(c *mongo.Client, database, collection string) *StorageDocument {
+	return &StorageDocument{
 		collection: c.Database(database).Collection(collection),
 	}
 }
 
-func (ss *SessionStore) Save(id string, value session.Store, exp time.Time) error {
-	query := map[string]string{"session_id": id}
+func (sd *StorageDocument) Save(data *session.Data) error {
+	query := map[string]string{"session_id": data.Id}
 
 	_, e1 := UpsertOne(
 		query,
-		session.OfflineStore{Id: id, Expiration: exp, Data: value},
-		ss.collection,
+		data,
+		sd.collection,
 	)
 	if e1 != nil {
 		return fmt.Errorf(stderr.CannotSaveSession, e1.Error())
@@ -34,15 +33,18 @@ func (ss *SessionStore) Save(id string, value session.Store, exp time.Time) erro
 	return nil
 }
 
-func (ss *SessionStore) Load(id string) (*session.OfflineStore, error) {
-	sd := &session.OfflineStore{}
-
+func (sd *StorageDocument) Load(id string) ([]byte, error) {
 	query := bson.M{"session_id": id}
-	result := ss.collection.FindOne(context.TODO(), query)
+	result := sd.collection.FindOne(context.TODO(), query)
 
-	if e := result.Decode(sd); e != nil {
-		return nil, fmt.Errorf(stderr.CannotLoadSession, e.Error())
+	bsonDoc, e1 := result.Raw()
+	if e1 != nil {
+		return nil, fmt.Errorf(stderr.CannotLoadSession, e1.Error())
 	}
 
-	return sd, nil
+	byteAry, e2 := bson.Marshal(bsonDoc)
+	if e2 != nil {
+		return nil, fmt.Errorf(stderr.CannotLoadSession, e2.Error())
+	}
+	return byteAry, nil
 }
