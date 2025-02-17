@@ -3,7 +3,7 @@ package git
 import (
 	"bytes"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/stdlib/logger"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -13,14 +13,14 @@ import (
 
 // Checkout Open an existing repo and checkout commit by full ref-name
 func Checkout(repoLocalPath, ref string) (string, string, error) {
-	log.Logf("pulling latest\n")
+	logger.Logf("pulling latest\n")
 	_, e1 := gitCmd(repoLocalPath, "fetch", "--all", "-p")
 	if e1 != nil {
 		return "", "", fmt.Errorf(stderr.GitFetchFailed, repoLocalPath, ref, e1.Error())
 	}
 
-	log.Infof(stdout.RefInfo, ref)
-	log.Infof(stdout.GitCheckout, ref)
+	logger.Infof(stdout.RefInfo, ref)
+	logger.Infof(stdout.GitCheckout, ref)
 
 	_, e2 := gitCmd(repoLocalPath, "checkout", ""+ref)
 	if e2 != nil {
@@ -43,8 +43,8 @@ func Checkout(repoLocalPath, ref string) (string, string, error) {
 // Clone Use git application to clone a repo from one location to a local
 // directory.
 func Clone(repoUri, repoDir, refName string) (string, string, error) {
-	log.Infof("branch to clone is %q", refName)
-	log.Infof("git clone %s", repoUri)
+	logger.Infof("branch to clone is %q", refName)
+	logger.Infof("git clone %s", repoUri)
 
 	var sco []byte
 	var e1 error
@@ -56,7 +56,7 @@ func Clone(repoUri, repoDir, refName string) (string, string, error) {
 			branchName = re.ReplaceAllString(refName, "${1}")
 		}
 
-		log.Logf("cloning branch name: %v", branchName)
+		logger.Logf("cloning branch name: %v", branchName)
 
 		// git clone --depth 1 --branch <tag_name> <repo_url>
 		// NOTE: Branch cannot be a full ref but can be short ref name or a tag.
@@ -68,7 +68,7 @@ func Clone(repoUri, repoDir, refName string) (string, string, error) {
 			return "", "", fmt.Errorf(stderr.Cloning, repoUri, e1.Error())
 		}
 
-		log.Infof("clone output \n%s", sco)
+		logger.Infof("clone output \n%s", sco)
 
 		// get current branch
 		cb, e4 := gitCmd(repoDir, "branch", "--show-current", refName)
@@ -83,7 +83,7 @@ func Clone(repoUri, repoDir, refName string) (string, string, error) {
 				return "", "", fmt.Errorf(stderr.Checkout, repoUri, e3.Error(), co)
 			}
 
-			log.Infof("checkout output \n%s", co)
+			logger.Infof("checkout output \n%s", co)
 		}
 	}
 
@@ -124,12 +124,12 @@ func CloneFromBundle(bundleName, tmpDir, bundleDir, ps string) string {
 	cmd := exec.Command("git", "clone", "-b", "main", srcRepo, repoPath)
 	_, _ = cmd.CombinedOutput()
 	if ec := cmd.ProcessState.ExitCode(); ec != 0 {
-		log.Panf("error un-bundling %q to %q for a unit test", srcRepo, repoPath)
+		logger.Panf("error un-bundling %q to %q for a unit test", srcRepo, repoPath)
 	}
 
 	absPath, e5 := filepath.Abs(repoPath)
 	if e5 != nil {
-		log.Panf("could not get full path to repository: %v", e5.Error())
+		logger.Panf("could not get full path to repository: %v", e5.Error())
 	}
 
 	return absPath
@@ -171,7 +171,7 @@ func RemoteTags(repo string) ([]string, error) {
 
 	ret := make([]string, len(mat))
 	for i, v := range mat {
-		log.Dbugf(stdout.RemoteTagDbug1, string(v[1]))
+		logger.Dbugf(stdout.RemoteTagDbug1, string(v[1]))
 		ret[i] = string(v[1])
 	}
 
@@ -185,7 +185,7 @@ func gitCmd(repoPath string, args ...string) ([]byte, error) {
 	cmd.Dir = repoPath
 	cmdStr := cmd.String()
 
-	log.Infof(stdout.RunningCommand, cmdStr)
+	logger.Infof(stdout.RunningCommand, cmdStr)
 
 	cmdOut, cmdErr := cmd.CombinedOutput()
 	exitCode := cmd.ProcessState.ExitCode()

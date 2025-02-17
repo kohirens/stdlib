@@ -3,11 +3,11 @@ package web
 import (
 	"fmt"
 	"github.com/kohirens/stdlib/fsio"
-	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/stdlib/logger"
 	"os"
 )
 
-var Log log.Logger = &log.StdLogger{}
+var log = &logger.StdLogger{}
 
 func NewLocalStorage() *LocalStorage {
 	return &LocalStorage{}
@@ -33,7 +33,7 @@ func (ls *LocalStorage) Save(content []byte, filename string) (int, error) {
 
 // Load a file from local storage.
 func (ls *LocalStorage) Load(pagePath string) ([]byte, error) {
-	Log.Infof(Stdout.LoadPage, pagePath)
+	log.Infof(Stdout.LoadPage, pagePath)
 
 	if !fsio.Exist(pagePath) {
 		return nil, fmt.Errorf("file %v not found", pagePath)
@@ -44,7 +44,7 @@ func (ls *LocalStorage) Load(pagePath string) ([]byte, error) {
 		return nil, fmt.Errorf(Stderr.CannotReadFile, pagePath, e1.Error())
 	}
 
-	Log.Dbugf(Stdout.BytesRead, pagePath, len(contents))
+	log.Dbugf(Stdout.BytesRead, pagePath, len(contents))
 
 	return contents, nil
 }

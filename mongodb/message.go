@@ -4,14 +4,14 @@ var stdout = struct {
 }{}
 
 var stderr = struct {
-	CannotConnect     string
+	Connect           string
 	CannotInsertData  string
 	CannotLoadSession string
 	CannotSaveSession string
 	CannotUpsertData  string
 	EnvVarUnset       string
 }{
-	CannotConnect:     "could not connect to the database: %v",
+	Connect:           "could not connect to the database: %w",
 	CannotInsertData:  "could not insert data into %v.%v; %v",
 	CannotLoadSession: "could not load session data; %v",
 	CannotSaveSession: "could not save session data; %v",

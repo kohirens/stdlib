@@ -2,7 +2,7 @@ package fsio
 
 import (
 	"fmt"
-	"github.com/kohirens/stdlib/log"
+	"github.com/kohirens/stdlib/logger"
 	"io"
 	"os"
 	"path/filepath"
@@ -27,10 +27,10 @@ func CopyDirToDir(src, dst, ps string, mode os.FileMode) error {
 			return nil
 		}
 
-		log.Infof("file to copy: %v", sourceFile)
+		logger.Dbugf("file to copy: %v", sourceFile)
 
 		copyTo := dst + strings.Replace(sourceFile, src, "", 1)
-		log.Infof("copy to: %v", copyTo)
+		logger.Dbugf("copy to: %v", copyTo)
 
 		// Skip directories.
 		if fi.IsDir() {
@@ -42,12 +42,12 @@ func CopyDirToDir(src, dst, ps string, mode os.FileMode) error {
 
 		// Make the parent directory of the file.
 		dir := filepath.Dir(copyTo)
-		log.Infof("making directory %v", dir)
+		logger.Dbugf("making directory %v", dir)
 		if e := os.MkdirAll(dir, mode); e != nil {
 			return fmt.Errorf("could not make directory %v because %v", dir, e.Error())
 		}
 
-		log.Logf("copy file %v to %v", sourceFile, copyTo)
+		logger.Logf("copy file %v to %v", sourceFile, copyTo)
 		_, e1 := CopyToDir(sourceFile, dir, ps)
 
 		return e1

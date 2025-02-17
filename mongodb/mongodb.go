@@ -6,7 +6,6 @@ package mongodb
 import (
 	"context"
 	"fmt"
-	"github.com/kohirens/stdlib/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -30,7 +29,7 @@ func Connection() (*mongo.Client, error) {
 	// Create a new client and connect to the server
 	client, e1 := mongo.Connect(context.TODO(), opts)
 	if e1 != nil {
-		log.Fatf(stderr.CannotConnect, e1.Error())
+		return nil, fmt.Errorf(stderr.Connect, e1.Error())
 	}
 
 	return client, nil
