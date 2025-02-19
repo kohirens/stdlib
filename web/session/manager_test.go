@@ -2,6 +2,7 @@ package session
 
 import (
 	"encoding/json"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -29,14 +30,14 @@ func TestManager(t *testing.T) {
 				return
 			}
 
-			if got := mngr.Get("test2"); got != "54321" {
+			if got := mngr.Get("test2"); !reflect.DeepEqual(got, []byte("54321")) {
 				t.Errorf("Manager.Restore() = %v, want %v", got, "54321")
 				return
 			}
 
 			// can set and get an item from the session
-			mngr.Set("test", "1245")
-			if got := mngr.Get("test"); got != "1245" {
+			mngr.Set("test", []byte("1245"))
+			if got := mngr.Get("test"); !reflect.DeepEqual(got, []byte("1245")) {
 				t.Errorf("Manager.Set() = %v, want %v", got, "1245")
 				return
 			}
@@ -47,7 +48,7 @@ func TestManager(t *testing.T) {
 				t.Errorf("Manager.Remove() = %v, want %v", ge1, "nil")
 				return
 			}
-			if got := mngr.Get("test"); got != "" {
+			if got := mngr.Get("test"); got != nil {
 				t.Errorf("Manager.Remove() = %v, want %v", got, "")
 				return
 			}
@@ -64,7 +65,7 @@ func (ms *MockStorage) Load(id string) (*Data, error) {
 		return &Data{
 			"abcdefg",
 			time.Now().Add(time.Minute + 5), //exp.Format("2006-01-02T15:04:05Z07:00"),
-			map[string]string{"test2": "54321"},
+			map[string][]byte{"test2": []byte("54321")},
 		}, nil
 	}
 

@@ -17,13 +17,13 @@ type Manager struct {
 }
 
 // Get Retrieve data from the session.
-func (m *Manager) Get(key string) string {
+func (m *Manager) Get(key string) []byte {
 	value, ok := m.data.Items[key]
 	if ok {
 		return value
 	}
 
-	return ""
+	return nil
 }
 
 // ID Of the session as an HTTP cookie with secure and http-only (cannot be read by JavaScript) enabled.
@@ -124,7 +124,7 @@ func (m *Manager) Remove(key string) error {
 }
 
 // Set Store data in the session.
-func (m *Manager) Set(key, value string) {
+func (m *Manager) Set(key string, value []byte) {
 	m.hasUpdates = true
 	m.data.Items[key] = value
 }

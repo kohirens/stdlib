@@ -19,7 +19,7 @@ func NewStorageMongoDB(c *mongo.Client, database, collection string) *StorageDoc
 }
 
 func (sd *StorageDocument) Save(data *session.Data) error {
-	query := map[string]string{"session_id": data.Id}
+	query := map[string][]byte{"session_id": []byte(data.Id)}
 
 	_, e1 := UpsertOne(
 		query,
