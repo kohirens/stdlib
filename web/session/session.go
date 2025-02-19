@@ -34,14 +34,14 @@ type Storage interface {
 }
 
 type Data struct {
-	Id         string            `json,bson:"session_id"`
-	Expiration time.Time         `json,bson:"expiration"`
-	Items      map[string]string `json,bson:"session_data"`
+	Id         string    `json,bson:"session_id"`
+	Expiration time.Time `json,bson:"expiration"`
+	Items      Store     `json,bson:"session_data"`
 }
 
 // Store Model for short term storage in memory (not intended for long
 // term storage).
-type Store map[string]string
+type Store map[string][]byte
 
 const (
 	IDKey = "_sid_"
