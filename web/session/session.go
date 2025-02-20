@@ -8,17 +8,14 @@
 package session
 
 import (
-	"errors"
 	"github.com/google/uuid"
-	"net/http"
 	"time"
 )
 
-// Handler Handle adding, getting, and removing data from a session.
-type Handler interface {
-	Get(key string) string
-	Remove(key string)
-	Set(key, value string)
+type Data struct {
+	Id         string    `json,bson:"session_id"`
+	Expiration time.Time `json,bson:"expiration"`
+	Items      Store     `json,bson:"session_data"`
 }
 
 // Storage An interface medium for storing the session data to anyplace an
@@ -33,12 +30,6 @@ type Storage interface {
 
 	// Save The session data to the storage medium.
 	Save(data *Data) error
-}
-
-type Data struct {
-	Id         string    `json,bson:"session_id"`
-	Expiration time.Time `json,bson:"expiration"`
-	Items      Store     `json,bson:"session_data"`
 }
 
 // Store Model for short term storage in memory (not intended for long
@@ -58,21 +49,6 @@ var (
 // GenerateID A unique session ID
 func GenerateID() string {
 	return uuid.NewString()
-}
-
-// Init Will return previous session or a new session if retrieval fails.
-// When there is an error, then a new session will be returned.
-func Init(c *http.Cookie, s Storage, d time.Duration) (*Manager, error) {
-	sm := NewManager(s, d)
-
-	if c != nil { // Look for previous session ID in an HTTP cookie.
-		var expErr *ExpiredError
-		if e := sm.RestoreFromCookie(c); !errors.As(e, &expErr) {
-			return sm, e
-		}
-	}
-
-	return sm, nil
 }
 
 // NewManager Initialize a new session manager to handle session save, restore, get, and set.
