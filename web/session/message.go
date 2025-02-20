@@ -8,6 +8,6 @@ var stderr = struct {
 }{
 	DecodeJSON:     "could not decode json data: %v",
 	EmptySessionID: "session ID is empty",
-	ExpiredCookie:  "session ID cookie has expired on %v",
+	ExpiredCookie:  "session has expired at %v",
 	NoSuchKey:      "the key %v was not found in the session",
 }

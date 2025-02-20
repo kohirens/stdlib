@@ -8,7 +8,9 @@
 package session
 
 import (
+	"errors"
 	"github.com/google/uuid"
+	"net/http"
 	"time"
 )
 
@@ -56,4 +58,19 @@ var (
 // GenerateID A unique session ID
 func GenerateID() string {
 	return uuid.NewString()
+}
+
+// Init Will return previous session or a new session if retrieval fails.
+// When there is an error, then a new session will be returned.
+func Init(c *http.Cookie, s Storage, d time.Duration) (*Manager, error) {
+	sm := NewManager(s, d)
+
+	if c != nil { // Look for previous session ID in an HTTP cookie.
+		var expErr *ExpiredError
+		if e := sm.RestoreFromCookie(c); !errors.As(e, &expErr) {
+			return sm, e
+		}
+	}
+
+	return sm, nil
 }
