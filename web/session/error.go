@@ -1,9 +1,12 @@
 package session
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
+
+var StorageError = errors.New(stderr.NoStorage)
 
 type ExpiredError struct {
 	exp time.Time

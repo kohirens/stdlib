@@ -51,33 +51,19 @@ func (m *Manager) Restore(id string) error {
 		return fmt.Errorf(stderr.EmptySessionID)
 	}
 
+	if m.storage == nil {
+		return StorageError
+	}
+
 	// Load from storage.
 	data, e1 := m.storage.Load(id)
 	if e1 != nil {
 		return e1
 	}
 
-	m.data = data
-
-	return nil
-}
-
-// RestoreFromCookie Restore a session by ID from an HTTP cookie as long as the
-// cookie has not expired and the data can be pulled from storage.
-func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie) error {
-	if sidCookie == nil || sidCookie.Value == "" {
-		return fmt.Errorf(stderr.EmptySessionID)
-	}
-
-	// Verify the cookie has not expired.
-	if !sidCookie.Expires.IsZero() && time.Now().UTC().After(sidCookie.Expires.UTC()) {
-		return ExpiredError{sidCookie.Expires}
-	}
-
-	// Load the session from storage, no matter the storage medium this should always return JSON as a byte array.
-	data, e1 := m.storage.Load(sidCookie.Value)
-	if e1 != nil {
-		return e1
+	// Verify the session has not expired.
+	if time.Now().UTC().After(data.Expiration.UTC()) {
+		return ExpiredError{data.Expiration}
 	}
 
 	m.data = data
