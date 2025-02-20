@@ -45,6 +45,23 @@ func (m *Manager) ID(cookiePath, domain string) *http.Cookie {
 	return c
 }
 
+// Remove data from a session
+func (m *Manager) Remove(key string) error {
+	// verify the key exists
+	_, ok := m.data.Items[key]
+	if !ok {
+		return fmt.Errorf(stderr.NoSuchKey, key)
+	}
+
+	// Indicate the session data needs to be saved.
+	m.hasUpdates = true
+
+	// Remove the key
+	delete(m.data.Items, key)
+
+	return nil
+}
+
 // Restore Restores the session by ID as a string.
 func (m *Manager) Restore(id string) error {
 	if id == "" {
@@ -78,23 +95,6 @@ func (m *Manager) Save() error {
 	if m.hasUpdates {
 		return m.storage.Save(m.data)
 	}
-
-	return nil
-}
-
-// Remove data from a session
-func (m *Manager) Remove(key string) error {
-	// verify the key exists
-	_, ok := m.data.Items[key]
-	if !ok {
-		return fmt.Errorf(stderr.NoSuchKey, key)
-	}
-
-	// Indicate the session data needs to be saved.
-	m.hasUpdates = true
-
-	// Remove the key
-	delete(m.data.Items, key)
 
 	return nil
 }
