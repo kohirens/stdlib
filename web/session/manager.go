@@ -87,19 +87,6 @@ func (m *Manager) RestoreFromCookie(sidCookie *http.Cookie) error {
 	return nil
 }
 
-// NewManager Initialize a new session manager to handle session save, restore, get, and set.
-func NewManager(storage Storage, expiration time.Duration) *Manager {
-	return &Manager{
-		data: &Data{
-			GenerateID(),
-			time.Now().Add(expiration),
-			make(Store, 100),
-		},
-		storage:    storage,
-		hasUpdates: false,
-	}
-}
-
 // Save Writes session data to its storage. This is no-op if Set was not previously called.
 func (m *Manager) Save() error {
 	if m.hasUpdates {
