@@ -74,3 +74,16 @@ func Init(c *http.Cookie, s Storage, d time.Duration) (*Manager, error) {
 
 	return sm, nil
 }
+
+// NewManager Initialize a new session manager to handle session save, restore, get, and set.
+func NewManager(storage Storage, expiration time.Duration) *Manager {
+	return &Manager{
+		data: &Data{
+			GenerateID(),
+			time.Now().Add(expiration),
+			make(Store, 100),
+		},
+		storage:    storage,
+		hasUpdates: false,
+	}
+}
