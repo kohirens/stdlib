@@ -26,6 +26,11 @@ func (m *Manager) Get(key string) []byte {
 	return nil
 }
 
+// Expiration Retrieve expiration time.
+func (m *Manager) Expiration() time.Time {
+	return m.data.Expiration
+}
+
 // ID Of the session as an HTTP cookie with secure and http-only (cannot be read by JavaScript) enabled.
 // The domain parameter is optional, and only set when it is not an emptry string.
 func (m *Manager) ID(cookiePath, domain string) *http.Cookie {
