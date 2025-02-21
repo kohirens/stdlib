@@ -45,6 +45,7 @@ func (m *Manager) IDCookie(cookiePath, domain string) *http.Cookie {
 		Secure:   true,
 		HttpOnly: true,
 		Value:    m.data.Id,
+		SameSite: http.SameSiteStrictMode,
 	}
 
 	if domain != "" {
