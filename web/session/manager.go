@@ -33,7 +33,11 @@ func (m *Manager) Expiration() time.Time {
 
 // ID Of the session as an HTTP cookie with secure and http-only (cannot be read by JavaScript) enabled.
 // The domain parameter is optional, and only set when it is not an emptry string.
-func (m *Manager) ID(cookiePath, domain string) *http.Cookie {
+func (m *Manager) ID() string {
+	return m.data.Id
+}
+
+func (m *Manager) IDCookie(cookiePath, domain string) *http.Cookie {
 	c := &http.Cookie{
 		Expires:  m.data.Expiration,
 		Name:     IDKey,
