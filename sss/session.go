@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	webSession "github.com/kohirens/stdlib/web/session"
+	wSession "github.com/kohirens/stdlib/web/session"
 	"io"
 )
 
@@ -25,7 +25,7 @@ type StorageBucket struct {
 // site domain be used as a prefix to prevent collision in the bucket.
 // The timeout on the Context will interrupt the request if it expires.
 // See also https://docs.aws.amazon.com/sdk-for-go/api/service/s3/#example_S3_GetObject_shared00
-func (c *StorageBucket) Load(key string) ([]byte, error) {
+func (c *StorageBucket) Load(key string) (*wSession.Data, error) {
 	fullKey := c.prefix + key
 	obj, e1 := c.S3.GetObject(&s3.GetObjectInput{
 		Bucket: &c.Name,
@@ -42,11 +42,15 @@ func (c *StorageBucket) Load(key string) ([]byte, error) {
 		return nil, fmt.Errorf(Stderr.ReadObject, key)
 	}
 
-	return b, nil
+	data := &wSession.Data{}
+	if e := json.Unmarshal(b, data); e != nil {
+		return nil, fmt.Errorf(Stderr.DecodeJSON, key)
+	}
+	return data, nil
 }
 
 // Save Session data to S3.
-func (c *StorageBucket) Save(data *webSession.Data) error {
+func (c *StorageBucket) Save(data *wSession.Data) error {
 	content, e1 := json.Marshal(data)
 	if e1 != nil {
 		return fmt.Errorf(Stderr.EncodeJSON, e1)
