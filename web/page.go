@@ -91,11 +91,10 @@ func GetMapItem(mapData StringMap, name string) string {
 func Respond200(content []byte, contentType string) *Response {
 	code := http.StatusOK
 	res := &Response{
-		Headers: StringMap{
-			"Content-Type": contentType,
+		Headers: MapOfStrings{
+			"Content-Type": {contentType},
 		},
 		StatusCode: code,
-		Cookies:    []string{},
 	}
 
 	switch contentType {
@@ -170,8 +169,8 @@ func Respond501() *Response {
 func RespondDebug(code int, message, footer string) *Response {
 	return &Response{
 		Body: fmt.Sprintf(Http200Debug, code, message, footer),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
+		Headers: MapOfStrings{
+			"Content-Type": {ContentTypeHtml},
 		},
 		StatusCode: code,
 	}
@@ -192,8 +191,8 @@ func RespondWithJSON(content interface{}) (*Response, error) {
 func ResponseOptions(options string) *Response {
 	return &Response{
 		Body: "",
-		Headers: StringMap{
-			"Allow": options,
+		Headers: MapOfStrings{
+			"Allow": {options},
 		},
 		StatusCode: 204,
 	}
@@ -203,9 +202,9 @@ func ResponseOptions(options string) *Response {
 func RespondWithLocation(location string, code int) *Response {
 	return &Response{
 		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code)+"<br />"+location, FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
-			"Location":     location,
+		Headers: map[string][]string{
+			"Content-Type": {ContentTypeHtml},
+			"Location":     {location},
 		},
 		StatusCode: code,
 	}
@@ -218,8 +217,8 @@ func RespondWithLocation(location string, code int) *Response {
 func RespondWithStatus(code int) *Response {
 	return &Response{
 		Body: fmt.Sprintf(HttpStatusContent, code, http.StatusText(code), FooterText),
-		Headers: StringMap{
-			"Content-Type": ContentTypeHtml,
+		Headers: MapOfStrings{
+			"Content-Type": {ContentTypeHtml},
 		},
 		StatusCode: code,
 	}

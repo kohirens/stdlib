@@ -1,22 +1,58 @@
 package web
 
-import "github.com/aws/aws-lambda-go/events"
+import (
+	"bytes"
+	"encoding/base64"
+	"github.com/aws/aws-lambda-go/events"
+	"net/http"
+	"strings"
+)
 
-// Response Has standard response fields and should be easily convertable.
+// Response Serves as a middle ground between types such as http.Response and events.LambdaFunctionURLResponse;
+// with methods to easily convert to each type. In addition, it also works as a http.ResponseWriter.
 type Response struct {
-	Body            string            `json:"body"`
-	Cookies         []string          `json:"cookies"`
-	Headers         map[string]string `json:"headers"`
-	IsBase64Encoded bool              `json:"isBase64Encoded"`
-	StatusCode      int               `json:"statusCode"`
+	Body            string              `json:"body"`
+	Headers         map[string][]string `json:"headers"`
+	IsBase64Encoded bool                `json:"isBase64Encoded"`
+	StatusCode      int                 `json:"statusCode"`
 }
 
+// ToLambdaResponse Convert to a Lambda function URL response.
 func (res *Response) ToLambdaResponse() *events.LambdaFunctionURLResponse {
 	return &events.LambdaFunctionURLResponse{
 		StatusCode:      res.StatusCode,
-		Headers:         res.Headers,
+		Headers:         res.convertToLambdaHeaders(),
 		Body:            res.Body,
 		IsBase64Encoded: res.IsBase64Encoded,
-		Cookies:         res.Cookies,
 	}
+}
+
+// Base64Encode Encodes the response body.
+func (res *Response) Base64Encode() {
+	res.IsBase64Encoded = true
+	res.Body = base64.StdEncoding.EncodeToString([]byte(res.Body))
+}
+
+// ToHttpResponse Convert to an HTTP response.
+func (res *Response) ToHttpResponse() *http.Response {
+	r := &http.Response{
+		StatusCode: res.StatusCode,
+		Header:     res.Headers,
+	}
+
+	b := bytes.NewBufferString(res.Body)
+	if e := r.Write(b); e != nil {
+		panic(e)
+	}
+
+	return r
+}
+
+// Convert the http.Response style headers map[string][]string to map[string]string.
+func (res *Response) convertToLambdaHeaders() map[string]string {
+	headers := make(map[string]string, len(res.Headers))
+	for k, v := range res.Headers {
+		headers[k] = strings.Join(v, "\n")
+	}
+	return headers
 }
