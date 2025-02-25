@@ -4,3 +4,4 @@
 package web
 
 type StringMap map[string]string
+type MapOfStrings map[string][]string
