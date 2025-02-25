@@ -56,3 +56,19 @@ func (res *Response) convertToLambdaHeaders() map[string]string {
 	}
 	return headers
 }
+
+// Header Part of the http.ResponseWriter interface.
+func (res *Response) Header() http.Header {
+	return res.Headers
+}
+
+// WriteHeader Part of the http.ResponseWriter interface.
+func (res *Response) Write(b []byte) (int, error) {
+	res.Body = string(b)
+	return len(res.Body), nil
+}
+
+// WriteHeader Part of the http.ResponseWriter interface.
+func (res *Response) WriteHeader(statusCode int) {
+	res.StatusCode = statusCode
+}
