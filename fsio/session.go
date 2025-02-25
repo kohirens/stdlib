@@ -19,7 +19,7 @@ type LocalStorage struct {
 	WorkDir string
 }
 
-// Load session data from local file storage.
+// Load Session data from local file storage.
 func (ls *LocalStorage) Load(id string) (*session.Data, error) {
 	f := filepath.Join(ls.WorkDir, id)
 	if !Exist(f) {
@@ -34,29 +34,24 @@ func (ls *LocalStorage) Load(id string) (*session.Data, error) {
 	data := &session.Data{}
 
 	if e := json.Unmarshal(content, data); e != nil {
+		fmt.Printf("JSON to decode: %v\n", string(content))
 		return nil, fmt.Errorf(Stderr.DecodeJSON, f, e)
 	}
 
 	return data, nil
 }
 
-// Save session data to a local file for storage.
+// Save Session data to a local file for storage.
 func (ls *LocalStorage) Save(data *session.Data) error {
 	f := filepath.Join(ls.WorkDir, data.Id)
-
-	fh, e1 := os.OpenFile(f, os.O_CREATE|os.O_RDWR, DefaultFilePerms)
-	if e1 != nil {
-		return fmt.Errorf(Stderr.OpenFile, f, e1)
-	}
 
 	content, e2 := json.Marshal(data)
 	if e2 != nil {
 		return fmt.Errorf(Stderr.EncodeJSON, e2)
 	}
 
-	_, e3 := fh.Write(content)
-	if e3 != nil {
-		return fmt.Errorf(Stderr.WriteFile, e3)
+	if e := os.WriteFile(f, content, DefaultFilePerms); e != nil {
+		return fmt.Errorf(Stderr.WriteFile, e)
 	}
 
 	return nil
