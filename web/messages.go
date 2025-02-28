@@ -27,6 +27,7 @@ var Stderr = struct {
 	CannotOpenFile      string
 	CannotParseFile     string
 	CannotReadFile      string
+	DecodeBase64        string
 	EnvVarUnset         string
 	FatalHeader         string
 	FieldNotFound       string
@@ -34,6 +35,7 @@ var Stderr = struct {
 	FileNotFound        string
 	HostNotSet          string
 	DoNotRedirectToSelf string
+	NewRequest          string
 	RedirectToEmpty     string
 }{
 	AuthCodeInvalid:     "incorrect authorization code was sent",
@@ -46,6 +48,7 @@ var Stderr = struct {
 	CannotOpenFile:      "could not open file %v: %v",
 	CannotParseFile:     "could not parse XSD: %v",
 	CannotReadFile:      "could not read file %v: %v",
+	DecodeBase64:        "could not decode base64: %v",
 	EnvVarUnset:         "environment variable %v has not been set",
 	FatalHeader:         "fatal error detected: %v",
 	FieldNotFound:       "could not find field %v",
@@ -53,5 +56,6 @@ var Stderr = struct {
 	FileNotFound:        "could not find file %v",
 	HostNotSet:          "could not retrieve the host from the request",
 	DoNotRedirectToSelf: "will not redirect %v to host %v",
+	NewRequest:          "could not initialize a new request: %v",
 	RedirectToEmpty:     "the REDIRECT_TO environment variables was empty",
 }
