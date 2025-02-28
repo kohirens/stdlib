@@ -24,7 +24,13 @@ func (res *Response) ToLambdaResponse() *events.LambdaFunctionURLResponse {
 		Headers:         res.convertToLambdaHeaders(),
 		Body:            res.Body,
 		IsBase64Encoded: res.IsBase64Encoded,
+		Cookies:         res.Cookies(),
 	}
+}
+
+// Cookies Get all the cookies.
+func (res *Response) Cookies() []string {
+	return res.Headers["Set-Cookie"]
 }
 
 // Base64Encode Encodes the response body.
