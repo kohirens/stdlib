@@ -17,9 +17,9 @@ var stderr = struct {
 }
 
 var stdout = struct {
-	SessionExist,
-	SessionSet string
+	IDSet,
+	Restored string
 }{
-	SessionExist: "using existing session ID: %v",
-	SessionSet:   "setting a session ID cookie now",
+	IDSet:    "setting a session ID cookie now",
+	Restored: "session restored",
 }

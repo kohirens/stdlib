@@ -14,7 +14,7 @@ func TestManager(t *testing.T) {
 		storage    Storage
 		expiration time.Duration
 	}{
-		{"new", &MockStorage{data: map[string][]byte{}}, 5 * time.Second},
+		{"new", &MockStorage{data: &Store{}}, 5 * time.Second},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -58,19 +58,21 @@ func TestManager(t *testing.T) {
 }
 
 type MockStorage struct {
-	data map[string][]byte
+	data *Store
 }
 
 func (ms *MockStorage) Load(id string) (*Data, error) {
-	if id == "abcdefg" {
+	switch id {
+	case "abcdefg":
 		return &Data{
 			"abcdefg",
 			time.Now().Add(time.Minute + 5), //exp.Format("2006-01-02T15:04:05Z07:00"),
-			map[string][]byte{"test2": []byte("54321")},
+			&Store{"test2": []byte("54321")},
 		}, nil
 	}
 
-	b, ok := ms.data[id]
+	d := *ms.data
+	b, ok := d[id]
 	if !ok {
 		panic("error error error")
 	}
@@ -85,47 +87,52 @@ func (ms *MockStorage) Load(id string) (*Data, error) {
 
 func (ms *MockStorage) Save(data *Data) error {
 	if ms.data == nil {
-		ms.data = map[string][]byte{}
+		ms.data = &Store{}
 	}
 
 	b, _ := json.Marshal(data)
 
-	ms.data[data.Id] = b
+	items := *ms.data
+	items[data.Id] = b
 
 	return nil
 }
 
 func TestManager_SetSessionIDCookie(t *testing.T) {
 	tests := []struct {
-		name string
-		w    http.ResponseWriter
-		r    *http.Request
-		md   *MockStorage
+		name        string
+		w           http.ResponseWriter
+		r           *http.Request
+		md          *MockStorage2
+		cookieCount int
 	}{
 		{
 			"id-set",
 			&MockResponse{},
 			&http.Request{},
-			&MockStorage{map[string][]byte{}},
+			&MockStorage2{&Store{}},
+			1,
 		},
 		{
 			"set-only-once",
 			&MockResponse{},
 			&http.Request{
 				Header: http.Header{
-					"Set-Cookie": []string{"_sid_=10d18518-3d9b-4af8-bcd3-3823ed03ed28; Path=/; Expires=Sun, 02 Mar 2025 14:18:16 GMT; HttpOnly; Secure; SameSite=Strict"},
+					"Cookie": []string{"_sid_=10d18518-3d9b-4af8-bcd3-3823ed03ed28; Path=/; Expires=Sun, 02 Mar 2025 14:18:16 GMT; HttpOnly; Secure; SameSite=Strict"},
 				},
 			},
-			&MockStorage{map[string][]byte{}},
+			&MockStorage2{&Store{}},
+			0,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := NewManager(tt.md, time.Minute*1)
-			m.SetSessionIDCookie(tt.w, tt.r)
+			m := NewManager(tt.md, time.Minute*3)
+			m.Load(tt.w, tt.r)
 
-			if got := tt.w.Header(); len(got) != 1 {
-				t.Errorf("Manager.SetSessionIDCookie() = %v times, want %v", len(got), 1)
+			if got := tt.w.Header(); len(got) != tt.cookieCount {
+				t.Errorf("Manager.SetSessionIDCookie() = %v times, want %v", len(got), tt.cookieCount)
 				return
 			}
 		})
@@ -148,4 +155,38 @@ func (m *MockResponse) Write(b []byte) (int, error) {
 }
 
 func (m *MockResponse) WriteHeader(statusCode int) {
+}
+
+type MockStorage2 struct {
+	data *Store
+}
+
+func (ms *MockStorage2) Load(id string) (*Data, error) {
+	switch id {
+	case "10d18518-3d9b-4af8-bcd3-3823ed03ed28":
+		return &Data{
+			"10d18518-3d9b-4af8-bcd3-3823ed03ed28",
+			time.Now().Add(time.Minute + 5), //exp.Format("2006-01-02T15:04:05Z07:00"),
+			ms.data,
+		}, nil
+	default:
+		return &Data{
+			id,
+			time.Now().Add(time.Minute + 5), //exp.Format("2006-01-02T15:04:05Z07:00"),
+			ms.data,
+		}, nil
+	}
+}
+
+func (ms *MockStorage2) Save(data *Data) error {
+	if ms.data == nil {
+		ms.data = &Store{}
+	}
+
+	b, _ := json.Marshal(data)
+
+	items := *ms.data
+	items[data.Id] = b
+
+	return nil
 }
