@@ -58,7 +58,7 @@ func NewManager(storage Storage, expiration time.Duration) *Manager {
 	return &Manager{
 		data: &Data{
 			GenerateID(),
-			time.Now().Add(expiration),
+			time.Now().UTC().Add(expiration),
 			make(Store, 100),
 		},
 		storage:    storage,
