@@ -53,7 +53,6 @@ func NewRequestFromLambdaFunctionURLRequest(l *events.LambdaFunctionURLRequest) 
 
 	headers := convertToHttpHeaders(l)
 	body, _ := base64.StdEncoding.DecodeString(l.Body)
-
 	formData, e0 := url.ParseQuery(string(body))
 	if e0 != nil {
 		return nil, e0
@@ -129,14 +128,22 @@ func convertCookiesToStringArray(rcs []*http.Cookie) []string {
 // convertToHttpHeaders Convert a map of strings to http.Header's.
 func convertToHttpHeaders(l *events.LambdaFunctionURLRequest) http.Header {
 	headers := http.Header{}
+	// Just initialize if there are no headers
 	if len(l.Headers) == 0 {
 		return headers
 	}
+
+	// Remember that HTTP request use Cookie and Response uses Set-Cookie.
+	cookieHeader := "Cookie"
+
+	// Clone headers over to the http.Header
 	for k, v := range l.Headers {
 		headers[k] = []string{v}
 	}
+
+	// Lambda stores cookies in a separate array, so make sure to grab them.
 	if len(l.Cookies) > 0 {
-		headers["Set-Cookie"] = l.Cookies
+		headers[cookieHeader] = l.Cookies
 	}
 
 	return headers
