@@ -156,6 +156,11 @@ func (r *Request) AddCookie(c *http.Cookie) {
 	r.Request.AddCookie(c)
 }
 
+// Cookie Wraps http.Request.Cookie()
+func (r *Request) Cookie(name string) (*http.Cookie, error) {
+	return r.Request.Cookie(name)
+}
+
 // Cookies Wraps http.Request.Cookies()
 func (r *Request) Cookies() []*http.Cookie {
 	return r.Request.Cookies()
