@@ -16,7 +16,7 @@ import (
 type Data struct {
 	Id         string    `json,bson:"session_id"`
 	Expiration time.Time `json,bson:"expiration"`
-	Items      Store     `json,bson:"session_data"`
+	Items      *Store    `json,bson:"session_data"`
 }
 
 // Storage An interface medium for storing the session data to anyplace an
@@ -38,7 +38,9 @@ type Storage interface {
 type Store map[string][]byte
 
 const (
-	IDKey = "_sid_"
+	IDKey          = "_sid_" // IDKey Cookie name.
+	IDCookiePath   = "/"     // IDCookiePath Any path in the domain.
+	IDCookieDomain = ""      // IDCookieDomain Default to the entire domain.
 )
 
 var (
@@ -55,11 +57,12 @@ func GenerateID() string {
 
 // NewManager Initialize a new session manager to handle session save, restore, get, and set.
 func NewManager(storage Storage, expiration time.Duration) *Manager {
+	store := make(Store, 100)
 	return &Manager{
 		data: &Data{
 			GenerateID(),
 			time.Now().UTC().Add(expiration),
-			make(Store, 100),
+			&store,
 		},
 		storage:    storage,
 		hasUpdates: false,

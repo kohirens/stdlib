@@ -18,7 +18,8 @@ type Manager struct {
 
 // Get Retrieve data from the session.
 func (m *Manager) Get(key string) []byte {
-	value, ok := m.data.Items[key]
+	items := *m.data.Items
+	value, ok := items[key]
 	if ok {
 		return value
 	}
@@ -58,7 +59,8 @@ func (m *Manager) IDCookie(cookiePath, domain string) *http.Cookie {
 // Remove data from a session
 func (m *Manager) Remove(key string) error {
 	// verify the key exists
-	_, ok := m.data.Items[key]
+	items := *m.data.Items
+	_, ok := items[key]
 	if !ok {
 		return fmt.Errorf(stderr.NoSuchKey, key)
 	}
@@ -67,7 +69,7 @@ func (m *Manager) Remove(key string) error {
 	m.hasUpdates = true
 
 	// Remove the key
-	delete(m.data.Items, key)
+	delete(*m.data.Items, key)
 
 	return nil
 }
@@ -112,26 +114,39 @@ func (m *Manager) Save() error {
 // Set Store data in the session.
 func (m *Manager) Set(key string, value []byte) {
 	m.hasUpdates = true
-	m.data.Items[key] = value
+	items := *m.data.Items
+	items[key] = value
 }
 
-// SetSessionIDCookie Set the session ID cookie. Will only set if there is no
-// existing cookie or current session expires.
-func (m *Manager) SetSessionIDCookie(w http.ResponseWriter, r *http.Request) {
-	sidCookie, _ := r.Cookie(IDKey)
-
-	if sidCookie != nil && !time.Now().UTC().After(sidCookie.Expires) {
-		Log.Infof(stdout.SessionExist, sidCookie.Value)
-		// Expire the cookie immediately if the ID does not match.
-		if sidCookie.Value != m.ID() {
-			Log.Errf(stderr.SessionStrange)
-			sidCookie.Expires = time.Now().UTC()
-		}
-		return
-	}
+// Load Will begin a new session, or restore an unexpired session, store the
+// session ID in an HTTP cookie to use on the next request.
+func (m *Manager) Load(w http.ResponseWriter, r *http.Request) {
+	idCookie, _ := r.Cookie(IDKey)
 
 	// ONLY set a new cookie when there is no session, or it has expired.
-	Log.Infof(stdout.SessionSet)
-	sidCookie = m.IDCookie("/", "")
-	http.SetCookie(w, sidCookie)
+	if idCookie == nil {
+		idCookie = m.IDCookie(IDCookiePath, IDCookieDomain)
+		Log.Infof(stdout.IDSet)
+		http.SetCookie(w, idCookie)
+	}
+
+	if e := m.Restore(idCookie.Value); e != nil {
+		Log.Errf(e.Error())
+	} else {
+		// When we successfully restore a session, we extend it a bit.
+		// Have the cookie also reflect this extended time.
+		Log.Infof(stdout.Restored)
+	}
+
+	// Expire the cookie immediately if the ID does not match (tampering).
+	if idCookie.Value != m.ID() {
+		Log.Errf(stderr.SessionStrange)
+		idCookie.Expires = time.Now().UTC()
+		m.RemoveAll()
+	}
+}
+
+// RemoveAll When you need to scrub the data from the session and fast.
+func (m *Manager) RemoveAll() {
+	m.data.Items = &Store{}
 }
