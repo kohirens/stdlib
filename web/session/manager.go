@@ -114,3 +114,23 @@ func (m *Manager) Set(key string, value []byte) {
 	m.hasUpdates = true
 	m.data.Items[key] = value
 }
+
+// SetSessionIDCookie Set the session ID cookie. Will only set if there is no
+// existing cookie or current session expires.
+func (m *Manager) SetSessionIDCookie(w http.ResponseWriter, r *http.Request) {
+	sidCookie, _ := r.Cookie(IDKey)
+
+	if sidCookie != nil && !time.Now().UTC().After(sidCookie.Expires) {
+		Log.Infof(stdout.SessionExist, sidCookie.Value)
+		if sidCookie.Value != m.ID() {
+			Log.Errf(stderr.SessionStrange)
+			sidCookie.Expires = time.Now().UTC()
+		}
+		return
+	}
+
+	// ONLY set a new cookie when there is no session, or it has expired.
+	Log.Infof(stdout.SessionSet)
+	sidCookie = m.IDCookie("/", "")
+	http.SetCookie(w, sidCookie)
+}

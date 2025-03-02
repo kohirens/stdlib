@@ -2,6 +2,7 @@ package session
 
 import (
 	"encoding/json"
+	"net/http"
 	"reflect"
 	"testing"
 	"time"
@@ -92,4 +93,59 @@ func (ms *MockStorage) Save(data *Data) error {
 	ms.data[data.Id] = b
 
 	return nil
+}
+
+func TestManager_SetSessionIDCookie(t *testing.T) {
+	tests := []struct {
+		name string
+		w    http.ResponseWriter
+		r    *http.Request
+		md   *MockStorage
+	}{
+		{
+			"id-set",
+			&MockResponse{},
+			&http.Request{},
+			&MockStorage{map[string][]byte{}},
+		},
+		{
+			"set-only-once",
+			&MockResponse{},
+			&http.Request{
+				Header: http.Header{
+					"Set-Cookie": []string{"_sid_=10d18518-3d9b-4af8-bcd3-3823ed03ed28; Path=/; Expires=Sun, 02 Mar 2025 14:18:16 GMT; HttpOnly; Secure; SameSite=Strict"},
+				},
+			},
+			&MockStorage{map[string][]byte{}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := NewManager(tt.md, time.Minute*1)
+			m.SetSessionIDCookie(tt.w, tt.r)
+
+			if got := tt.w.Header(); len(got) != 1 {
+				t.Errorf("Manager.SetSessionIDCookie() = %v times, want %v", len(got), 1)
+				return
+			}
+		})
+	}
+}
+
+type MockResponse struct {
+	Headers *http.Header
+}
+
+func (m *MockResponse) Header() http.Header {
+	if m.Headers == nil {
+		m.Headers = &http.Header{}
+	}
+	return *m.Headers
+}
+
+func (m *MockResponse) Write(b []byte) (int, error) {
+	return len(b), nil
+}
+
+func (m *MockResponse) WriteHeader(statusCode int) {
 }
