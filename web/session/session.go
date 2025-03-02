@@ -9,6 +9,7 @@ package session
 
 import (
 	"github.com/google/uuid"
+	"github.com/kohirens/stdlib/logger"
 	"time"
 )
 
@@ -44,6 +45,7 @@ var (
 	// ExtendTime How much time the session is extended when a user loads a
 	// page after the initial start of the session
 	ExtendTime = 5 * time.Minute
+	Log        = logger.StdLogger{}
 )
 
 // GenerateID A unique session ID
