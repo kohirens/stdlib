@@ -58,7 +58,17 @@ func (res *Response) ToHttpResponse() *http.Response {
 func (res *Response) convertToLambdaHeaders() map[string]string {
 	headers := make(map[string]string, len(res.Headers))
 	for k, v := range res.Headers {
-		headers[k] = strings.Join(v, "\n")
+		// Use a comma to separate multiple field values for a single field name
+		// see https://www.rfc-editor.org/rfc/rfc9110.html#name-field-lines-and-combined-fi
+		// However, Set-Cookie contains "," we need to make a special case and store them separately.
+		if k == "Set-Cookie" {
+			continue // Don't put Cookies in the header of the Lambda response object, instead store them in the Cookies slice.
+		}
+		// In the spec multiline headers can also just be separated with a comm, this is a problem if the header contains commas.
+		// The developer should be aware of this an encode the data in base64 or something else.
+		// The REAL problem is that this LambdaFunctionUrlResponse does not handle headers properly with its data structure.
+		// It should use the same http.Request header structure so that you can set the same header multiple times as needed.
+		headers[k] = strings.Join(v, ", ")
 	}
 	return headers
 }
