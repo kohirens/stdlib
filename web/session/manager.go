@@ -122,6 +122,7 @@ func (m *Manager) SetSessionIDCookie(w http.ResponseWriter, r *http.Request) {
 
 	if sidCookie != nil && !time.Now().UTC().After(sidCookie.Expires) {
 		Log.Infof(stdout.SessionExist, sidCookie.Value)
+		// Expire the cookie immediately if the ID does not match.
 		if sidCookie.Value != m.ID() {
 			Log.Errf(stderr.SessionStrange)
 			sidCookie.Expires = time.Now().UTC()
