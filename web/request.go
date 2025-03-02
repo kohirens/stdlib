@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -36,21 +37,40 @@ func NewRequest(r *http.Request) *Request {
 
 // NewRequestFromLambdaFunctionURLRequest Work with this type of request as though it were of type http.Request.
 func NewRequestFromLambdaFunctionURLRequest(l *events.LambdaFunctionURLRequest) (*Request, error) {
-	origin := GetHeader(l.Headers, "Origin")
-	uRL := fmt.Sprintf(
-		"%v%v?%v",
-		origin,
-		l.RawPath,
-		l.RawQueryString,
-	)
+	//origin := GetHeader(l.Headers, "Origin")
+	//uri := fmt.Sprintf(
+	//	"%v%v?%v",
+	//	origin,
+	//	l.RawPath,
+	//	l.RawQueryString,
+	//)
+	//bdy := convertBody(l.Body, l.IsBase64Encoded)
 
-	bdy := convertBody(l.Body, l.IsBase64Encoded)
-	r, e2 := http.NewRequest(l.RequestContext.HTTP.Method, uRL, bdy)
-	if e2 != nil {
-		return nil, fmt.Errorf(Stderr.NewRequest, e2)
+	//r, e2 := http.NewRequest(l.RequestContext.HTTP.Method, uri, bdy)
+	//if e2 != nil {
+	//	return nil, fmt.Errorf(Stderr.NewRequest, e2)
+	//}
+
+	headers := convertToHttpHeaders(l)
+	body, _ := base64.StdEncoding.DecodeString(l.Body)
+
+	formData, e0 := url.ParseQuery(string(body))
+	if e0 != nil {
+		return nil, e0
 	}
 
-	r.Header = convertToHttpHeaders(l.Headers)
+	r := &http.Request{
+		Method:        l.RequestContext.HTTP.Method,
+		Proto:         l.RequestContext.HTTP.Protocol,
+		Body:          io.NopCloser(bytes.NewReader(body)),
+		ContentLength: int64(len(string(body))),
+		Host:          GetHeader(l.Headers, "Host"),
+		Form:          formData,
+		PostForm:      formData,
+		Header:        headers,
+	}
+
+	r.Header = headers
 
 	return &Request{
 		Request:                  r,
@@ -60,7 +80,7 @@ func NewRequestFromLambdaFunctionURLRequest(l *events.LambdaFunctionURLRequest) 
 
 // ToLambdaFunctionURLRequest Get the Lambda function URL request you put in or a new one with properties set.
 func (r *Request) ToLambdaFunctionURLRequest() *events.LambdaFunctionURLRequest {
-	if r.LambdaFunctionURLRequest == nil {
+	if r.LambdaFunctionURLRequest != nil {
 		return r.LambdaFunctionURLRequest
 	}
 
@@ -107,16 +127,41 @@ func convertCookiesToStringArray(rcs []*http.Cookie) []string {
 }
 
 // convertToHttpHeaders Convert a map of strings to http.Header's.
-func convertToHttpHeaders(lh map[string]string) http.Header {
+func convertToHttpHeaders(l *events.LambdaFunctionURLRequest) http.Header {
 	headers := http.Header{}
-
-	if len(lh) == 0 {
+	if len(l.Headers) == 0 {
 		return headers
 	}
-
-	for name, value := range lh {
-		headers[name] = strings.Split(value, "\n")
+	for k, v := range l.Headers {
+		headers[k] = []string{v}
+	}
+	if len(l.Cookies) > 0 {
+		headers["Set-Cookie"] = l.Cookies
 	}
 
 	return headers
 }
+
+// Wrappers Methods that simply wrap the http.Request, nothing special below this line.
+
+// AddCookie Wraps http.Request.AddCookie()
+func (r *Request) AddCookie(c *http.Cookie) {
+	r.Request.AddCookie(c)
+}
+
+// Cookies Wraps http.Request.Cookies()
+func (r *Request) Cookies() []*http.Cookie {
+	return r.Request.Cookies()
+}
+
+// CookiesNamed Wraps http.Request.CookiesNamed()
+func (r *Request) CookiesNamed(name string) []*http.Cookie {
+	return r.Request.CookiesNamed(name)
+}
+
+// ParseForm Wraps http.Request.ParseForm()
+func (r *Request) ParseForm() error {
+	return r.Request.ParseForm()
+}
+
+//TODO: Add the rest of the wrappers

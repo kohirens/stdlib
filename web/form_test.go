@@ -16,7 +16,7 @@ func TestParseUrlEncodedForm(t *testing.T) {
 	}{
 		{
 			"load-form-with-file",
-			"meal-plan-upload-2024-01-18T12_31_43-6e03d9cc.json",
+			"lambda-meal-plan-upload-2024-01-18T12_31_43-6e03d9cc.json",
 			"application/x-www-form-urlencoded",
 			map[string][]string{"doc": []string{"menu-01.jpg"}, "due-date": []string{"2024-01-19"}, "name": []string{"Menu 1"}},
 			false,
@@ -50,7 +50,7 @@ func TestParseForm2(t *testing.T) {
 	}{
 		{
 			"load-form-with-file",
-			"meal-plan-upload-2024-01-20T16-25-57-1d58ba82.json",
+			"lambda-meal-plan-upload-2024-01-20T16-25-57-1d58ba82.json",
 			"multipart/form-data; boundary=----WebKitFormBoundarydkoqSwxjXfp9UkJb",
 			"testdata/menu-01.jpg",
 			243015,
