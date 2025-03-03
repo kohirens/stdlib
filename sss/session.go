@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/kohirens/stdlib/logger"
 	wSession "github.com/kohirens/stdlib/web/session"
 	"io"
 )
@@ -21,12 +22,17 @@ type StorageBucket struct {
 	prefix  string
 }
 
+var Log = logger.StdLogger{}
+
 // Load Session data from S3, the ID serves as the object name. We recommend the
 // site domain be used as a prefix to prevent collision in the bucket.
 // The timeout on the Context will interrupt the request if it expires.
 // See also https://docs.aws.amazon.com/sdk-for-go/api/service/s3/#example_S3_GetObject_shared00
 func (c *StorageBucket) Load(key string) (*wSession.Data, error) {
 	fullKey := c.prefix + key
+
+	Log.Infof("Loading session for key %v", fullKey)
+
 	obj, e1 := c.S3.GetObject(&s3.GetObjectInput{
 		Bucket: &c.Name,
 		Key:    &fullKey,
@@ -69,6 +75,9 @@ func (c *StorageBucket) Save(data *wSession.Data) error {
 // For more info, see https://docs.aws.amazon.com/sdk-for-go/api/service/s3/#example_S3_PutObject_shared00
 func (c *StorageBucket) Upload(b []byte, key string) (string, error) {
 	fullKey := c.prefix + key
+
+	Log.Infof("Saving data for key %v", fullKey)
+
 	put, e1 := c.S3.PutObjectWithContext(c.Context, &s3.PutObjectInput{
 		Bucket:               &c.Name,
 		Key:                  &fullKey,
