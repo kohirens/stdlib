@@ -37,13 +37,13 @@ func NewRequest(r *http.Request) *Request {
 
 // NewRequestFromLambdaFunctionURLRequest Work with this type of request as though it were of type http.Request.
 func NewRequestFromLambdaFunctionURLRequest(l *events.LambdaFunctionURLRequest) (*Request, error) {
-	//origin := GetHeader(l.Headers, "Origin")
-	//uri := fmt.Sprintf(
-	//	"%v%v?%v",
-	//	origin,
-	//	l.RawPath,
-	//	l.RawQueryString,
-	//)
+	origin := GetHeader(l.Headers, "Origin")
+	uri := fmt.Sprintf(
+		"%v%v?%v",
+		origin,
+		l.RawPath,
+		l.RawQueryString,
+	)
 	//bdy := convertBody(l.Body, l.IsBase64Encoded)
 
 	//r, e2 := http.NewRequest(l.RequestContext.HTTP.Method, uri, bdy)
@@ -58,6 +58,11 @@ func NewRequestFromLambdaFunctionURLRequest(l *events.LambdaFunctionURLRequest) 
 		return nil, e0
 	}
 
+	u, e1 := url.ParseRequestURI(uri)
+	if e1 != nil {
+		return nil, e1
+	}
+
 	r := &http.Request{
 		Method:        l.RequestContext.HTTP.Method,
 		Proto:         l.RequestContext.HTTP.Protocol,
@@ -67,6 +72,7 @@ func NewRequestFromLambdaFunctionURLRequest(l *events.LambdaFunctionURLRequest) 
 		Form:          formData,
 		PostForm:      formData,
 		Header:        headers,
+		URL:           u,
 	}
 
 	r.Header = headers
