@@ -1,16 +1,7 @@
 package sss
 
 var Stdout = struct {
-	ReadingObject string
-	S3Download    string
-	S3Move        string
-	S3Upload      string
-}{
-	ReadingObject: "reading object %v",
-	S3Download:    "will download file %v to memory",
-	S3Move:        "will move file from %v to %v",
-	S3Upload:      "will upload file %v to %v",
-}
+}{}
 
 var Stderr = struct {
 	DecodeJSON         string
