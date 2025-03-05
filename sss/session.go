@@ -4,21 +4,21 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/kohirens/stdlib/logger"
 	wSession "github.com/kohirens/stdlib/web/session"
 	"io"
+	"log"
+	"time"
 )
 
 type StorageBucket struct {
 	Context context.Context
 	Name    string
-	S3      *s3.S3
+	S3      *s3.Client
 	prefix  string
 }
 
@@ -33,14 +33,16 @@ func (c *StorageBucket) Load(key string) (*wSession.Data, error) {
 
 	Log.Infof("Loading session for key %v", fullKey)
 
-	obj, e1 := c.S3.GetObject(&s3.GetObjectInput{
-		Bucket: &c.Name,
-		Key:    &fullKey,
-	})
+	obj, e1 := c.S3.GetObject(
+		context.Background(),
+		&s3.GetObjectInput{
+			Bucket: &c.Name,
+			Key:    &fullKey,
+		},
+	)
 
 	if e1 != nil {
-		e := decipherError(e1)
-		return nil, fmt.Errorf(Stderr.DownLoadKey, key, c.Name, e.Error())
+		return nil, fmt.Errorf(Stderr.DownLoadKey, key, c.Name, e1.Error())
 	}
 
 	b, e2 := io.ReadAll(obj.Body)
@@ -57,6 +59,10 @@ func (c *StorageBucket) Load(key string) (*wSession.Data, error) {
 
 // Save Session data to S3.
 func (c *StorageBucket) Save(data *wSession.Data) error {
+	// TODO: Lock the object on now
+	// TODO: Check if the object is locked.
+	// if it is then wait and try again.
+	// If not locked, then lock it. then unlock when done.
 	content, e1 := json.Marshal(data)
 	if e1 != nil {
 		return fmt.Errorf(Stderr.EncodeJSON, e1)
@@ -78,46 +84,34 @@ func (c *StorageBucket) Upload(b []byte, key string) (string, error) {
 
 	Log.Infof("Saving data for key %v", fullKey)
 
-	put, e1 := c.S3.PutObjectWithContext(c.Context, &s3.PutObjectInput{
-		Bucket:               &c.Name,
-		Key:                  &fullKey,
-		Body:                 aws.ReadSeekCloser(bytes.NewReader(b)), //bytes.NewReader(b),
-		ServerSideEncryption: aws.String("AES256"),
+	put, e1 := c.S3.PutObject(context.Background(), &s3.PutObjectInput{
+		Bucket:                    &c.Name,
+		Key:                       &fullKey,
+		Body:                      bytes.NewReader(b),
+		ServerSideEncryption:      "AES256",
+		ObjectLockRetainUntilDate: aws.Time(time.Now().AddDate(0, 0, 7)),
 	})
 
 	if e1 != nil {
-		return "", decipherError(e1)
+		return "", fmt.Errorf(Stderr.PutObject, e1.Error())
 	}
 
 	return *put.ETag, nil
-}
-
-// DecipherError Put an S3 error into context or something more human comprehensible.
-func decipherError(e error) error {
-	var err awserr.Error
-
-	ok := errors.As(e, &err)
-
-	if ok {
-		switch err.Code() {
-		case s3.ErrCodeNoSuchKey:
-			return fmt.Errorf(Stderr.NoSuchKey, err.Error())
-		case s3.ErrCodeInvalidObjectState:
-			return fmt.Errorf(Stderr.InvalidObjectState, err.Error())
-		}
-	}
-
-	return e
 }
 
 // NewStorageClient Initializes an S3 client to use as session storage.
 // Credentials are expected to be configured in the environment to be picked up
 // by the AWS SDK. Panics on failure.
 func NewStorageClient(bucket string, ctx context.Context) *StorageBucket {
-	sess := session.Must(session.NewSession())
+	// Load AWS configuration
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		log.Fatalf("Failed to load AWS config: %v", err)
+	}
+	client := s3.NewFromConfig(cfg)
 	return &StorageBucket{
 		Name:    bucket,
-		S3:      s3.New(sess),
+		S3:      client,
 		Context: ctx,
 	}
 }
