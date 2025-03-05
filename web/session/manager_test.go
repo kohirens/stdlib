@@ -2,6 +2,7 @@ package session
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"reflect"
 	"strings"
@@ -178,11 +179,7 @@ func (ms *MockStorage2) Load(id string) (*Data, error) {
 			ms.data,
 		}, nil
 	default:
-		return &Data{
-			id,
-			time.Now().Add(time.Minute + 5), //exp.Format("2006-01-02T15:04:05Z07:00"),
-			ms.data,
-		}, nil
+		return nil, errors.New("id not found")
 	}
 }
 
