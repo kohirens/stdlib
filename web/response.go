@@ -17,6 +17,8 @@ type Response struct {
 	StatusCode      int                 `json:"statusCode"`
 }
 
+var _ http.ResponseWriter = &Response{}
+
 // ToLambdaResponse Convert to a Lambda function URL response.
 func (res *Response) ToLambdaResponse() *events.LambdaFunctionURLResponse {
 	return &events.LambdaFunctionURLResponse{
