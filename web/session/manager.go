@@ -65,6 +65,7 @@ func (m *Manager) Load(w http.ResponseWriter, r *http.Request) {
 		idCookie = m.IDCookie(IDCookiePath, IDCookieDomain)
 		Log.Infof(stdout.IDSet)
 		http.SetCookie(w, idCookie)
+		return
 	}
 
 	if e := m.Restore(idCookie.Value); e != nil {
