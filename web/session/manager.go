@@ -3,6 +3,7 @@ package session
 import (
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -14,10 +15,13 @@ type Manager struct {
 	// To save on network traffic default this to false, and set to true when
 	// Set is called. Save is no-up if this is false.
 	hasUpdates bool
+	mutex      sync.Mutex
 }
 
 // Get Retrieve data from the session.
 func (m *Manager) Get(key string) []byte {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
 	value, ok := m.data.Items[key]
 	if ok {
 		return value
@@ -152,6 +156,8 @@ func (m *Manager) Restore(id string) error {
 
 // Save Writes session data to its storage. This is no-op if Set was not previously called.
 func (m *Manager) Save() error {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
 	if m.hasUpdates {
 		return m.storage.Save(m.data)
 	}
@@ -161,6 +167,8 @@ func (m *Manager) Save() error {
 
 // Set Store data in the session.
 func (m *Manager) Set(key string, value []byte) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
 	m.hasUpdates = true
 	m.data.Items[key] = value
 }
