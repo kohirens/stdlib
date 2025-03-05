@@ -18,8 +18,7 @@ type Manager struct {
 
 // Get Retrieve data from the session.
 func (m *Manager) Get(key string) []byte {
-	items := *m.data.Items
-	value, ok := items[key]
+	value, ok := m.data.Items[key]
 	if ok {
 		return value
 	}
@@ -98,8 +97,7 @@ func (m *Manager) Load(w http.ResponseWriter, r *http.Request) {
 // Remove data from a session
 func (m *Manager) Remove(key string) error {
 	// verify the key exists
-	items := *m.data.Items
-	_, ok := items[key]
+	_, ok := m.data.Items[key]
 	if !ok {
 		return fmt.Errorf(stderr.NoSuchKey, key)
 	}
@@ -108,14 +106,14 @@ func (m *Manager) Remove(key string) error {
 	m.hasUpdates = true
 
 	// Remove the key
-	delete(*m.data.Items, key)
+	delete(m.data.Items, key)
 
 	return nil
 }
 
 // RemoveAll When you need to scrub the data from the session and fast.
 func (m *Manager) RemoveAll() {
-	m.data.Items = &Store{}
+	m.data.Items = Store{}
 }
 
 // Restore Restores the session by ID as a string.
@@ -163,6 +161,5 @@ func (m *Manager) Save() error {
 // Set Store data in the session.
 func (m *Manager) Set(key string, value []byte) {
 	m.hasUpdates = true
-	items := *m.data.Items
-	items[key] = value
+	m.data.Items[key] = value
 }

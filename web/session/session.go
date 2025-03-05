@@ -16,7 +16,7 @@ import (
 type Data struct {
 	Id         string    `json,bson:"session_id"`
 	Expiration time.Time `json,bson:"expiration"`
-	Items      *Store    `json,bson:"session_data"`
+	Items      Store     `json,bson:"session_data"`
 }
 
 // Storage An interface medium for storing the session data to anyplace an
@@ -62,7 +62,7 @@ func NewManager(storage Storage, expiration time.Duration) *Manager {
 		data: &Data{
 			GenerateID(),
 			time.Now().UTC().Add(expiration),
-			&store,
+			store,
 		},
 		storage:    storage,
 		hasUpdates: false,
