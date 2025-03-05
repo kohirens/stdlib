@@ -38,25 +38,23 @@ func NewRequest(r *http.Request) *Request {
 // NewRequestFromLambdaFunctionURLRequest Work with this type of request as though it were of type http.Request.
 func NewRequestFromLambdaFunctionURLRequest(l *events.LambdaFunctionURLRequest) (*Request, error) {
 	origin := GetHeader(l.Headers, "Origin")
-	uri := fmt.Sprintf(
-		"%v%v?%v",
-		origin,
-		l.RawPath,
-		l.RawQueryString,
-	)
-	//bdy := convertBody(l.Body, l.IsBase64Encoded)
+	uri := origin + l.RawPath
 
-	//r, e2 := http.NewRequest(l.RequestContext.HTTP.Method, uri, bdy)
+	if l.RawQueryString != "" {
+		uri += "?" + l.RawQueryString
+	}
+
+	//// TODO: Find out why the parseForm does not work with this method.
+	//// WARNING: This is a time sink-hole.
+	//body := convertBody(l.Body, l.IsBase64Encoded)
+	//r, e2 := http.NewRequest(l.RequestContext.HTTP.Method, uri, body)
 	//if e2 != nil {
 	//	return nil, fmt.Errorf(Stderr.NewRequest, e2)
 	//}
 
 	headers := convertToHttpHeaders(l)
+	method := l.RequestContext.HTTP.Method
 	body, _ := base64.StdEncoding.DecodeString(l.Body)
-	formData, e0 := url.ParseQuery(string(body))
-	if e0 != nil {
-		return nil, e0
-	}
 
 	u, e1 := url.ParseRequestURI(uri)
 	if e1 != nil {
@@ -64,15 +62,23 @@ func NewRequestFromLambdaFunctionURLRequest(l *events.LambdaFunctionURLRequest) 
 	}
 
 	r := &http.Request{
-		Method:        l.RequestContext.HTTP.Method,
+		Method:        method,
 		Proto:         l.RequestContext.HTTP.Protocol,
 		Body:          io.NopCloser(bytes.NewReader(body)),
 		ContentLength: int64(len(string(body))),
 		Host:          GetHeader(l.Headers, "Host"),
-		Form:          formData,
-		PostForm:      formData,
 		Header:        headers,
 		URL:           u,
+	}
+
+	if method == "POST" || method == "PUT" {
+		formData, e0 := url.ParseQuery(string(body))
+		if e0 != nil {
+			return nil, e0
+		}
+
+		r.Form = formData
+		r.PostForm = formData
 	}
 
 	r.Header = headers
