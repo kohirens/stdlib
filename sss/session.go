@@ -85,11 +85,11 @@ func (c *StorageBucket) Upload(b []byte, key string) (string, error) {
 	Log.Infof("Saving data for key %v", fullKey)
 
 	put, e1 := c.S3.PutObject(context.Background(), &s3.PutObjectInput{
-		Bucket:                    &c.Name,
-		Key:                       &fullKey,
-		Body:                      bytes.NewReader(b),
-		ServerSideEncryption:      "AES256",
-		ObjectLockRetainUntilDate: aws.Time(time.Now().AddDate(0, 0, 7)),
+		Bucket:               &c.Name,
+		Key:                  &fullKey,
+		Body:                 bytes.NewReader(b),
+		ServerSideEncryption: "AES256",
+		Expires:              aws.Time(time.Now().UTC().AddDate(0, 0, 7)),
 	})
 
 	if e1 != nil {
