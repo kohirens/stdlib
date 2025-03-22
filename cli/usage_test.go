@@ -3,7 +3,6 @@ package cli
 import (
 	"bytes"
 	"flag"
-	"github.com/kohirens/stdlib/str"
 	"io"
 	"os"
 	"testing"
@@ -22,13 +21,13 @@ func TestUsage(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		um         str.Map
+		um         Map
 		subcommand map[string]*flag.FlagSet
 		want       string
 	}{
 		{
 			"display usage message",
-			str.Map{
+			Map{
 				"help":          "display this help",
 				"version":       "display version info",
 				"test-cmd_opt1": "opt1 summary",
