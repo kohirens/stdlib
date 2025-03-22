@@ -2,43 +2,48 @@ package logger
 
 import "os"
 
-var _ Logger = (*StdLogger)(nil)
-var _ Logger = StdLogger{}
+var _ Logger = (*Standard)(nil)
+var _ Logger = Standard{}
 
-// StdLogger Standard logging functions.
+// Standard logging functions.
 //
 //	Please always supply human comprehensible logging messages for yourself
 //	and others whom may not have worked on your code.
-type StdLogger struct {
-}
+type Standard struct{}
 
 // Dbugf Print a debug message to stdout.
-func (sl StdLogger) Dbugf(message string, vars ...interface{}) {
-	Dbugf(message, vars...)
+func (sl Standard) Dbugf(message string, vars ...interface{}) {
+	verboseF(VerboseLvlDebug, message, vars...)
 }
 
 // Errf Print a warning message to stderr.
-func (sl StdLogger) Errf(message string, vars ...interface{}) {
-	Errf(message, vars...)
+func (sl Standard) Errf(message string, vars ...interface{}) {
+	verboseF(VerboseLvlError, message, vars...)
 }
 
-// Fatf Print a fatal message to stderr then exit 1.
-func (sl StdLogger) Fatf(message string, vars ...interface{}) {
-	Fatf(message, vars...)
+// Fatf Print a fatal message to stderr.
+func (sl Standard) Fatf(message string, vars ...interface{}) {
+	verboseF(VerboseLvlFatal, message, vars...)
 	os.Exit(1)
 }
 
 // Infof Print an informational message to stdout.
-func (sl StdLogger) Infof(message string, vars ...interface{}) {
-	Infof(message, vars...)
+func (sl Standard) Infof(message string, vars ...interface{}) {
+	verboseF(VerboseLvlInfo, message, vars...)
 }
 
 // Logf Log a general message, useful for giving the user feedback on progress.
-func (sl StdLogger) Logf(message string, vars ...interface{}) {
-	Logf(message, vars...)
+func (sl Standard) Logf(message string, vars ...interface{}) {
+	verboseF(VerboseLvlLog, message, vars...)
 }
 
-// Panf Panic printing a message to stderr before exiting.
-func (sl StdLogger) Panf(message string, vars ...interface{}) {
-	Panf(message, vars...)
+// Panf Log a general message, useful for giving the user feedback on progress.
+func (sl Standard) Panf(message string, vars ...interface{}) {
+	verboseF(VerboseLvlFatal, message, vars...)
+	panic("")
+}
+
+// Warnf Print a warning message to stdout.
+func (sl Standard) Warnf(message string, vars ...interface{}) {
+	verboseF(VerboseLvlWarn, message, vars...)
 }

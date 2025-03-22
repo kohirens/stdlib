@@ -1,4 +1,4 @@
-// Package log Provide simple logging to os.Stdout and os.Stderr
+// Package logger Provide simple logging to os.Stdout and os.Stderr
 package logger
 
 import (
@@ -27,45 +27,8 @@ const (
 // VerbosityLevel Logging level (default=3); 0=fatal,1=error,2=warning,3=general,4=info,5=debug
 var VerbosityLevel = VerboseLvlLog
 
-// Dbugf Print a debug message to stdout.
-func Dbugf(message string, vars ...interface{}) {
-	verboseF(VerboseLvlDebug, message, vars...)
-}
-
-// Errf Print a warning message to stderr.
-func Errf(message string, vars ...interface{}) {
-	verboseF(VerboseLvlError, message, vars...)
-}
-
-// Fatf Print a fatal message to stderr.
-func Fatf(message string, vars ...interface{}) {
-	verboseF(VerboseLvlFatal, message, vars...)
-	os.Exit(1)
-}
-
-// Infof Print an informational message to stdout.
-func Infof(message string, vars ...interface{}) {
-	verboseF(VerboseLvlInfo, message, vars...)
-}
-
-// Logf Log a general message, useful for giving the user feedback on progress.
-func Logf(message string, vars ...interface{}) {
-	verboseF(VerboseLvlLog, message, vars...)
-}
-
-// Panf Log a general message, useful for giving the user feedback on progress.
-func Panf(message string, vars ...interface{}) {
-	verboseF(VerboseLvlFatal, message, vars...)
-	panic("")
-}
-
-// Warnf Print a warning message to stdout.
-func Warnf(message string, vars ...interface{}) {
-	verboseF(VerboseLvlWarn, message, vars...)
-}
-
-// verboseF Print log message based on the verbosity level. Prints a
-// newline after every message.
+// verboseF Print log message based on the verbosity level. Prints a newline
+// after every message.
 func verboseF(lvl int, messageTmpl string, vars ...interface{}) {
 	var e error
 	if lvl == VerboseLvlError || lvl == VerboseLvlFatal {
