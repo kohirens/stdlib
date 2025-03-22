@@ -27,6 +27,7 @@ func Test_verboseF(t *testing.T) {
 
 			if string(got) != want {
 				t.Errorf("got %s, want %s", got, want)
+				return
 			}
 		})
 	}

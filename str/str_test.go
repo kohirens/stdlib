@@ -17,6 +17,7 @@ func TestStringInArray(tester *testing.T) {
 		tester.Run(tc.name, func(t *testing.T) {
 			if got := InArray(tc.item, tc.items); got != tc.want {
 				t.Errorf("got %v, but want %v", got, tc.want)
+				return
 			}
 		})
 	}
@@ -42,10 +43,12 @@ func TestStrToCamel(runner *testing.T) {
 
 			if err != nil {
 				t.Errorf("got an unexpected error: %v", err.Error())
+				return
 			}
 
 			if got != tc.want {
 				t.Errorf("got %v, want %v", got, tc.want)
+				return
 			}
 		})
 	}
