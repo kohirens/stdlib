@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib/logger"
 	"io"
 	"time"
 )
@@ -258,7 +257,7 @@ func (gh *Client) MergePullRequest(prNumber int, mergeMethod string) (*PullReque
 		return nil, fmt.Errorf(stderr.CouldNotJsonEncode, body, err1.Error())
 	}
 
-	logger.Logf(stdout.SendMergeRequest, uri)
+	log.Logf(stdout.SendMergeRequest, uri)
 
 	res, err2 := gh.send("PUT", uri, bytes.NewReader(bodyBits))
 	if err2 != nil {
@@ -298,7 +297,7 @@ func (gh *Client) OpenPullRequest(base, branch, title, summary string) (*PullReq
 		return nil, fmt.Errorf(stderr.CouldNotJsonEncode, body, err1.Error())
 	}
 
-	logger.Logf(stdout.MakePullRequest, uri)
+	log.Logf(stdout.MakePullRequest, uri)
 
 	res, err2 := gh.send("POST", uri, bytes.NewReader(bodyBits))
 	if err2 != nil {
@@ -320,7 +319,7 @@ func (gh *Client) OpenPullRequest(base, branch, title, summary string) (*PullReq
 		return nil, fmt.Errorf(stderr.CouldNotJsonDecode, err4.Error())
 	}
 
-	logger.Logf(stdout.PullRequestMade, pr.Number)
+	log.Logf(stdout.PullRequestMade, pr.Number)
 
 	return pr, nil
 }

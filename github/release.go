@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/kohirens/stdlib/logger"
 	"io"
 	"path/filepath"
 	"time"
@@ -117,7 +116,7 @@ func (gh *Client) TagAndRelease(commit, name, tag string) (*ReleasesResponse, er
 		return nil, fmt.Errorf(stderr.CouldNotJsonEncode, body, err1.Error())
 	}
 
-	logger.Logf("attempting to publish a release to %v\n", uri)
+	log.Logf("attempting to publish a release to %v\n", uri)
 
 	res, err2 := gh.send("POST", uri, bytes.NewReader(bodyBits))
 	if err2 != nil {

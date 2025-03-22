@@ -43,6 +43,7 @@ type Client struct {
 
 var (
 	HeaderApiVersion = "2022-11-28"
+	log              = logger.Standard{}
 )
 
 // NewClient Return a GitHub API client.
@@ -69,13 +70,13 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 
 	res, err1 := gh.send("GET", uri, nil)
 	if err1 != nil {
-		logger.Logf(stderr.CouldNotGetRequest, err1.Error())
+		log.Logf(stderr.CouldNotGetRequest, err1.Error())
 		return false
 	}
 
 	bodyBits, err2 := io.ReadAll(res.Body)
 	if err2 != nil {
-		logger.Logf(stderr.CouldNotReadResponse, err2.Error())
+		log.Logf(stderr.CouldNotReadResponse, err2.Error())
 		return false
 	}
 
@@ -87,7 +88,7 @@ func (gh *Client) DoesBranchExistRemotely(branch string) bool {
 func (gh *Client) WaitForPrToMerge(prNumber int, waitSeconds int) error {
 	uri := fmt.Sprintf(epPullMerge, gh.Host, gh.Org, gh.Repository, prNumber)
 
-	logger.Logf(stdout.CheckMergeStatus, prNumber)
+	log.Logf(stdout.CheckMergeStatus, prNumber)
 
 	res, err2 := gh.send("GET", uri, nil)
 	if err2 != nil {
@@ -97,7 +98,7 @@ func (gh *Client) WaitForPrToMerge(prNumber int, waitSeconds int) error {
 	for i := 0; i < waitSeconds; i++ {
 		time.Sleep(1 * time.Second)
 
-		logger.Infof("checking if pr %d was merged\n", prNumber)
+		log.Infof("checking if pr %d was merged\n", prNumber)
 
 		res, err2 = gh.send("GET", uri, nil)
 		if err2 != nil {
@@ -154,7 +155,7 @@ func (gh *Client) send(method, url string, body io.Reader) (*http.Response, erro
 		req.Header.Set("Content-Type", HeaderApiPostType)
 	}
 
-	logger.Infof(stdout.UrlRequest, method, url)
+	log.Infof(stdout.UrlRequest, method, url)
 
 	res, err2 := gh.Client.Do(req)
 	if err2 != nil {

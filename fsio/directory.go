@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+var log = logger.Standard{}
+
 // CopyDirToDir Copy files from 1 directory into another. The files of src are
 // copied and not the directory itself to the root of the dst directory. Any
 // files that exist in the destination directory are overwritten.
@@ -27,10 +29,10 @@ func CopyDirToDir(src, dst, ps string, mode os.FileMode) error {
 			return nil
 		}
 
-		logger.Dbugf("file to copy: %v", sourceFile)
+		log.Dbugf("file to copy: %v", sourceFile)
 
 		copyTo := dst + strings.Replace(sourceFile, src, "", 1)
-		logger.Dbugf("copy to: %v", copyTo)
+		log.Dbugf("copy to: %v", copyTo)
 
 		// Skip directories.
 		if fi.IsDir() {
@@ -42,12 +44,12 @@ func CopyDirToDir(src, dst, ps string, mode os.FileMode) error {
 
 		// Make the parent directory of the file.
 		dir := filepath.Dir(copyTo)
-		logger.Dbugf("making directory %v", dir)
+		log.Dbugf("making directory %v", dir)
 		if e := os.MkdirAll(dir, mode); e != nil {
 			return fmt.Errorf("could not make directory %v because %v", dir, e.Error())
 		}
 
-		logger.Logf("copy file %v to %v", sourceFile, copyTo)
+		log.Logf("copy file %v to %v", sourceFile, copyTo)
 		_, e1 := CopyToDir(sourceFile, dir, ps)
 
 		return e1
