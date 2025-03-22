@@ -5,6 +5,70 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.0] - 2025-03-22
+
+### Added
+
+- Utilties to the env Package
+- DynamoDB Session Store
+- URL To web.request
+- Sss/session.go Logging
+- SetSessionCookie
+- Request To Web Package
+- Get Cookies for Web Response To Lambda Response
+- Getter For Session Time
+- Session Initialization
+
+### Changed
+
+- Updated Depenencies
+- Panic On Error Closing File
+- Move Error Message
+- Logger API
+- Lock The Session
+- Add Response Writer Assertion
+- Revert Session Store
+- Session Extend Time
+- Session Loading
+- Finish Wrapping http.Request
+- Finish Wrapping http.Request
+- Overwrite Session Data
+- Web Response To Implement Response Writer
+- Web.Response To support HTTP Headers
+- Session Cookie SameSite
+- Session ID Getter
+- Consolidate Session Restore
+- Sessions To Store Bytes
+- Web Session Package
+- Name of Log Package
+- Session ID Cookie
+
+### Fixed
+
+- Session Manager Load From Cookies
+- Web Request
+- Use Consistent Session Expiration Time
+- Web Packge Request Cookies
+- Lambda Function Url Response Headers
+- Sss Package Session
+- Session Manager Remove Feature
+
+### Miscellaneous Tasks
+
+- Add return statements to Test Functions
+- Update Contribution Guide
+- Cleanup sss Package Messages
+- Clean-up Code
+- Rearrange Code
+- Cleanup Comments
+- Cleanup Comments
+
+### Removed
+
+- Map from str Package
+- Web and Session To It Own Library
+- Object Lock From S3 Session Save
+
 ## [5.5.4] - 2024-11-20
 
 ### Added
