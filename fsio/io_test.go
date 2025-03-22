@@ -28,6 +28,7 @@ func TestReadCloser(t *testing.T) {
 			gotBytes, _ := io.ReadAll(got)
 			if string(gotBytes) != tt.want {
 				t.Errorf("ReadCloser() got = %v, want %v", string(gotBytes), tt.want)
+				return
 			}
 		})
 	}

@@ -19,6 +19,7 @@ func TestExist(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Exist(tt.filename); got != tt.want {
 				t.Errorf("Exist() = %v, want %v", got, tt.want)
+				return
 			}
 		})
 	}
@@ -40,6 +41,7 @@ func TestExistFiles(runner *testing.T) {
 
 			if got != sbj.want {
 				t.Errorf("got %v, want %v", got, sbj.want)
+				return
 			}
 		})
 	}
@@ -62,6 +64,7 @@ func TestNormalizePath(t *testing.T) {
 
 			if got != tc.want {
 				t.Errorf("got %v, want %v", got, tc.want)
+				return
 			}
 		})
 	}

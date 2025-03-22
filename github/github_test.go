@@ -19,12 +19,15 @@ func TestParseRepositoryUri(t *testing.T) {
 			got, got1, got2 := ParseRepositoryUri(tt.uri)
 			if got != tt.want {
 				t.Errorf("parseRepositoryUri() got = %v, want %v", got, tt.want)
+				return
 			}
 			if got1 != tt.want1 {
 				t.Errorf("parseRepositoryUri() got1 = %v, want %v", got1, tt.want1)
+				return
 			}
 			if got2 != tt.want2 {
 				t.Errorf("parseRepositoryUri() got2 = %v, want %v", got2, tt.want2)
+				return
 			}
 		})
 	}

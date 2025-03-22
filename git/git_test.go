@@ -45,6 +45,7 @@ func TestCloneFromBundle(t *testing.T) {
 			got := CloneFromBundle(tt.args.bundleName, TmpDir, tt.args.bundleDir, tt.args.ps)
 			if fsio.Exist(got) != tt.want {
 				t.Errorf("CloneFromBundle() = %v, want %v", got, tt.want)
+				return
 			}
 		})
 	}
@@ -78,18 +79,22 @@ func TestGitClone(tester *testing.T) {
 
 			if tc.shouldErr == true && err == nil {
 				t.Error("did not get expected err")
+				return
 			}
 
 			if tc.shouldErr == false && err != nil {
 				t.Errorf("got an unexpected err: %s", err)
+				return
 			}
 
 			if gotHash != tc.wantHash {
 				t.Errorf("got %v, want %v", gotHash, tc.wantHash)
+				return
 			}
 
 			if gotPath != tc.outPath {
 				t.Errorf("got %v, want %v", gotPath, tc.outPath)
+				return
 			}
 		})
 	}
@@ -117,18 +122,22 @@ func TestGitCannotClone(tester *testing.T) {
 
 			if tc.shouldErr == true && err == nil {
 				t.Error("did not get expected err")
+				return
 			}
 
 			if tc.shouldErr == false && err != nil {
 				t.Errorf("got an unexpected err: %s", err)
+				return
 			}
 
 			if gotHash != tc.wantHash {
 				t.Errorf("got %v, want %v", gotHash, tc.wantHash)
+				return
 			}
 
 			if gotPath != tc.outPath {
 				t.Errorf("got %v, want %v", gotPath, tc.outPath)
+				return
 			}
 		})
 	}
@@ -158,10 +167,12 @@ func TestGetRepoDir2(tester *testing.T) {
 
 			if gotRepo != tc.want {
 				t.Errorf("got %v, want %v", gotRepo, tc.want)
+				return
 			}
 
 			if gotHash != tc.wantHash {
 				t.Errorf("got %v, want %v", gotHash, tc.wantHash)
+				return
 			}
 		})
 	}
@@ -184,10 +195,12 @@ func TestGetLatestTag(tester *testing.T) {
 
 			if gotErr != nil {
 				t.Errorf("unexpected error in test %q", gotErr.Error())
+				return
 			}
 
 			if got != tc.want {
 				t.Errorf("got %v, want %v", got, tc.want)
+				return
 			}
 		})
 	}
@@ -210,10 +223,12 @@ func TestGetLatestTagError(tester *testing.T) {
 
 			if gotErr == nil {
 				t.Errorf("unexpected error in test %q", gotErr.Error())
+				return
 			}
 
 			if got != tc.want {
 				t.Errorf("got %v, want %v", got, tc.want)
+				return
 			}
 		})
 	}
@@ -238,11 +253,13 @@ func TestGetRemoteTags(tester *testing.T) {
 
 			if !tc.shouldErr && gotErr != nil {
 				t.Errorf("unexpected error in test %q", gotErr.Error())
+				return
 			}
 
 			t1 := strings.Join(got, ",")
 			if got != nil && t1 != tc.want {
 				t.Errorf("got %v, want %v", t1, tc.want)
+				return
 			}
 		})
 	}

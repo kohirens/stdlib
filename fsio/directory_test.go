@@ -54,12 +54,13 @@ func TestCopyDirToDir(runner *testing.T) {
 		runner.Run(tt.name, func(t *testing.T) {
 			if err := CopyDirToDir(tt.src, tt.dst, tt.ps, test.FileMode); (err != nil) != tt.wantErr {
 				t.Errorf("CopyDirToDir() error = %v, wantErr %v", err, tt.wantErr)
-
+				return
 			}
 
 			for _, f := range tt.want {
 				if !Exist(f) {
 					t.Errorf("file not found %v", f)
+					return
 				}
 			}
 		})
@@ -89,6 +90,7 @@ func TestCopyDirToDirSrcDoesNotExist(runner *testing.T) {
 		runner.Run(tt.name, func(t *testing.T) {
 			if err := CopyDirToDir(tt.src, tt.dst, tt.ps, test.FileMode); (err != nil) != tt.wantErr {
 				t.Errorf("CopyDirToDir() error = %v, wantErr %v", err, tt.wantErr)
+				return
 			}
 		})
 	}
@@ -128,10 +130,12 @@ func TestCopyDirToDirDstOverwrite(runner *testing.T) {
 			b, e1 := os.ReadFile(d + PS + ".config/config.yml")
 			if e1 != nil {
 				t.Errorf("failed to read file: %v", e1.Error())
+				return
 			}
 
 			if !strings.Contains(string(b), "2.1") {
 				t.Errorf("did not get expected content from file.")
+				return
 			}
 		})
 	}
@@ -151,10 +155,12 @@ func TestCopyToDir(t *testing.T) {
 
 			if err != nil {
 				t.Errorf("got an unexpected error copying file %q to %q", tc.source, tc.dest)
+				return
 			}
 
 			if got != tc.want {
 				t.Errorf("got %v, want %v", got, tc.want)
+				return
 			}
 		})
 	}
@@ -175,6 +181,7 @@ func TestDirExist(t *testing.T) {
 
 		if got != sbj.want {
 			t.Errorf("got %v, want %v", got, sbj.want)
+			return
 		}
 	}
 }

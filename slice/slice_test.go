@@ -22,6 +22,7 @@ func TestPrependByte(tr *testing.T) {
 
 			if bytes.Compare(got, tc.want) != 0 {
 				t.Errorf("got %v but want %v", got, tc.want)
+				return
 			}
 		})
 	}
@@ -65,6 +66,7 @@ func TestPrepend(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Prepend(tt.ary, tt.item); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Prepend() = %v, want %v", got, tt.want)
+				return
 			}
 		})
 	}
