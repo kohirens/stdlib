@@ -13,7 +13,7 @@ func NewReadCloser(content string, isFile bool) (io.ReadCloser, error) {
 		b, e := os.ReadFile(content)
 
 		if e != nil {
-			return nil, fmt.Errorf("could not read %s: %v", content, e.Error())
+			return nil, fmt.Errorf(stderr.Read, e.Error())
 		}
 
 		return io.NopCloser(bytes.NewBuffer(b)), nil
