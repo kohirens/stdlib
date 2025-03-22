@@ -15,7 +15,9 @@ func Sha256(filePath string) ([]byte, error) {
 	}
 
 	defer func() {
-		file.Close()
+		if e := file.Close(); e != nil {
+			panic(e)
+		}
 	}()
 
 	hash := sha256.New()
