@@ -17,12 +17,35 @@ const (
 )
 
 // AbsPath  Return the absolute path of the directory or panic if error.
+// Deprecated This does not perform as intended and can be tricky to use. Please avoid.
 func AbsPath(dir string) string {
 	tmp, err1 := filepath.Abs(dir)
 	if err1 != nil {
 		panic(fmt.Sprintf("could not get absolute path for %s: %v", dir, err1.Error()))
 	}
 	return tmp
+}
+
+// Chdir to a directory, then back to the current working directory once the
+// test & subtest are over.
+func Chdir(t *testing.T, dir string) {
+	// Get current directory
+	currentDir, e1 := os.Getwd()
+	if e1 != nil {
+		t.Fatalf("Error getting current directory: %v", e1)
+	}
+
+	// Change to the desired directory
+	if e := os.Chdir(dir); e != nil {
+		t.Fatalf("Error changing directory: %v", e)
+	}
+
+	// Change back to original directory when test is done.
+	t.Cleanup(func() {
+		if e := os.Chdir(currentDir); e != nil {
+			t.Errorf("Error restoring directory: %v", e)
+		}
+	})
 }
 
 // GetTempFile Get a temporary file for writing and reading.
@@ -120,7 +143,7 @@ func VerboseSubCmdOut(stdo []byte, stde error) ([]byte, error) {
 // RunMain Used for running the application's main function from a call to
 // a test function, but in a sub process.
 //
-//	Function "m" must call os.Exit.
+//	Function "m" must call os.Exit or this will hang.
 func RunMain(subEnvVarName string, m func()) {
 	subCmdArgs, ok := os.LookupEnv(subEnvVarName)
 	if !ok { // Do nothing.
