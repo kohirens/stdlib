@@ -25,3 +25,36 @@ func GetHttpResponseFromFile(filepath string) (*http.Response, error) {
 	}
 	return &http.Response{Body: f}, nil
 }
+
+type MockResponseWriter struct {
+	ExpectedBody       []byte
+	ExpectedHeaders    http.Header
+	Headers            http.Header
+	ExpectedStatusCode int
+}
+
+func (m MockResponseWriter) Header() http.Header {
+	if m.Headers == nil {
+		m.Headers = make(http.Header)
+	}
+	return m.Headers
+}
+
+func (m MockResponseWriter) Write(bytes []byte) (int, error) {
+	idx := 0
+	if m.ExpectedBody != nil {
+		var val byte
+		for idx, val = range bytes {
+			if m.ExpectedBody[idx] != val {
+				panic(stderr.ExpectedBytes)
+			}
+		}
+	}
+	return idx, nil
+}
+
+func (m MockResponseWriter) WriteHeader(statusCode int) {
+	if statusCode != m.ExpectedStatusCode {
+		panic(stderr.ExpectedStatusCode)
+	}
+}
