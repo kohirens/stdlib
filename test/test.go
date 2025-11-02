@@ -100,7 +100,7 @@ func ResetDir(directory string, mode os.FileMode) {
 	}
 
 	// Make the directory
-	if e := os.Mkdir(directory, mode); e != nil {
+	if e := os.MkdirAll(directory, mode); e != nil {
 		panic(fmt.Sprintf("could not make %v directory", directory))
 	}
 }
