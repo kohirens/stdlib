@@ -1,6 +1,6 @@
 # fsio
 
-Package with generic file IO functions. The package was name `fsio` to reduce
+Package with generic file IO functions. The package was named `fsio` to reduce
 conflict with other package names like file, filepath, and other generic names.
 
 ## Functions
