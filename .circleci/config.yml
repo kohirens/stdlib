@@ -75,6 +75,8 @@ workflows:
     jobs:
       - vr/publish-changelog:
           context: << pipeline.parameters.ctx_auto_release >>
+          committer_email: "619281+b01@users.noreply.github.com"
+          committer_name: "Khalifah K Shabazz"
 
   publish-release-tag:
     when:
